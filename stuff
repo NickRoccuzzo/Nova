@@ -1,60 +1,124 @@
-Creating worker_communication_services ... error
-Creating worker_consumer_defensive     ... 
-Creating worker_consumer_cyclical      ... 
-Creating worker_energy                 ... 
-Creating worker_industrials            ... 
-Creating worker_consumer_defensive     ... error
-Creating worker_healthcare             ... 
-Creating worker_utilities              ... 
-Creating worker_real_estate            ... 
-Creating worker_technology             ... 
-Creating worker_consumer_cyclical      ... error
-
-ERROR: for worker_communication_services  Cannot start service communication_services: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for worker_consumer_defensive  Cannot start service consumer_defensive: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable toCreating worker_financials             ... error
-: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-Creating worker_energy                 ... error
-ERROR: for worker_consumer_cyclical  Cannot start service consumer_cyclical: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for worker_financials  Cannot start service financials: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-Creating worker_industrials            ... error
-: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for worker_utilities  Cannot start service utilities: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for worker_industrials  Cannot start service industrials: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount sCreating worker_basic_materials        ... error
-Creating worker_real_estate            ... error
-ERROR: for worker_basic_materials  Cannot start service basic_materials: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for worker_real_estate  Cannot start service real_estate: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start containCreating worker_technology             ... error
-Creating worker_healthcare             ... error
-
-ERROR: for worker_technology  Cannot start service technology: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for worker_healthcare  Cannot start service healthcare: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for communication_services  Cannot start service communication_services: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for consumer_defensive  Cannot start service consumer_defensive: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for consumer_cyclical  Cannot start service consumer_cyclical: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for financials  Cannot start service financials: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for energy  Cannot start service energy: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for utilities  Cannot start service utilities: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for industrials  Cannot start service industrials: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for basic_materials  Cannot start service basic_materials: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for real_estate  Cannot start service real_estate: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for technology  Cannot start service technology: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-
-ERROR: for healthcare  Cannot start service healthcare: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/volumes/nova_nova_shared_data/_data" to rootfs at "/shared_data": create mount destination for /shared_data mount: bind mount source stat: stat /var/lib/docker/volumes/nova_nova_shared_data/_data: no such file or directory: unknown
-ERROR: Encountered errors while bringing up the project.
-root@admin01-VMware-Virtual-Platform:/Nova# 
+Creating worker_healthcare             ... done
+Creating worker_real_estate            ... done
+Creating worker_consumer_cyclical      ... done
+Creating worker_financials             ... done
+Creating worker_communication_services ... done
+Creating analysis_container            ... done
+Attaching to worker_utilities, worker_technology, worker_energy, worker_consumer_defensive, worker_basic_materials, worker_financials, worker_industrials, worker_communication_services, worker_consumer_cyclical, worker_healthcare, worker_real_estate, analysis_container
+worker_basic_materials    | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_basic_materials    |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_communication_services | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_communication_services |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_basic_materials    | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_basic_materials    |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_consumer_defensive | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_consumer_defensive |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_communication_services exited with code 0
+worker_basic_materials exited with code 0
+worker_consumer_cyclical exited with code 0
+worker_energy exited with code 0
+worker_consumer_defensive exited with code 0
+analysis_container        | python: can't open file '/app/analysis.py': [Errno 2] No such file or directory
+worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_financials exited with code 0
+worker_technology         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_technology         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_technology         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_technology         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_utilities          | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_utilities          |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_technology exited with code 0
+worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_utilities          | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_utilities          |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_utilities exited with code 0
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_real_estate exited with code 0
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_industrials exited with code 0
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare exited with code 0
+analysis_container exited with code 2
