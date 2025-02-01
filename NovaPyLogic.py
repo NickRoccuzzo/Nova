@@ -23,22 +23,10 @@ logging.basicConfig(
 # Use Docker volume path for shared storage
 TICKER_DIR = os.getenv("TICKER_DIR", "/shared_data")
 
-# Create a session with retry logic to handle 429 errors
-session = requests.Session()
-retries = Retry(total=5, backoff_factor=2, status_forcelist=[429, 500, 502, 503, 504])
-session.mount('https://', HTTPAdapter(max_retries=retries))
-
 
 def preprocess_dates(data_dir, file_suffix):
     """
     Preprocess and sort option chain data by expiration dates.
-
-    Parameters:
-    - data_dir (str): Directory containing options data CSVs.
-    - file_suffix (str): 'CALLS' or 'PUTS' for filtering files.
-
-    Returns:
-    - dict: A dictionary with formatted dates as keys and DataFrames as values.
     """
     sorted_data = {}
 
@@ -49,20 +37,17 @@ def preprocess_dates(data_dir, file_suffix):
     for filename in os.listdir(data_dir):
         if filename.endswith(file_suffix + ".csv"):
             try:
-                # ✅ Fix: Remove underscores before extracting date
                 date_str = filename.replace("_", "").split(file_suffix)[0]
-
                 expiration_date = datetime.strptime(date_str, '%Y%m%d')
                 formatted_date = expiration_date.strftime('%m/%d/%y')
 
                 file_path = os.path.join(data_dir, filename)
                 df = pd.read_csv(file_path)
 
-                # ✅ Handle missing columns: Log a warning instead of skipping
                 if "openInterest" not in df.columns or "strike" not in df.columns:
-                    logging.warning(f"Missing required columns in {file_path}. Available columns: {df.columns}")
+                    logging.warning(f"Missing columns in {file_path}. Available: {df.columns}")
 
-                sorted_data[formatted_date] = df  # Store DataFrame even if columns are missing
+                sorted_data[formatted_date] = df
 
             except ValueError as e:
                 logging.error(f"Error processing {filename}: {e}")
@@ -72,30 +57,39 @@ def preprocess_dates(data_dir, file_suffix):
 
 def fetch_stock_data(ticker):
     """
-    Fetch stock price data with retries and exponential backoff to handle rate limits.
+    Fetch stock price data with retries.
     """
     stock = yf.Ticker(ticker)
 
-    for attempt in range(5):  # Retry up to 5 times
+    for attempt in range(5):  
         try:
             current_data = stock.history(period="1d")
             if not current_data.empty:
                 return current_data['Close'].iloc[-1]
-            else:
-                return 0.0
         except Exception as e:
             logging.error(f"Attempt {attempt + 1} failed for {ticker}: {e}")
-            time.sleep(2 ** attempt)  # Exponential backoff
+            time.sleep(2 ** attempt)  
 
-    return 0.0  # Return 0 if all retries fail
+    return 0.0  
+
+
+def format_dollar_amount(amount):
+    """
+    Format numbers into human-readable currency format.
+    """
+    if amount >= 1_000_000_000:
+        return f"${amount / 1_000_000_000:.1f}B"
+    elif amount >= 1_000_000:
+        return f"${amount / 1_000_000:.1f}M"
+    elif amount >= 1_000:
+        return f"${amount / 1_000:.1f}K"
+    else:
+        return f"${amount:.2f}"
 
 
 def gather_options_data(ticker):
     """
-    Extracts useful insights from options chain data.
-
-    Returns:
-    - Dictionary containing summarized options data.
+    Extracts insights from options chain data.
     """
     ticker_path = os.path.join(TICKER_DIR, ticker)
 
@@ -106,21 +100,19 @@ def gather_options_data(ticker):
         logging.warning(f"Missing data for {ticker}. Skipping...")
         return {}
 
-    logging.info(f"Processing {ticker}: Calls Dir -> {calls_dir}, Puts Dir -> {puts_dir}")
-
     calls_data = preprocess_dates(calls_dir, "CALLS")
     puts_data = preprocess_dates(puts_dir, "PUTS")
-
-    logging.info(f"Extracted {len(calls_data)} call expirations and {len(puts_data)} put expirations for {ticker}")
 
     calls_oi = {date: df['openInterest'].sum() for date, df in calls_data.items() if not df.empty}
     puts_oi = {date: df['openInterest'].sum() for date, df in puts_data.items() if not df.empty}
 
-    logging.info(f"Processed Open Interest -> Calls: {calls_oi}, Puts: {puts_oi}")
+    logging.info(f"Processed OI -> Calls: {calls_oi}, Puts: {puts_oi}")
 
-    max_strike_calls, max_strike_puts = {}, {}
+    max_strike_calls, second_max_strike_calls, third_max_strike_calls = {}, {}, {}
+    max_strike_puts, second_max_strike_puts, third_max_strike_puts = {}, {}, {}
+    avg_strike = {}
+    top_volume_contracts = []
 
-    # Fetch current stock price
     try:
         stock = yf.Ticker(ticker)
         current_price = fetch_stock_data(ticker)
@@ -129,57 +121,61 @@ def gather_options_data(ticker):
         logging.error(f"Failed to fetch data for {ticker}: {e}")
         current_price, company_name = 0.0, "Unknown"
 
-    def process_option_data(option_data, max_strike_dict):
+    def process_option_data(option_data, max_strike_dicts):
         for date, df in option_data.items():
             if not df.empty:
                 sorted_data = df.sort_values(by='openInterest', ascending=False)
-                max_strike_dict[date] = sorted_data.iloc[0]['strike'] if not sorted_data.empty else 0
 
-    process_option_data(calls_data, max_strike_calls)
-    process_option_data(puts_data, max_strike_puts)
+                max_strike_dicts[0][date] = sorted_data.iloc[0]['strike'] if len(sorted_data) > 0 else 0
+                max_strike_dicts[1][date] = sorted_data.iloc[1]['strike'] if len(sorted_data) > 1 else 0
+                max_strike_dicts[2][date] = sorted_data.iloc[2]['strike'] if len(sorted_data) > 2 else 0
+
+                highest_volume = df.loc[df['volume'].idxmax()]
+                total_spent = highest_volume['volume'] * highest_volume['lastPrice'] * 100
+                formatted_spent = format_dollar_amount(total_spent)
+
+                unusual = highest_volume['volume'] > highest_volume['openInterest']
+
+                top_volume_contracts.append({
+                    'type': "CALL" if "CALLS" in df.columns else "PUT",
+                    'strike': highest_volume['strike'],
+                    'volume': highest_volume['volume'],
+                    'openInterest': highest_volume['openInterest'],
+                    'date': date,
+                    'total_spent': formatted_spent,
+                    'unusual': unusual
+                })
+
+    process_option_data(calls_data, [max_strike_calls, second_max_strike_calls, third_max_strike_calls])
+    process_option_data(puts_data, [max_strike_puts, second_max_strike_puts, third_max_strike_puts])
+
+    for date in max_strike_calls.keys():
+        if date in max_strike_puts and (calls_oi.get(date, 0) + puts_oi.get(date, 0) > 0):
+            total_oi = calls_oi.get(date, 0) + puts_oi.get(date, 0)
+            weight_calls = calls_oi.get(date, 0) / total_oi if total_oi else 0
+            weight_puts = puts_oi.get(date, 0) / total_oi if total_oi else 0
+            avg_strike[date] = (
+                (max_strike_calls[date] * weight_calls +
+                 second_max_strike_calls[date] * weight_calls +
+                 third_max_strike_calls[date] * weight_calls +
+                 max_strike_puts[date] * weight_puts +
+                 second_max_strike_puts[date] * weight_puts +
+                 third_max_strike_puts[date] * weight_puts) / (3 * (weight_calls + weight_puts))
+            )
+        else:
+            avg_strike[date] = np.nan
 
     return {
         "calls_oi": calls_oi,
         "puts_oi": puts_oi,
         "max_strike_calls": max_strike_calls,
+        "second_max_strike_calls": second_max_strike_calls,
+        "third_max_strike_calls": third_max_strike_calls,
         "max_strike_puts": max_strike_puts,
+        "second_max_strike_puts": second_max_strike_puts,
+        "third_max_strike_puts": third_max_strike_puts,
+        "avg_strike": avg_strike,
+        "top_volume_contracts": top_volume_contracts,
         "current_price": current_price,
         "company_name": company_name
     }
-
-
-def process_tickers_in_parallel(tickers):
-    """
-    Runs gather_options_data() in parallel for multiple tickers.
-
-    Parameters:
-    - tickers (list): List of tickers to process.
-    """
-    logging.info(f"Processing {len(tickers)} tickers in parallel...")
-
-    with ThreadPoolExecutor(max_workers=5) as executor:
-        results = list(executor.map(gather_options_data, tickers))
-
-    logging.info("Parallel processing complete.")
-    return results
-
-
-if __name__ == "__main__":
-    # Get assigned sector from environment variable (Docker will set this)
-    SECTOR = os.getenv("SECTOR")
-
-    if not SECTOR:
-        raise ValueError("SECTOR environment variable is not set. Each container must be assigned a sector.")
-
-    # Load tickers from tickers.json based on sector
-    with open("tickers.json", "r") as f:
-        tickers_data = json.load(f)
-
-    if SECTOR not in tickers_data:
-        raise ValueError(f"Sector '{SECTOR}' not found in tickers.json.")
-
-    # Extract tickers for this sector
-    tickers = [ticker for industry in tickers_data[SECTOR].values() for ticker in industry]
-
-    # Run parallel processing
-    process_tickers_in_parallel(tickers)
