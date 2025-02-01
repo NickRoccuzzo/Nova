@@ -105,8 +105,7 @@ services:
     command: ["sh", "-c", "python analysis.py && exit"]
     container_name: analysis_container
     volumes:
-      - shared_data:/shared_data  # ✅ USES THE SAME SHARED VOLUME
-      - ./nova_analysis:/nova_analysis
+      - shared_data:/shared_data  # ✅ Matches everything
     depends_on:
       technology:
         condition: service_completed_successfully
@@ -133,4 +132,4 @@ services:
 
 volumes:
   shared_data:
-    driver: local  # ✅ UNIFIED ALL WORKERS AND ANALYSIS UNDER A SINGLE VOLUME
+    driver: local  # ✅ Everything reads from the same place
