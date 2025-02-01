@@ -8,7 +8,7 @@ services:
     environment:
       - SECTOR=Basic_Materials
     volumes:
-      - nova_shared_data:/shared_data  # ✅ Fix here
+      - nova_shared_data:/shared_data
 
   communication_services:
     build: .
@@ -17,7 +17,7 @@ services:
     environment:
       - SECTOR=Communication_Services
     volumes:
-      - nova_shared_data:/shared_data  # ✅ Fix here
+      - nova_shared_data:/shared_data
 
   consumer_cyclical:
     build: .
@@ -105,7 +105,7 @@ services:
     command: ["sh", "-c", "python analysis.py && exit"]
     container_name: analysis_container
     volumes:
-      - nova_shared_data:/shared_data  # ✅ Fix here
+      - nova_shared_data:/shared_data
     depends_on:
       technology:
         condition: service_completed_successfully
@@ -132,4 +132,4 @@ services:
 
 volumes:
   nova_shared_data:
-    driver: local  # ✅ Fix here (no subdirectory `_data`)
+    driver: local  # ✅ Corrected and simplified
