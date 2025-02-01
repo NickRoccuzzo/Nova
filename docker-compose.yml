@@ -1,50 +1,104 @@
 version: "3.8"
 
 services:
-  worker_technology:
-    build: .
-    command: ["sh", "-c", "python Nova.py && exit"]
-    volumes:
-      - nova_shared_data:/var/lib/docker/volumes/nova_shared_data/_data
-    environment:
-      - SECTOR=Technology
-
-  worker_healthcare:
-    build: .
-    command: ["sh", "-c", "python Nova.py && exit"]
-    volumes:
-      - nova_shared_data:/var/lib/docker/volumes/nova_shared_data/_data
-    environment:
-      - SECTOR=Healthcare
-
-  worker_financials:
-    build: .
-    command: ["sh", "-c", "python Nova.py && exit"]
-    volumes:
-      - nova_shared_data:/var/lib/docker/volumes/nova_shared_data/_data
-    environment:
-      - SECTOR=Financials
-
-  worker_basic_materials:
-    build: .
-    command: ["sh", "-c", "python Nova.py && exit"]
-    volumes:
-      - nova_shared_data:/var/lib/docker/volumes/nova_shared_data/_data
-    environment:
-      - SECTOR=Basic_Materials
-
-  analysis:
+  basic_materials:
     build: .
     command: ["sh", "-c", "python analysis.py && exit"]
+    container_name: worker_basic_materials
+    environment:
+      - SECTOR=Basic_Materials
     volumes:
-      - nova_shared_data:/var/lib/docker/volumes/nova_shared_data/_data
-      - ./nova_analysis:/nova_analysis
-    depends_on:
-      - worker_technology
-      - worker_healthcare
-      - worker_financials
-      - worker_basic_materials
+      - shared_data:/shared_data
+
+  communication_services:
+    build: .
+    command: ["sh", "-c", "python analysis.py && exit"]
+    container_name: worker_communication_services
+    environment:
+      - SECTOR=Communication_Services
+    volumes:
+      - shared_data:/shared_data
+
+  consumer_cyclical:
+    build: .
+    command: ["sh", "-c", "python analysis.py && exit"]
+    container_name: worker_consumer_cyclical
+    environment:
+      - SECTOR=Consumer_Cyclical
+    volumes:
+      - shared_data:/shared_data
+
+  consumer_defensive:
+    build: .
+    command: ["sh", "-c", "python analysis.py && exit"]
+    container_name: worker_consumer_defensive
+    environment:
+      - SECTOR=Consumer_Defensive
+    volumes:
+      - shared_data:/shared_data
+
+  energy:
+    build: .
+    command: ["sh", "-c", "python analysis.py && exit"]
+    container_name: worker_energy
+    environment:
+      - SECTOR=Energy
+    volumes:
+      - shared_data:/shared_data
+
+  financials:
+    build: .
+    command: ["sh", "-c", "python analysis.py && exit"]
+    container_name: worker_financials
+    environment:
+      - SECTOR=Financials
+    volumes:
+      - shared_data:/shared_data
+
+  healthcare:
+    build: .
+    command: ["sh", "-c", "python analysis.py && exit"]
+    container_name: worker_healthcare
+    environment:
+      - SECTOR=Healthcare
+    volumes:
+      - shared_data:/shared_data
+
+  industrials:
+    build: .
+    command: ["sh", "-c", "python analysis.py && exit"]
+    container_name: worker_industrials
+    environment:
+      - SECTOR=Industrials
+    volumes:
+      - shared_data:/shared_data
+
+  real_estate:
+    build: .
+    command: ["sh", "-c", "python analysis.py && exit"]
+    container_name: worker_real_estate
+    environment:
+      - SECTOR=Real_Estate
+    volumes:
+      - shared_data:/shared_data
+
+  technology:
+    build: .
+    command: ["sh", "-c", "python analysis.py && exit"]
+    container_name: worker_technology
+    environment:
+      - SECTOR=Technology
+    volumes:
+      - shared_data:/shared_data
+
+  utilities:
+    build: .
+    container_name: worker_utilities
+    environment:
+      - SECTOR=Utilities
+    volumes:
+      - shared_data:/shared_data
 
 volumes:
-  nova_shared_data:
+  shared_data:
     driver: local
