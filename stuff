@@ -1,268 +1,76 @@
-2025-02-01 20:58:13 [ERROR] Error processing 20250321_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250214_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250307_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20261218_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20260116_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250207_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250919_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250620_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250221_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20270115_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [INFO] Extracted 0 call expirations and 0 put expirations for MOS
-2025-02-01 20:58:13 [INFO] Processed Open Interest -> Calls: {}, Puts: {}
-2025-02-01 20:58:13 [INFO] Successfully processed CRH
-2025-02-01 20:58:13 [INFO] Processing AA: Calls Dir -> /shared_data/AA/CALLS, Puts Dir -> /shared_data/AA/PUTS
-2025-02-01 20:58:13 [ERROR] Error processing 20250207_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250718_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250307_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250214_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20270115_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250620_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20261218_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20260116_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250919_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250321_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250228_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250221_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250417_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250228_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250321_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250214_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250417_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250307_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20261218_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20260116_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250207_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250919_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250620_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250221_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250718_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20270115_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [INFO] Extracted 0 call expirations and 0 put expirations for AA
-2025-02-01 20:58:13 [INFO] Processed Open Interest -> Calls: {}, Puts: {}
-2025-02-01 20:58:13 [INFO] Successfully processed MOS
-2025-02-01 20:58:13 [INFO] Processing SUM: Calls Dir -> /shared_data/SUM/CALLS, Puts Dir -> /shared_data/SUM/PUTS
-2025-02-01 20:58:13 [ERROR] Error processing 20250815_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250321_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250516_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250221_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250321_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250815_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250516_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [ERROR] Error processing 20250221_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:13 [INFO] Extracted 0 call expirations and 0 put expirations for SUM
-2025-02-01 20:58:13 [INFO] Processed Open Interest -> Calls: {}, Puts: {}
-2025-02-01 20:58:13 [INFO] Successfully processed AA
-2025-02-01 20:58:14 [INFO] Processing CF: Calls Dir -> /shared_data/CF/CALLS, Puts Dir -> /shared_data/CF/PUTS
-2025-02-01 20:58:14 [ERROR] Error processing 20250207_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20260221_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250214_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20270115_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250815_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250620_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20260116_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250919_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250321_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20260618_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250228_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250516_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250221_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20260320_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250228_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250321_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20260618_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250214_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250815_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250516_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20260116_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20260320_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250207_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250919_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20260221_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250620_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250221_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20270115_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [INFO] Extracted 0 call expirations and 0 put expirations for CF
-2025-02-01 20:58:14 [INFO] Processed Open Interest -> Calls: {}, Puts: {}
-2025-02-01 20:58:14 [INFO] Successfully processed SUM
-2025-02-01 20:58:14 [INFO] Successfully processed CF
-2025-02-01 20:58:14 [INFO] Processing ASPI: Calls Dir -> /shared_data/ASPI/CALLS, Puts Dir -> /shared_data/ASPI/PUTS
-2025-02-01 20:58:14 [ERROR] Error processing 20250718_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250321_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20251219_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250221_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250417_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250321_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250417_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20251219_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250221_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250718_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [INFO] Extracted 0 call expirations and 0 put expirations for ASPI
-2025-02-01 20:58:14 [INFO] Processed Open Interest -> Calls: {}, Puts: {}
-2025-02-01 20:58:14 [INFO] Processing CE: Calls Dir -> /shared_data/CE/CALLS, Puts Dir -> /shared_data/CE/PUTS
-2025-02-01 20:58:14 [ERROR] Error processing 20251017_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250620_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250919_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250321_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250221_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250321_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250919_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250620_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20251017_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [ERROR] Error processing 20250221_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:14 [INFO] Extracted 0 call expirations and 0 put expirations for CE
-2025-02-01 20:58:14 [INFO] Processed Open Interest -> Calls: {}, Puts: {}
-2025-02-01 20:58:15 [ERROR] CE: No price data found, symbol may be delisted (period=1d)
-2025-02-01 20:58:15 [ERROR] Failed processing ASPI: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:16 [ERROR] Error processing TROX for expiration 2025-03-21: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:16 [ERROR] Error processing DOW for expiration 2025-03-07: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:16 [ERROR] Error processing HUN for expiration 2025-08-15: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:17 [ERROR] 429 Client Error: Too Many Requests for url: https://query2.finance.yahoo.com/v10/finance/quoteSummary/CE?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=CE&crumb=Edge%3A+Too+Many+Requests
-2025-02-01 20:58:18 [ERROR] Error processing TROX for expiration 2025-05-16: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:18 [ERROR] Error processing HUN for expiration 2026-01-16: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:18 [ERROR] Error processing DOW for expiration 2025-03-21: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:19 [ERROR] Error processing TROX for expiration 2025-08-15: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:19 [ERROR] Failed processing CE: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:20 [ERROR] Error processing HUN for expiration 2027-01-15: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:20 [INFO] Processing HUN: Calls Dir -> /shared_data/HUN/CALLS, Puts Dir -> /shared_data/HUN/PUTS
-2025-02-01 20:58:20 [ERROR] Error processing 20270115_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:20 [ERROR] Error processing 20250815_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:20 [ERROR] Error processing 20260116_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:20 [ERROR] Error processing 20250321_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:20 [ERROR] Error processing 20250516_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:20 [ERROR] Error processing 20250221_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:20 [ERROR] Error processing 20250321_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:20 [ERROR] Error processing 20250815_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:20 [ERROR] Error processing 20250516_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:20 [ERROR] Error processing 20260116_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:20 [ERROR] Error processing 20250221_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:20 [ERROR] Error processing 20270115_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:20 [INFO] Extracted 0 call expirations and 0 put expirations for HUN
-2025-02-01 20:58:20 [INFO] Processed Open Interest -> Calls: {}, Puts: {}
-2025-02-01 20:58:21 [ERROR] Error processing DOW for expiration 2025-04-17: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:21 [ERROR] Error processing TROX for expiration 2025-12-19: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:21 [INFO] Processing TROX: Calls Dir -> /shared_data/TROX/CALLS, Puts Dir -> /shared_data/TROX/PUTS
-2025-02-01 20:58:21 [ERROR] Error processing 20250815_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:21 [ERROR] Error processing 20250321_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:21 [ERROR] Error processing 20251219_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:21 [ERROR] Error processing 20250516_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:21 [ERROR] Error processing 20250221_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:21 [ERROR] Error processing 20250321_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:21 [ERROR] Error processing 20250815_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:21 [ERROR] Error processing 20250516_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:21 [ERROR] Error processing 20251219_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:21 [ERROR] Error processing 20250221_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:21 [INFO] Extracted 0 call expirations and 0 put expirations for TROX
-2025-02-01 20:58:21 [INFO] Processed Open Interest -> Calls: {}, Puts: {}
-2025-02-01 20:58:23 [ERROR] HUN: No price data found, symbol may be delisted (period=1d)
-2025-02-01 20:58:23 [ERROR] Error processing DOW for expiration 2025-06-20: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:25 [ERROR] TROX: No price data found, symbol may be delisted (period=1d)
-2025-02-01 20:58:27 [ERROR] 429 Client Error: Too Many Requests for url: https://query2.finance.yahoo.com/v10/finance/quoteSummary/HUN?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=HUN&crumb=Edge%3A+Too+Many+Requests
-2025-02-01 20:58:27 [ERROR] Error processing DOW for expiration 2025-09-19: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:27 [ERROR] 429 Client Error: Too Many Requests for url: https://query2.finance.yahoo.com/v10/finance/quoteSummary/TROX?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=TROX&crumb=Edge%3A+Too+Many+Requests
-2025-02-01 20:58:28 [ERROR] Failed processing TROX: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:28 [ERROR] Error processing DOW for expiration 2026-01-16: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:28 [ERROR] Failed processing HUN: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:30 [ERROR] Error processing DOW for expiration 2026-06-19: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:31 [ERROR] Error processing DOW for expiration 2026-12-18: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:33 [ERROR] Error processing DOW for expiration 2027-01-15: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:33 [INFO] Processing DOW: Calls Dir -> /shared_data/DOW/CALLS, Puts Dir -> /shared_data/DOW/PUTS
-2025-02-01 20:58:33 [ERROR] Error processing 20250207_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20260619_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250307_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250214_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20270115_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250620_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20261218_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20260116_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250919_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250321_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250228_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250221_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250417_CALLS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250228_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250321_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20260619_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250214_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250417_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250307_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20261218_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20260116_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250207_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250919_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250620_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20250221_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [ERROR] Error processing 20270115_PUTS.csv: unconverted data remains: _
-2025-02-01 20:58:33 [INFO] Extracted 0 call expirations and 0 put expirations for DOW
-2025-02-01 20:58:33 [INFO] Processed Open Interest -> Calls: {}, Puts: {}
-2025-02-01 20:58:34 [ERROR] DOW: No price data found, symbol may be delisted (period=1d)
-2025-02-01 20:58:36 [ERROR] 429 Client Error: Too Many Requests for url: https://query2.finance.yahoo.com/v10/finance/quoteSummary/DOW?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=DOW&crumb=Edge%3A+Too+Many+Requests
-2025-02-01 20:58:39 [ERROR] Failed processing DOW: Expecting value: line 1 column 1 (char 0)
-2025-02-01 20:58:39 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 20:58:41 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 20:58:58 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 20:59:02 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 20:59:19 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 20:59:22 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 20:59:36 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 20:59:39 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 20:59:53 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 20:59:56 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:00:11 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:00:16 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:00:34 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:00:37 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:00:49 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:00:53 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:01:07 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:01:09 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:01:20 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:01:23 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:01:34 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:01:36 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:01:47 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:01:50 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:02:07 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:02:10 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:02:23 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:02:25 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:02:43 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:02:44 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:02:58 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:03:00 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:03:13 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:03:15 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:03:28 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:03:30 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:03:43 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:03:44 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:03:56 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:03:58 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:04:11 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:04:13 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:04:23 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:04:27 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:04:39 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:04:43 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:04:54 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:04:55 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:05:10 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:05:12 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:05:23 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:05:25 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:05:36 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:05:38 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:05:50 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:05:52 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:06:04 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:06:06 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:06:18 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:06:20 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:06:31 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:06:32 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:06:46 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:06:49 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-2025-02-01 21:06:59 [INFO] All tickers in sector 'Basic_Materials' processed successfully.
-2025-02-01 21:07:01 [INFO] Processing 45 tickers for sector 'Basic_Materials'.
-root@b7943777a702:/app# root@admin01-VMware-Virtual-Platform:/# ^C
-root@admin01-VMware-Virtual-Platform:/# 
+root@admin01-VMware-Virtual-Platform:/var/lib/docker/volumes/nova_shared_data/_data/X# cat X_raw.json 
+{
+  "calls_oi": {
+    "02/07/25": 4034,
+    "02/14/25": 2380,
+    "02/21/25": 55894,
+    "02/28/25": 596,
+    "03/07/25": 117,
+    "03/21/25": 173641,
+    "04/17/25": 72977,
+    "05/16/25": 19699,
+    "06/20/25": 83757,
+    "07/18/25": 4923,
+    "08/15/25": 3107,
+    "12/19/25": 31931,
+    "01/16/26": 67954,
+    "11/20/26": 1201,
+    "12/18/26": 987,
+    "01/15/27": 13635
+  },
+  "puts_oi": {
+    "02/07/25": 2953,
+    "02/14/25": 800,
+    "02/21/25": 21173,
+    "02/28/25": 140,
+    "03/07/25": 603,
+    "03/21/25": 86652,
+    "04/17/25": 13759,
+    "05/16/25": 2223,
+    "06/20/25": 189334,
+    "07/18/25": 2050,
+    "08/15/25": 936,
+    "12/19/25": 12892,
+    "01/16/26": 70770,
+    "11/20/26": 73,
+    "12/18/26": 320,
+    "01/15/27": 1519
+  },
+  "max_strike_calls": {
+    "02/07/25": 40.0,
+    "02/14/25": 39.0,
+    "02/21/25": 40.0,
+    "02/28/25": 41.0,
+    "03/07/25": 37.0,
+    "03/21/25": 45.0,
+    "04/17/25": 45.0,
+    "05/16/25": 50.0,
+    "06/20/25": 40.0,
+    "07/18/25": 55.0,
+    "08/15/25": 55.0,
+    "12/19/25": 50.0,
+    "01/16/26": 55.0,
+    "11/20/26": 45.0,
+    "12/18/26": 40.0,
+    "01/15/27": 55.0
+  },
+  "max_strike_puts": {
+    "02/07/25": 30.0,
+    "02/14/25": 25.0,
+    "02/21/25": 33.0,
+    "02/28/25": 38.0,
+    "03/07/25": 38.0,
+    "03/21/25": 35.0,
+    "04/17/25": 31.0,
+    "05/16/25": 45.0,
+    "06/20/25": 45.0,
+    "07/18/25": 35.0,
+    "08/15/25": 30.0,
+    "12/19/25": 25.0,
+    "01/16/26": 40.0,
+    "11/20/26": 23.0,
+    "12/18/26": 33.0,
+    "01/15/27": 30.0
+  },
+  "current_price": 36.85,
+  "company_name": "United States Steel Corporation"
