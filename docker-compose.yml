@@ -3,7 +3,7 @@ version: "3.8"
 services:
   basic_materials:
     build: .
-    command: ["sh", "-c", "python analysis.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit"]
     container_name: worker_basic_materials
     environment:
       - SECTOR=Basic_Materials
@@ -12,7 +12,7 @@ services:
 
   communication_services:
     build: .
-    command: ["sh", "-c", "python analysis.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit"]
     container_name: worker_communication_services
     environment:
       - SECTOR=Communication_Services
@@ -21,7 +21,7 @@ services:
 
   consumer_cyclical:
     build: .
-    command: ["sh", "-c", "python analysis.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit"]
     container_name: worker_consumer_cyclical
     environment:
       - SECTOR=Consumer_Cyclical
@@ -30,7 +30,7 @@ services:
 
   consumer_defensive:
     build: .
-    command: ["sh", "-c", "python analysis.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit"]
     container_name: worker_consumer_defensive
     environment:
       - SECTOR=Consumer_Defensive
@@ -39,7 +39,7 @@ services:
 
   energy:
     build: .
-    command: ["sh", "-c", "python analysis.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit"]
     container_name: worker_energy
     environment:
       - SECTOR=Energy
@@ -48,7 +48,7 @@ services:
 
   financials:
     build: .
-    command: ["sh", "-c", "python analysis.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit"]
     container_name: worker_financials
     environment:
       - SECTOR=Financials
@@ -57,7 +57,7 @@ services:
 
   healthcare:
     build: .
-    command: ["sh", "-c", "python analysis.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit"]
     container_name: worker_healthcare
     environment:
       - SECTOR=Healthcare
@@ -66,7 +66,7 @@ services:
 
   industrials:
     build: .
-    command: ["sh", "-c", "python analysis.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit"]
     container_name: worker_industrials
     environment:
       - SECTOR=Industrials
@@ -75,7 +75,7 @@ services:
 
   real_estate:
     build: .
-    command: ["sh", "-c", "python analysis.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit"]
     container_name: worker_real_estate
     environment:
       - SECTOR=Real_Estate
@@ -84,7 +84,7 @@ services:
 
   technology:
     build: .
-    command: ["sh", "-c", "python analysis.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit"]
     container_name: worker_technology
     environment:
       - SECTOR=Technology
@@ -108,17 +108,28 @@ services:
       - shared_data:/shared_data  # ✅ USES THE SAME SHARED VOLUME
       - ./nova_analysis:/nova_analysis
     depends_on:
-      - worker_technology
-      - worker_healthcare
-      - worker_financials
-      - worker_basic_materials
-      - worker_communication_services
-      - worker_consumer_cyclical
-      - worker_consumer_defensive
-      - worker_energy
-      - worker_industrials
-      - worker_real_estate
-      - worker_utilities
+      technology:
+        condition: service_completed_successfully
+      healthcare:
+        condition: service_completed_successfully
+      financials:
+        condition: service_completed_successfully
+      basic_materials:
+        condition: service_completed_successfully
+      communication_services:
+        condition: service_completed_successfully
+      consumer_cyclical:
+        condition: service_completed_successfully
+      consumer_defensive:
+        condition: service_completed_successfully
+      energy:
+        condition: service_completed_successfully
+      industrials:
+        condition: service_completed_successfully
+      real_estate:
+        condition: service_completed_successfully
+      utilities:
+        condition: service_completed_successfully
 
 volumes:
   shared_data:
