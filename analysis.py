@@ -7,9 +7,9 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Define folders and files
-BASE_FOLDER = "tickers"                  # Folder where ticker subfolders are located
-TICKERS_MAPPING_FILE = "tickers.json"    # File mapping tickers to sectors/industries
-OUTPUT_FOLDER = "nova_analysis"          # Folder for analysis output
+BASE_FOLDER = "/shared_data"               # ✅ Change from "tickers" to "/shared_data"
+TICKERS_MAPPING_FILE = "/shared_data/tickers.json"  # ✅ Ensure this is in the shared volume
+OUTPUT_FOLDER = "/shared_data/nova_analysis"  # ✅ Keep results in shared_data for consistency
 
 # Ensure the output folder exists
 if not os.path.exists(OUTPUT_FOLDER):
