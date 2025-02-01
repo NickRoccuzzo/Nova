@@ -1,76 +1,76 @@
-root@admin01-VMware-Virtual-Platform:/var/lib/docker/volumes/nova_shared_data/_data/X# cat X_raw.json 
-{
-  "calls_oi": {
-    "02/07/25": 4034,
-    "02/14/25": 2380,
-    "02/21/25": 55894,
-    "02/28/25": 596,
-    "03/07/25": 117,
-    "03/21/25": 173641,
-    "04/17/25": 72977,
-    "05/16/25": 19699,
-    "06/20/25": 83757,
-    "07/18/25": 4923,
-    "08/15/25": 3107,
-    "12/19/25": 31931,
-    "01/16/26": 67954,
-    "11/20/26": 1201,
-    "12/18/26": 987,
-    "01/15/27": 13635
-  },
-  "puts_oi": {
-    "02/07/25": 2953,
-    "02/14/25": 800,
-    "02/21/25": 21173,
-    "02/28/25": 140,
-    "03/07/25": 603,
-    "03/21/25": 86652,
-    "04/17/25": 13759,
-    "05/16/25": 2223,
-    "06/20/25": 189334,
-    "07/18/25": 2050,
-    "08/15/25": 936,
-    "12/19/25": 12892,
-    "01/16/26": 70770,
-    "11/20/26": 73,
-    "12/18/26": 320,
-    "01/15/27": 1519
-  },
-  "max_strike_calls": {
-    "02/07/25": 40.0,
-    "02/14/25": 39.0,
-    "02/21/25": 40.0,
-    "02/28/25": 41.0,
-    "03/07/25": 37.0,
-    "03/21/25": 45.0,
-    "04/17/25": 45.0,
-    "05/16/25": 50.0,
-    "06/20/25": 40.0,
-    "07/18/25": 55.0,
-    "08/15/25": 55.0,
-    "12/19/25": 50.0,
-    "01/16/26": 55.0,
-    "11/20/26": 45.0,
-    "12/18/26": 40.0,
-    "01/15/27": 55.0
-  },
-  "max_strike_puts": {
-    "02/07/25": 30.0,
-    "02/14/25": 25.0,
-    "02/21/25": 33.0,
-    "02/28/25": 38.0,
-    "03/07/25": 38.0,
-    "03/21/25": 35.0,
-    "04/17/25": 31.0,
-    "05/16/25": 45.0,
-    "06/20/25": 45.0,
-    "07/18/25": 35.0,
-    "08/15/25": 30.0,
-    "12/19/25": 25.0,
-    "01/16/26": 40.0,
-    "11/20/26": 23.0,
-    "12/18/26": 33.0,
-    "01/15/27": 30.0
-  },
-  "current_price": 36.85,
-  "company_name": "United States Steel Corporation"
+root@admin01-VMware-Virtual-Platform:/Nova# docker-compose logs -f
+Attaching to worker_energy, worker_consumer_cyclical, worker_utilities, worker_real_estate, worker_consumer_defensive, worker_financials, worker_technology, worker_industrials, worker_healthcare, worker_basic_materials, worker_communication_services
+worker_consumer_defensive | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_consumer_defensive |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_consumer_defensive | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_consumer_defensive |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_basic_materials    | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_basic_materials    |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_basic_materials    | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_basic_materials    |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_basic_materials    | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_basic_materials    |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_energy             | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_energy             |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_energy             | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_energy             |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_communication_services | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_communication_services |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_communication_services | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_communication_services |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_utilities          | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_utilities          |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_utilities          | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_utilities          |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_utilities          | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
+worker_utilities          |   highest_volume = df.loc[df['volume'].idxmax()]
+worker_consumer_defensive exited with code 0
+worker_communication_services exited with code 0
+worker_utilities exited with code 0
+worker_basic_materials exited with code 0
+worker_basic_materials exited with code 0
+worker_utilities exited with code 0
+worker_real_estate exited with code 0
+worker_financials exited with code 0
+worker_communication_services exited with code 0
+worker_consumer_defensive exited with code 0
+worker_energy exited with code 0
+worker_utilities exited with code 0
+worker_basic_materials exited with code 0
+worker_industrials exited with code 0
+worker_real_estate exited with code 0
+worker_communication_services exited with code 0
+worker_consumer_defensive exited with code 0
+worker_consumer_cyclical exited with code 0
+worker_technology exited with code 0
+worker_utilities exited with code 0
+worker_basic_materials exited with code 0
+worker_financials exited with code 0
+worker_energy exited with code 0
+worker_communication_services exited with code 0
+worker_healthcare exited with code 0
+worker_utilities exited with code 0
+worker_basic_materials exited with code 0
+worker_real_estate exited with code 0
+worker_consumer_defensive exited with code 0
+worker_communication_services exited with code 0
+worker_utilities exited with code 0
+worker_consumer_cyclical exited with code 0
+worker_basic_materials exited with code 0
+worker_industrials exited with code 0
+worker_consumer_defensive exited with code 0
+worker_energy exited with code 0
+worker_real_estate exited with code 0
+worker_financials exited with code 0
+worker_utilities exited with code 0
+worker_basic_materials exited with code 0
+worker_communication_services exited with code 0
+worker_utilities exited with code 0
+worker_consumer_defensive exited with code 0
+worker_basic_materials exited with code 0
+worker_energy exited with code 0
+worker_technology exited with code 0
+worker_communication_services exited with code 0
+^CERROR: Aborting.
