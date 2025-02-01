@@ -7,10 +7,6 @@ import json
 import logging
 from datetime import datetime
 import yfinance as yf
-from concurrent.futures import ThreadPoolExecutor
-import requests
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
 
 # Configure logging
 logging.basicConfig(
@@ -70,7 +66,7 @@ def fetch_stock_data(ticker):
             logging.error(f"Attempt {attempt + 1} failed for {ticker}: {e}")
             time.sleep(2 ** attempt)  
 
-    return 0.0  
+    return 0.0   # Default value if all attempts fail
 
 
 def format_dollar_amount(amount):
@@ -121,7 +117,7 @@ def gather_options_data(ticker):
         logging.error(f"Failed to fetch data for {ticker}: {e}")
         current_price, company_name = 0.0, "Unknown"
 
-    def process_option_data(option_data, max_strike_dicts):
+    def process_option_data(option_data, max_strike_dicts, option_type):
         for date, df in option_data.items():
             if not df.empty:
                 sorted_data = df.sort_values(by='openInterest', ascending=False)
@@ -130,40 +126,38 @@ def gather_options_data(ticker):
                 max_strike_dicts[1][date] = sorted_data.iloc[1]['strike'] if len(sorted_data) > 1 else 0
                 max_strike_dicts[2][date] = sorted_data.iloc[2]['strike'] if len(sorted_data) > 2 else 0
 
-                highest_volume = df.loc[df['volume'].idxmax()]
-                total_spent = highest_volume['volume'] * highest_volume['lastPrice'] * 100
-                formatted_spent = format_dollar_amount(total_spent)
+                # ✅ Fix idxmax() bug: Check if DataFrame is empty before calling idxmax()
+                if not df.empty and df['volume'].notna().any():
+                    highest_volume_idx = df['volume'].idxmax()
+                    highest_volume = df.loc[highest_volume_idx]
+                    total_spent = highest_volume['volume'] * highest_volume['lastPrice'] * 100
+                    formatted_spent = format_dollar_amount(total_spent)
 
-                unusual = highest_volume['volume'] > highest_volume['openInterest']
+                    unusual = highest_volume['volume'] > highest_volume['openInterest']
 
-                top_volume_contracts.append({
-                    'type': "CALL" if "CALLS" in df.columns else "PUT",
-                    'strike': highest_volume['strike'],
-                    'volume': highest_volume['volume'],
-                    'openInterest': highest_volume['openInterest'],
-                    'date': date,
-                    'total_spent': formatted_spent,
-                    'unusual': unusual
-                })
+                    top_volume_contracts.append({
+                        'type': option_type,
+                        'strike': highest_volume['strike'],
+                        'volume': highest_volume['volume'],
+                        'openInterest': highest_volume['openInterest'],
+                        'date': date,
+                        'total_spent': formatted_spent,
+                        'unusual': unusual
+                    })
 
-    process_option_data(calls_data, [max_strike_calls, second_max_strike_calls, third_max_strike_calls])
-    process_option_data(puts_data, [max_strike_puts, second_max_strike_puts, third_max_strike_puts])
+    process_option_data(calls_data, [max_strike_calls, second_max_strike_calls, third_max_strike_calls], "CALL")
+    process_option_data(puts_data, [max_strike_puts, second_max_strike_puts, third_max_strike_puts], "PUT")
 
     for date in max_strike_calls.keys():
         if date in max_strike_puts and (calls_oi.get(date, 0) + puts_oi.get(date, 0) > 0):
             total_oi = calls_oi.get(date, 0) + puts_oi.get(date, 0)
-            weight_calls = calls_oi.get(date, 0) / total_oi if total_oi else 0
-            weight_puts = puts_oi.get(date, 0) / total_oi if total_oi else 0
-            avg_strike[date] = (
-                (max_strike_calls[date] * weight_calls +
-                 second_max_strike_calls[date] * weight_calls +
-                 third_max_strike_calls[date] * weight_calls +
-                 max_strike_puts[date] * weight_puts +
-                 second_max_strike_puts[date] * weight_puts +
-                 third_max_strike_puts[date] * weight_puts) / (3 * (weight_calls + weight_puts))
-            )
-        else:
-            avg_strike[date] = np.nan
+            if total_oi > 0:
+                avg_strike[date] = (
+                    (max_strike_calls[date] * calls_oi.get(date, 0) +
+                     max_strike_puts[date] * puts_oi.get(date, 0)) / total_oi
+                )
+            else:
+                avg_strike[date] = np.nan
 
     return {
         "calls_oi": calls_oi,
