@@ -8,7 +8,7 @@ services:
     environment:
       - SECTOR=Basic_Materials
     volumes:
-      - shared_data:/shared_data
+      - nova_shared_data:/shared_data  # ✅ Fix here
 
   communication_services:
     build: .
@@ -17,7 +17,7 @@ services:
     environment:
       - SECTOR=Communication_Services
     volumes:
-      - shared_data:/shared_data
+      - nova_shared_data:/shared_data  # ✅ Fix here
 
   consumer_cyclical:
     build: .
@@ -26,7 +26,7 @@ services:
     environment:
       - SECTOR=Consumer_Cyclical
     volumes:
-      - shared_data:/shared_data
+      - nova_shared_data:/shared_data
 
   consumer_defensive:
     build: .
@@ -35,7 +35,7 @@ services:
     environment:
       - SECTOR=Consumer_Defensive
     volumes:
-      - shared_data:/shared_data
+      - nova_shared_data:/shared_data
 
   energy:
     build: .
@@ -44,7 +44,7 @@ services:
     environment:
       - SECTOR=Energy
     volumes:
-      - shared_data:/shared_data
+      - nova_shared_data:/shared_data
 
   financials:
     build: .
@@ -53,7 +53,7 @@ services:
     environment:
       - SECTOR=Financials
     volumes:
-      - shared_data:/shared_data
+      - nova_shared_data:/shared_data
 
   healthcare:
     build: .
@@ -62,7 +62,7 @@ services:
     environment:
       - SECTOR=Healthcare
     volumes:
-      - shared_data:/shared_data
+      - nova_shared_data:/shared_data
 
   industrials:
     build: .
@@ -71,7 +71,7 @@ services:
     environment:
       - SECTOR=Industrials
     volumes:
-      - shared_data:/shared_data
+      - nova_shared_data:/shared_data
 
   real_estate:
     build: .
@@ -80,7 +80,7 @@ services:
     environment:
       - SECTOR=Real_Estate
     volumes:
-      - shared_data:/shared_data
+      - nova_shared_data:/shared_data
 
   technology:
     build: .
@@ -89,7 +89,7 @@ services:
     environment:
       - SECTOR=Technology
     volumes:
-      - shared_data:/shared_data
+      - nova_shared_data:/shared_data
 
   utilities:
     build: .
@@ -98,14 +98,14 @@ services:
     environment:
       - SECTOR=Utilities
     volumes:
-      - shared_data:/shared_data
+      - nova_shared_data:/shared_data
 
   analysis:
     build: .
     command: ["sh", "-c", "python analysis.py && exit"]
     container_name: analysis_container
     volumes:
-      - shared_data:/shared_data  # ✅ Matches everything
+      - nova_shared_data:/shared_data  # ✅ Fix here
     depends_on:
       technology:
         condition: service_completed_successfully
@@ -131,5 +131,5 @@ services:
         condition: service_completed_successfully
 
 volumes:
-  shared_data:
-    driver: local  # ✅ Everything reads from the same place
+  nova_shared_data:
+    driver: local  # ✅ Fix here (no subdirectory `_data`)
