@@ -93,12 +93,33 @@ services:
 
   utilities:
     build: .
+    command: ["sh", "-c", "python Nova.py && exit"]
     container_name: worker_utilities
     environment:
       - SECTOR=Utilities
     volumes:
       - shared_data:/shared_data
 
+  analysis:
+    build: .
+    command: ["sh", "-c", "python analysis.py && exit"]
+    container_name: analysis_container
+    volumes:
+      - shared_data:/shared_data  # ✅ USES THE SAME SHARED VOLUME
+      - ./nova_analysis:/nova_analysis
+    depends_on:
+      - worker_technology
+      - worker_healthcare
+      - worker_financials
+      - worker_basic_materials
+      - worker_communication_services
+      - worker_consumer_cyclical
+      - worker_consumer_defensive
+      - worker_energy
+      - worker_industrials
+      - worker_real_estate
+      - worker_utilities
+
 volumes:
   shared_data:
-    driver: local
+    driver: local  # ✅ UNIFIED ALL WORKERS AND ANALYSIS UNDER A SINGLE VOLUME
