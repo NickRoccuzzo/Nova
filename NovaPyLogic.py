@@ -2,6 +2,7 @@
 import os
 import pandas as pd
 import numpy as np
+import json  # ✅ Fix: Import missing json module
 import logging
 from datetime import datetime
 import yfinance as yf
@@ -43,9 +44,19 @@ def preprocess_dates(data_dir, file_suffix):
                 expiration_date = datetime.strptime(date_str, '%Y%m%d')
                 formatted_date = expiration_date.strftime('%m/%d/%y')
 
-                df = pd.read_csv(os.path.join(data_dir, filename))
-                if not df.empty:
-                    sorted_data[formatted_date] = df
+                # Read CSV with better error handling
+                file_path = os.path.join(data_dir, filename)
+                try:
+                    df = pd.read_csv(file_path)
+
+                    # Ensure required columns exist
+                    if "openInterest" in df.columns and "strike" in df.columns:
+                        sorted_data[formatted_date] = df
+                    else:
+                        logging.error(f"Missing required columns in {file_path}")
+
+                except Exception as e:
+                    logging.error(f"Error reading {file_path}: {e}")
 
             except ValueError as e:
                 logging.error(f"Error processing {filename}: {e}")
@@ -69,11 +80,17 @@ def gather_options_data(ticker):
         logging.warning(f"Missing data for {ticker}. Skipping...")
         return {}
 
+    logging.info(f"Processing {ticker}: Calls Dir -> {calls_dir}, Puts Dir -> {puts_dir}")
+
     calls_data = preprocess_dates(calls_dir, "CALLS")
     puts_data = preprocess_dates(puts_dir, "PUTS")
 
+    logging.info(f"Extracted {len(calls_data)} call expirations and {len(puts_data)} put expirations for {ticker}")
+
     calls_oi = {date: df['openInterest'].sum() for date, df in calls_data.items() if not df.empty}
     puts_oi = {date: df['openInterest'].sum() for date, df in puts_data.items() if not df.empty}
+
+    logging.info(f"Processed Open Interest -> Calls: {calls_oi}, Puts: {puts_oi}")
 
     max_strike_calls, second_max_strike_calls, third_max_strike_calls = {}, {}, {}
     max_strike_puts, second_max_strike_puts, third_max_strike_puts = {}, {}, {}
@@ -86,7 +103,7 @@ def gather_options_data(ticker):
     current_price = current_data['Close'].iloc[-1] if not current_data.empty else 0.0
     company_name = stock.info.get('longName', 'N/A')
 
-    def process_option_data(option_data, max_strike_dict, second_strike_dict, third_strike_dict):
+    def process_option_data(option_data, max_strike_dict, second_strike_dict, third_strike_dict, file_suffix):
         for date, df in option_data.items():
             if not df.empty:
                 sorted_data = df.sort_values(by='openInterest', ascending=False)
@@ -106,7 +123,10 @@ def gather_options_data(ticker):
                 else:
                     third_strike_dict[date] = 0
 
-                # Find highest volume contract
+                logging.info(
+                    f"{ticker} {date} - Top Strikes: {max_strike_dict[date]}, {second_strike_dict[date]}, {third_strike_dict[date]}")
+
+                # ✅ Fix: Correct `file_suffix` reference
                 if 'volume' in df.columns and df['volume'].notna().any():
                     highest_volume_contract = df.loc[df['volume'].idxmax()]
                     total_spent = highest_volume_contract['volume'] * highest_volume_contract['lastPrice'] * 100
@@ -125,8 +145,8 @@ def gather_options_data(ticker):
                     })
 
     # Process Calls and Puts
-    process_option_data(calls_data, max_strike_calls, second_max_strike_calls, third_max_strike_calls)
-    process_option_data(puts_data, max_strike_puts, second_max_strike_puts, third_max_strike_puts)
+    process_option_data(calls_data, max_strike_calls, second_max_strike_calls, third_max_strike_calls, "CALLS")
+    process_option_data(puts_data, max_strike_puts, second_max_strike_puts, third_max_strike_puts, "PUTS")
 
     return {
         "calls_oi": calls_oi,
@@ -144,9 +164,7 @@ def gather_options_data(ticker):
 
 
 def format_dollar_amount(amount):
-    """
-    Format a given dollar amount into a human-readable string with suffixes like 'K' for thousands and 'M' for millions.
-    """
+    """Formats a given dollar amount with K, M, B suffixes."""
     if amount >= 1_000_000_000:
         return f"${amount / 1_000_000_000:.1f}B"
     elif amount >= 1_000_000:
@@ -158,9 +176,7 @@ def format_dollar_amount(amount):
 
 
 def process_tickers_in_parallel(tickers):
-    """
-    Runs gather_options_data() in parallel for multiple tickers.
-    """
+    """Runs `gather_options_data()` in parallel for multiple tickers."""
     logging.info(f"Processing {len(tickers)} tickers in parallel...")
 
     with ThreadPoolExecutor(max_workers=5) as executor:
