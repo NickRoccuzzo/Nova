@@ -133,8 +133,6 @@ def gather_options_data(ticker):
 
     # ✅ Get sector from the container's environment variable
     sector = os.getenv("SECTOR", "Unknown")
-
-    # ✅ Find the industry dynamically from `tickers.json` for the given sector
     industry = "Unknown"
     tickers_mapping_file = os.path.join(TICKER_DIR, "tickers.json")
 
@@ -142,19 +140,28 @@ def gather_options_data(ticker):
         with open(tickers_mapping_file, "r") as f:
             tickers_mapping = json.load(f)
 
-        # ✅ Get the industries for the current sector
+        # First, try using the current container's sector.
         sector_data = tickers_mapping.get(sector, {})
-
-        # ✅ Loop through industries to find where the ticker exists
         for industry_name, tickers_list in sector_data.items():
             if ticker in tickers_list:
                 industry = industry_name
-                break  # ✅ Stop searching once we find the industry
+                break
+
+        # Fallback: if not found, search in all sectors.
+        if industry == "Unknown":
+            for sec, industries in tickers_mapping.items():
+                for industry_name, tickers_list in industries.items():
+                    if ticker in tickers_list:
+                        sector = sec
+                        industry = industry_name
+                        break
+                if industry != "Unknown":
+                    break
 
     except Exception as e:
         logging.error(f"Error reading {tickers_mapping_file}: {e}")
 
-    # ✅ Update the final result dictionary
+    # ✅ Return final result including sector and industry
     return {
         "calls_oi": calls_oi,
         "puts_oi": puts_oi,
@@ -168,7 +175,6 @@ def gather_options_data(ticker):
         "top_volume_contracts": top_volume_contracts,
         "current_price": current_price,
         "company_name": company_name,
-        "sector": sector,   # ✅ Now directly included
-        "industry": industry  # ✅ Dynamically assigned
+        "sector": sector,
+        "industry": industry
     }
-
