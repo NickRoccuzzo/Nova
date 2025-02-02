@@ -2,18 +2,28 @@ import os
 import numpy as np
 import json
 import logging
+import shutil
+import time
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Define folders and files
-BASE_FOLDER = "/shared_data"               # ✅ Change from "tickers" to "/shared_data"
-TICKERS_MAPPING_FILE = "/shared_data/tickers.json"  # ✅ Ensure this is in the shared volume
-OUTPUT_FOLDER = "/shared_data/nova_analysis"  # ✅ Keep results in shared_data for consistency
+BASE_FOLDER = "/shared_data"                      # The shared volume
+TICKERS_MAPPING_FILE = "/shared_data/tickers.json"  # Mapping file expected in shared_data
+OUTPUT_FOLDER = "/shared_data/nova_analysis"        # Where to write the final analysis
 
 # Ensure the output folder exists
 if not os.path.exists(OUTPUT_FOLDER):
     os.makedirs(OUTPUT_FOLDER)
+
+# Failsafe: if tickers.json is not in /shared_data, copy it from /app (assuming it’s there)
+if not os.path.exists(TICKERS_MAPPING_FILE):
+    try:
+        shutil.copy('/app/tickers.json', TICKERS_MAPPING_FILE)
+        logging.info("Copied tickers.json from /app to /shared_data")
+    except Exception as e:
+        logging.error(f"Could not copy tickers.json: {e}")
 
 # Dictionary to store results for each ticker
 ticker_results = {}
@@ -42,10 +52,6 @@ def parse_total_spent(total_spent_str):
 
 # ----- WEIGHTED OPEN INTEREST SCORING -----
 def weighted_open_interest_scoring(calls_oi, puts_oi):
-    """
-    Assigns weights to open interest (OI) based on how much higher each expiration date's OI is
-    compared to the average OI.
-    """
     total_score = 0
     calls_oi_values = np.array(list(calls_oi.values()))
     puts_oi_values = np.array(list(puts_oi.values()))
@@ -78,13 +84,7 @@ def weighted_open_interest_scoring(calls_oi, puts_oi):
 
 def analyze_ticker_json(file_path):
     """
-    Reads a JSON file and calculates the Bull/Bear score along with additional metrics:
-      - score: overall bullish or bearish signal
-      - unusual_contracts_count: count of contracts flagged as unusual
-      - total_unusual_spent: total money spent on unusual contracts (raw float)
-      - cumulative_total_spent_calls: total spent on call contracts (raw float)
-      - cumulative_total_spent_puts: total spent on put contracts (raw float)
-      - current_price: the current price of the ticker
+    Reads a JSON file and calculates metrics (score, unusual contracts, etc.)
     """
     try:
         with open(file_path, 'r') as file:
@@ -172,7 +172,6 @@ def analyze_ticker_json(file_path):
                 total_score -= 1
 
     # ----- Top Volume Contracts Scoring & Metrics -----
-    # Initialize counters and bonus lookup lists for unusual contracts
     call_unusual_counter = 0
     put_unusual_counter = 0
     call_unusual_bonus = [25, 50, 75, 100, 125, 150, 125, 150, 200, 250, 275, 300]
@@ -188,13 +187,11 @@ def analyze_ticker_json(file_path):
         spent = parse_total_spent(total_spent_str)
         strike_pct_diff = ((strike - current_price) / current_price) * 100 if current_price != 0 else 0
 
-        # Accumulate spent totals by contract type
         if contract_type == "CALL":
             cumulative_total_spent_calls += spent
         elif contract_type == "PUT":
             cumulative_total_spent_puts += spent
 
-        # For unusual contracts, add bonus based on the count order per type:
         if unusual:
             unusual_contracts_count += 1
             total_unusual_spent += spent
@@ -209,7 +206,6 @@ def analyze_ticker_json(file_path):
                 bonus = put_unusual_bonus[idx] if idx < len(put_unusual_bonus) else put_unusual_bonus[-1]
                 total_score += bonus
 
-        # Additional scoring based on contract details:
         if contract_type == "CALL":
             if volume > open_interest:
                 total_score += 2
@@ -266,32 +262,38 @@ def analyze_ticker_json(file_path):
     }
     return result
 
-
 # --- LOAD TICKERS MAPPING & BUILD REVERSE LOOKUP ---
+# We build a reverse mapping from ticker symbol to {sector, industry}.
 ticker_to_sector_industry = {}
 try:
     with open(TICKERS_MAPPING_FILE, "r") as f:
         tickers_mapping = json.load(f)
-    # Build a reverse mapping: ticker -> {sector, industry}
     for sector, industries in tickers_mapping.items():
         for industry, tickers in industries.items():
             for ticker in tickers:
-                ticker_to_sector_industry[ticker] = {"sector": sector, "industry": industry}
+                # Normalize ticker symbols to uppercase
+                ticker_to_sector_industry[ticker.upper()] = {"sector": sector, "industry": industry}
 except Exception as e:
     logging.error(f"Error reading {TICKERS_MAPPING_FILE}: {e}")
 
 # --- PROCESS TICKER FOLDERS ---
+# (Exclude the output folder to avoid processing non-ticker directories.)
 for ticker_folder in os.listdir(BASE_FOLDER):
+    # Skip the output directory and any files that aren’t directories
+    if ticker_folder == os.path.basename(OUTPUT_FOLDER):
+        continue
     folder_path = os.path.join(BASE_FOLDER, ticker_folder)
     if os.path.isdir(folder_path):
+        # Normalize folder name (assuming folder names are ticker symbols)
+        ticker_symbol = ticker_folder.upper()
         for file in os.listdir(folder_path):
             if file.endswith("_raw.json"):
                 file_path = os.path.join(folder_path, file)
                 logging.info(f"Processing: {file_path}")
                 result = analyze_ticker_json(file_path)
                 if result is not None:
-                    # Add sector/industry info from our mapping (defaulting to "Unknown")
-                    mapping = ticker_to_sector_industry.get(ticker_folder, {"sector": "Unknown", "industry": "Unknown"})
+                    # Look up the ticker using the normalized symbol; default to Unknown if not found
+                    mapping = ticker_to_sector_industry.get(ticker_symbol, {"sector": "Unknown", "industry": "Unknown"})
                     result.update(mapping)
                     ticker_results[ticker_folder] = result
 
@@ -303,7 +305,6 @@ for ticker, data in ticker_results.items():
     sector = data.get("sector", "Unknown")
     industry = data.get("industry", "Unknown")
 
-    # Aggregate by sector
     if sector not in sector_aggregates:
         sector_aggregates[sector] = {
             "total_score": 0,
@@ -318,7 +319,6 @@ for ticker, data in ticker_results.items():
     sector_aggregates[sector]["total_calls_spent"] += data["cumulative_total_spent_calls"]
     sector_aggregates[sector]["total_puts_spent"] += data["cumulative_total_spent_puts"]
 
-    # Aggregate by industry (using a key that combines sector and industry)
     industry_key = f"{sector}|{industry}"
     if industry_key not in industry_aggregates:
         industry_aggregates[industry_key] = {
@@ -334,7 +334,6 @@ for ticker, data in ticker_results.items():
     industry_aggregates[industry_key]["total_calls_spent"] += data["cumulative_total_spent_calls"]
     industry_aggregates[industry_key]["total_puts_spent"] += data["cumulative_total_spent_puts"]
 
-# Compute average scores and add formatted monetary fields for each sector and industry
 for sector, agg in sector_aggregates.items():
     agg["average_score"] = agg["total_score"] / agg["ticker_count"] if agg["ticker_count"] > 0 else 0
     agg["formatted_total_unusual_spent"] = format_money(agg["total_unusual_spent"])
@@ -358,7 +357,6 @@ sorted_ticker_results = dict(sorted(ticker_results.items(), key=lambda item: ite
 top_20_bullish = dict(list(sorted_ticker_results.items())[:40])
 top_20_bearish = dict(list(sorted_ticker_results.items())[-40:])
 
-# Determine the top bullish and bearish sectors (by average score)
 sorted_sectors = sorted(sector_aggregates.items(), key=lambda item: item[1]["average_score"], reverse=True)
 top_bullish_sector = sorted_sectors[0] if sorted_sectors else None
 top_bearish_sector = sorted_sectors[-1] if sorted_sectors else None
