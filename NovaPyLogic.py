@@ -19,6 +19,22 @@ logging.basicConfig(
 # Use Docker volume path for shared storage
 TICKER_DIR = os.getenv("TICKER_DIR", "/shared_data")
 
+# Load tickers.json mapping once at startup
+TICKERS_MAPPING_FILE = "/shared_data/tickers.json"
+ticker_to_sector_industry = {}
+
+try:
+    with open(TICKERS_MAPPING_FILE, "r") as f:
+        tickers_mapping = json.load(f)
+    
+    # Build a reverse lookup dictionary: ticker -> {sector, industry}
+    for sector, industries in tickers_mapping.items():
+        for industry, tickers in industries.items():
+            for ticker in tickers:
+                ticker_to_sector_industry[ticker] = {"sector": sector, "industry": industry}
+except Exception as e:
+    logging.error(f"Error loading {TICKERS_MAPPING_FILE}: {e}")
+
 
 def preprocess_dates(data_dir, file_suffix):
     """
