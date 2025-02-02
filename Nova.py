@@ -60,21 +60,21 @@ def save_options_data(ticker):
 
 
 def process_ticker(ticker):
-    """ Processes a single ticker: downloads CSVs, gathers data, and saves JSON output. """
+    """Processes a single ticker: downloads CSVs, gathers data, and saves JSON output."""
     save_options_data(ticker)
 
-    # Gather additional option data
     try:
         data_dict = gather_options_data(ticker)
         clean_data = convert_keys_for_json(data_dict)
-
         output_path = os.path.join("/shared_data", ticker, f"{ticker}_raw.json")
         with open(output_path, "w") as f_out:
             json.dump(clean_data, f_out, indent=2)
-
         logging.info(f"Successfully processed {ticker}")
     except Exception as e:
         logging.error(f"Failed processing {ticker}: {e}")
+
+    # Add a delay to help avoid rate limiting.
+    time.sleep(3)  # Adjust the delay as needed.
 
 
 def convert_keys_for_json(obj):
