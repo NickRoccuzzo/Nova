@@ -1,43 +1,9 @@
-# The 'summary_analysis2.json' file finally got created, and here's where I found it:
-
-root@admin01-VMware-Virtual-Platform:/var/lib/docker/volumes/nova_nova_shared_data/_data/nova_analysis# 
-
-# However, after checking 'summary_analysis2.json', I noticed there were some parts that were not filled in/incomplete with "Unknown" for certain values, this could be due to being throttled or rate-limited from concurrent futures.  It would behoove us to backoff exponentially (if that's not already configured) and add in an extra sleep time.  Because we pull the data exponentially faster now, we can wait a few seconds in between tickers
-
-# Here's an example of what I mean by 'not filled in'/'incomplete':
-
-        "HD": {
-            "score": -567.5,
-            "unusual_contracts_count": 8,
-            "total_unusual_spent": "$2,336,200",
-            "cumulative_total_spent_calls": "$2,826,800",
-            "cumulative_total_spent_puts": "$2,617,500",
-            "current_price": 411.98,
-            "company_name": "The Home Depot, Inc.",
-            "sector": "Unknown",
-            "industry": "Unknown"
-        },
-        "WFC": {
-            "score": -666.5,
-            "unusual_contracts_count": 8,
-            "total_unusual_spent": "$4,510,700",
-            "cumulative_total_spent_calls": "$8,070,700",
-            "cumulative_total_spent_puts": "$965,600",
-            "current_price": 78.8,
-            "company_name": "Wells Fargo & Company",
-            "sector": "Unknown",
-            "industry": "Unknown"
-        },
-        "AAPL": {
-            "score": -682.0,
-            "unusual_contracts_count": 14,
-            "total_unusual_spent": "$24,390,000",
-            "cumulative_total_spent_calls": "$48,852,600",
-            "cumulative_total_spent_puts": "$23,545,400",
-            "current_price": 236.0,
-            "company_name": "Apple Inc.",
-            "sector": "Unknown",
-            "industry": "Unknown"
-        },
-
-# The 'industry' are the arrays within the 'tickers.json' file.  The sectors are obviously the larger objects that hold the arrays of industrys.
+{
+    "top_20_bullish": {},
+    "top_20_bearish": {},
+    "all_tickers": {},
+    "sector_summary": {},
+    "industry_summary": {},
+    "top_bullish_sector": null,
+    "top_bearish_sector": null
+}
