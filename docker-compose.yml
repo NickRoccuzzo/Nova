@@ -132,4 +132,5 @@ services:
 
 volumes:
   nova_shared_data:
-    driver: local  # ✅ Corrected and simplified
+    name: nova_shared_data
+    driver: local
