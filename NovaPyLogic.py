@@ -117,34 +117,6 @@ def gather_options_data(ticker):
         logging.error(f"Failed to fetch data for {ticker}: {e}")
         current_price, company_name = 0.0, "Unknown"
 
-    def process_option_data(option_data, max_strike_dicts, option_type):
-        for date, df in option_data.items():
-            if not df.empty:
-                sorted_data = df.sort_values(by='openInterest', ascending=False)
-
-                max_strike_dicts[0][date] = sorted_data.iloc[0]['strike'] if len(sorted_data) > 0 else 0
-                max_strike_dicts[1][date] = sorted_data.iloc[1]['strike'] if len(sorted_data) > 1 else 0
-                max_strike_dicts[2][date] = sorted_data.iloc[2]['strike'] if len(sorted_data) > 2 else 0
-
-                # ✅ Fix idxmax() bug: Check if DataFrame is empty before calling idxmax()
-                if not df.empty and df['volume'].notna().any():
-                    highest_volume_idx = df['volume'].idxmax()
-                    highest_volume = df.loc[highest_volume_idx]
-                    total_spent = highest_volume['volume'] * highest_volume['lastPrice'] * 100
-                    formatted_spent = format_dollar_amount(total_spent)
-
-                    unusual = highest_volume['volume'] > highest_volume['openInterest']
-
-                    top_volume_contracts.append({
-                        'type': option_type,
-                        'strike': highest_volume['strike'],
-                        'volume': highest_volume['volume'],
-                        'openInterest': highest_volume['openInterest'],
-                        'date': date,
-                        'total_spent': formatted_spent,
-                        'unusual': unusual
-                    })
-
     process_option_data(calls_data, [max_strike_calls, second_max_strike_calls, third_max_strike_calls], "CALL")
     process_option_data(puts_data, [max_strike_puts, second_max_strike_puts, third_max_strike_puts], "PUT")
 
@@ -159,6 +131,30 @@ def gather_options_data(ticker):
             else:
                 avg_strike[date] = np.nan
 
+    # ✅ Get sector from the container's environment variable
+    sector = os.getenv("SECTOR", "Unknown")
+
+    # ✅ Find the industry dynamically from `tickers.json` for the given sector
+    industry = "Unknown"
+    tickers_mapping_file = os.path.join(TICKER_DIR, "tickers.json")
+
+    try:
+        with open(tickers_mapping_file, "r") as f:
+            tickers_mapping = json.load(f)
+
+        # ✅ Get the industries for the current sector
+        sector_data = tickers_mapping.get(sector, {})
+
+        # ✅ Loop through industries to find where the ticker exists
+        for industry_name, tickers_list in sector_data.items():
+            if ticker in tickers_list:
+                industry = industry_name
+                break  # ✅ Stop searching once we find the industry
+
+    except Exception as e:
+        logging.error(f"Error reading {tickers_mapping_file}: {e}")
+
+    # ✅ Update the final result dictionary
     return {
         "calls_oi": calls_oi,
         "puts_oi": puts_oi,
@@ -171,5 +167,8 @@ def gather_options_data(ticker):
         "avg_strike": avg_strike,
         "top_volume_contracts": top_volume_contracts,
         "current_price": current_price,
-        "company_name": company_name
+        "company_name": company_name,
+        "sector": sector,   # ✅ Now directly included
+        "industry": industry  # ✅ Dynamically assigned
     }
+
