@@ -1,124 +1,43 @@
-Creating worker_healthcare             ... done
-Creating worker_real_estate            ... done
-Creating worker_consumer_cyclical      ... done
-Creating worker_financials             ... done
-Creating worker_communication_services ... done
-Creating analysis_container            ... done
-Attaching to worker_utilities, worker_technology, worker_energy, worker_consumer_defensive, worker_basic_materials, worker_financials, worker_industrials, worker_communication_services, worker_consumer_cyclical, worker_healthcare, worker_real_estate, analysis_container
-worker_basic_materials    | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_basic_materials    |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_communication_services | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_communication_services |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_basic_materials    | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_basic_materials    |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_consumer_defensive | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_consumer_defensive |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_communication_services exited with code 0
-worker_basic_materials exited with code 0
-worker_consumer_cyclical exited with code 0
-worker_energy exited with code 0
-worker_consumer_defensive exited with code 0
-analysis_container        | python: can't open file '/app/analysis.py': [Errno 2] No such file or directory
-worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_financials exited with code 0
-worker_technology         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_technology         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_technology         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_technology         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_utilities          | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_utilities          |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_technology exited with code 0
-worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_utilities          | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_utilities          |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_utilities exited with code 0
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_real_estate        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_real_estate        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_industrials        | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_industrials        |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_real_estate exited with code 0
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_industrials exited with code 0
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare         | /app/NovaPyLogic.py:133: FutureWarning: The behavior of Series.idxmax with all-NA values, or any-NA and skipna=False, is deprecated. In a future version this will raise ValueError
-worker_healthcare         |   highest_volume = df.loc[df['volume'].idxmax()]
-worker_healthcare exited with code 0
-analysis_container exited with code 2
+# The 'summary_analysis2.json' file finally got created, and here's where I found it:
+
+root@admin01-VMware-Virtual-Platform:/var/lib/docker/volumes/nova_nova_shared_data/_data/nova_analysis# 
+
+# However, after checking 'summary_analysis2.json', I noticed there were some parts that were not filled in/incomplete with "Unknown" for certain values, this could be due to being throttled or rate-limited from concurrent futures.  It would behoove us to backoff exponentially (if that's not already configured) and add in an extra sleep time.  Because we pull the data exponentially faster now, we can wait a few seconds in between tickers
+
+# Here's an example of what I mean by 'not filled in'/'incomplete':
+
+        "HD": {
+            "score": -567.5,
+            "unusual_contracts_count": 8,
+            "total_unusual_spent": "$2,336,200",
+            "cumulative_total_spent_calls": "$2,826,800",
+            "cumulative_total_spent_puts": "$2,617,500",
+            "current_price": 411.98,
+            "company_name": "The Home Depot, Inc.",
+            "sector": "Unknown",
+            "industry": "Unknown"
+        },
+        "WFC": {
+            "score": -666.5,
+            "unusual_contracts_count": 8,
+            "total_unusual_spent": "$4,510,700",
+            "cumulative_total_spent_calls": "$8,070,700",
+            "cumulative_total_spent_puts": "$965,600",
+            "current_price": 78.8,
+            "company_name": "Wells Fargo & Company",
+            "sector": "Unknown",
+            "industry": "Unknown"
+        },
+        "AAPL": {
+            "score": -682.0,
+            "unusual_contracts_count": 14,
+            "total_unusual_spent": "$24,390,000",
+            "cumulative_total_spent_calls": "$48,852,600",
+            "cumulative_total_spent_puts": "$23,545,400",
+            "current_price": 236.0,
+            "company_name": "Apple Inc.",
+            "sector": "Unknown",
+            "industry": "Unknown"
+        },
+
+# The 'industry' are the arrays within the 'tickers.json' file.  The sectors are obviously the larger objects that hold the arrays of industrys.
