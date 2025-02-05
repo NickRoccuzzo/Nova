@@ -1,9 +1,2 @@
-{
-    "top_20_bullish": {},
-    "top_20_bearish": {},
-    "all_tickers": {},
-    "sector_summary": {},
-    "industry_summary": {},
-    "top_bullish_sector": null,
-    "top_bearish_sector": null
-}
+# Use social media sentiment score somehow -- maybe an X API ?  Find free sources if you can
+# Earnings --> Maybe avoid these for now
