@@ -614,20 +614,39 @@ for ticker, data in ticker_results.items():
     data["cumulative_total_spent_calls"] = format_money(data["cumulative_total_spent_calls"])
     data["cumulative_total_spent_puts"] = format_money(data["cumulative_total_spent_puts"])
 
-# Sort tickers & determine top sectors
-sorted_ticker_results = dict(sorted(ticker_results.items(), key=lambda item: item[1]["score"], reverse=True))
-top_20_bullish = dict(list(sorted_ticker_results.items())[:40])
-top_20_bearish = dict(list(sorted_ticker_results.items())[-40:])
+# 1) Sort before formatting
+#    Sort by "cumulative_total_spent_calls" descending
+sorted_by_calls = sorted(
+    ticker_results.items(), 
+    key=lambda item: item[1]["cumulative_total_spent_calls"],  # numeric comparison
+    reverse=True
+)
+top_10_bullish = dict(sorted_by_calls[:10])
 
-sorted_sectors = sorted(sector_aggregates.items(), key=lambda item: item[1]["average_score"], reverse=True)
-top_bullish_sector = sorted_sectors[0] if sorted_sectors else None
-top_bearish_sector = sorted_sectors[-1] if sorted_sectors else None
+#    Sort by "cumulative_total_spent_puts" descending
+sorted_by_puts = sorted(
+    ticker_results.items(),
+    key=lambda item: item[1]["cumulative_total_spent_puts"],  # numeric comparison
+    reverse=True
+)
+top_10_bearish = dict(sorted_by_puts[:10])
 
-# Save final results
+# (Optional) If you still want the old "score-based" sorting for all_tickers:
+sorted_ticker_results = dict(
+    sorted(ticker_results.items(), key=lambda item: item[1]["score"], reverse=True)
+)
+
+# 2) Now format monetary fields AFTER we’ve done the numeric sort
+for ticker, data in ticker_results.items():
+    data["total_unusual_spent"] = format_money(data["total_unusual_spent"])
+    data["cumulative_total_spent_calls"] = format_money(data["cumulative_total_spent_calls"])
+    data["cumulative_total_spent_puts"] = format_money(data["cumulative_total_spent_puts"])
+
+# 3) Build your summary results
 summary_results = {
-    "top_20_bullish": top_20_bullish,
-    "top_20_bearish": top_20_bearish,
-    "all_tickers": sorted_ticker_results,
+    "top_10_bullish_by_calls": top_10_bullish,
+    "top_10_bearish_by_puts": top_10_bearish,
+    "all_tickers": sorted_ticker_results,   # still sorted by score if you like
     "sector_summary": sector_aggregates,
     "industry_summary": industry_aggregates,
     "top_bullish_sector": top_bullish_sector,
@@ -640,9 +659,3 @@ with open(summary_file, "w") as outfile:
 
 logging.info("Scoring Complete")
 logging.info(f"Results saved to: {summary_file}")
-
-# Finally, write out tracked_changes.json
-with open(TRACKED_CHANGES_FILE, "w") as outfile:
-    json.dump(tracked_changes, outfile, indent=4)
-
-logging.info(f"Tracked changes saved to: {TRACKED_CHANGES_FILE}")
