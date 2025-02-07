@@ -136,11 +136,11 @@ def analyze_ticker_json(file_path):
         third_put = third_max_strike_puts.get(date, 0)
 
         if current_price < max_call:
-            total_score += 1
+            total_score += 0.5
         if current_price < max_put:
             total_score += 1
         if current_price > max_call:
-            total_score -= 1
+            total_score -= 0.5
         if current_price > max_put:
             total_score -= 1
 
@@ -174,8 +174,8 @@ def analyze_ticker_json(file_path):
     # ----- Top Volume Contracts Scoring & Metrics -----
     call_unusual_counter = 0
     put_unusual_counter = 0
-    call_unusual_bonus = [25, 50, 75, 100, 125, 150, 125, 150, 200, 250, 275, 300]
-    put_unusual_bonus = [-25, -50, -75, -100, -125, -150, -125, -150, -200, -250, -275, -300]
+    call_unusual_bonus = [20, 40, 70, 85, 110, 130, 145, 175, 200, 250, 275, 300]
+    put_unusual_bonus = [-20, -40, -70, -85, -110, -130, -145, -175, -200, -250, -275, -300]
 
     for contract in top_volume_contracts:
         contract_type = contract.get("type", "")
@@ -208,48 +208,60 @@ def analyze_ticker_json(file_path):
 
         if contract_type == "CALL":
             if volume > open_interest:
-                total_score += 2
-            if strike_pct_diff >= 20:
                 total_score += 3
-            elif strike_pct_diff >= 15:
+            if strike_pct_diff >= 20:
                 total_score += 2
-            elif strike_pct_diff >= 10:
+            elif strike_pct_diff >= 15:
                 total_score += 1
+            elif strike_pct_diff >= 10:
+                total_score += 0.5
             elif strike_pct_diff >= 5:
                 total_score += 0.5
+            if spent > 250_000:
+                total_score += 0.25
             if spent > 500_000:
                 total_score += 0.5
             if spent > 1_000_000:
                 total_score += 1
-            if spent > 5_000_000:
+            if spent > 2_000_000:
                 total_score += 2
-            if spent > 10_000_000:
+            if spent > 2_500_000:
+                total_score += 2.5
+            if spent > 5_000_000:
                 total_score += 3
+            if spent > 10_000_000:
+                total_score += 5
 
         elif contract_type == "PUT":
             if volume > open_interest:
-                total_score -= 2
-            if strike_pct_diff <= -20:
                 total_score -= 3
-            elif strike_pct_diff <= -15:
+            if strike_pct_diff <= -20:
                 total_score -= 2
-            elif strike_pct_diff <= -10:
+            elif strike_pct_diff <= -15:
                 total_score -= 1
+            elif strike_pct_diff <= -10:
+                total_score -= 0.5
             elif strike_pct_diff <= -5:
                 total_score -= 0.5
+            if spent > 250_000:
+                total_score -= 0.25
             if spent > 500_000:
                 total_score -= 0.5
             if spent > 1_000_000:
                 total_score -= 1
-            if spent > 5_000_000:
+            if spent > 2_000_000:
                 total_score -= 2
-            if spent > 10_000_000:
+            if spent > 2_500_000:
+                total_score -= 2.5
+            if spent > 5_000_000:
                 total_score -= 3
+            if spent > 10_000_000:
+                total_score -= 5
 
     if cumulative_total_spent_calls > cumulative_total_spent_puts:
-        total_score += 5
+        total_score += 3
     elif cumulative_total_spent_calls < cumulative_total_spent_puts:
-        total_score -= 5
+        total_score -= 3
 
     result = {
         "score": total_score,
