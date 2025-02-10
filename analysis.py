@@ -33,8 +33,11 @@ ticker_results = {}
 tracked_changes = {}
 
 def format_money(amount):
-    """Format a monetary value with a dollar sign, commas, and no decimals."""
-    return f"${amount:,.0f}"
+    try:
+        amount = float(amount)  # Convert to a number (handles both int and str)
+        return f"${amount:,.0f}"  # Format as currency (e.g., "$1,000")
+    except ValueError:
+        return "Invalid Amount"  # Handle cases where conversion fails
 
 def parse_total_spent(total_spent_str: str) -> float:
     """
