@@ -32,30 +32,42 @@ ticker_results = {}
 # Dictionary to store all changes for every ticker
 tracked_changes = {}
 
-def format_money(amount):
-    try:
-        amount = float(amount)  # Convert to a number (handles both int and str)
-        return f"${amount:,.0f}"  # Format as currency (e.g., "$1,000")
-    except ValueError:
-        return "Invalid Amount"  # Handle cases where conversion fails
-
 def parse_total_spent(total_spent_str: str) -> float:
     """
     Convert a monetary string (e.g., '$30.8K', '$1.2M', or '$564.00') to a float value.
     """
     try:
-        value_str = total_spent_str.replace("$", "").strip()
+        value_str = total_spent_str.replace("$", "").replace(",", "").strip()
         multiplier = 1
-        if "K" in value_str:
+
+        if value_str.endswith("K"):
             multiplier = 1_000
-            value_str = value_str.replace("K", "")
-        elif "M" in value_str:
+            value_str = value_str[:-1]  # Remove 'K'
+        elif value_str.endswith("M"):
             multiplier = 1_000_000
-            value_str = value_str.replace("M", "")
-        return float(value_str) * multiplier
+            value_str = value_str[:-1]  # Remove 'M'
+        elif value_str.endswith("B"):
+            multiplier = 1_000_000_000
+            value_str = value_str[:-1]  # Remove 'B'
+
+        return float(value_str) * multiplier  # Convert to float and apply multiplier
     except Exception as e:
         logging.error(f"Error parsing total_spent value '{total_spent_str}': {e}")
-        return 0.0
+        return 0.0  # Return 0 if parsing fails
+
+def format_money(amount):
+    """
+    Format a monetary value as a string with a dollar sign, commas, and no decimals.
+    This function assumes the input is already a float or int.
+    """
+    try:
+        if not isinstance(amount, (int, float)):
+            amount = parse_total_spent(str(amount))  # Convert before formatting
+
+        return f"${amount:,.0f}"  # Format with commas and dollar sign
+    except (ValueError, TypeError):
+        return "Invalid Amount"  # Handle failed conversions
+
 
 # ----- WEIGHTED OPEN INTEREST SCORING -----
 def weighted_open_interest_scoring(calls_oi: Dict[str, float], puts_oi: Dict[str, float]) -> float:
