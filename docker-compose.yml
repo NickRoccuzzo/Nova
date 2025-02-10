@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   basic_materials:
     build: .
@@ -9,6 +7,11 @@ services:
       - SECTOR=Basic_Materials
     volumes:
       - nova_shared_data:/shared_data
+    healthcheck:
+      test: ["CMD", "ls", "-A", "/shared_data"]
+      interval: 10s
+      retries: 3
+      start_period: 5s
 
   communication_services:
     build: .
@@ -18,6 +21,11 @@ services:
       - SECTOR=Communication_Services
     volumes:
       - nova_shared_data:/shared_data
+    healthcheck:
+      test: ["CMD", "ls", "-A", "/shared_data"]
+      interval: 10s
+      retries: 3
+      start_period: 5s
 
   consumer_cyclical:
     build: .
@@ -27,6 +35,11 @@ services:
       - SECTOR=Consumer_Cyclical
     volumes:
       - nova_shared_data:/shared_data
+    healthcheck:
+      test: ["CMD", "ls", "-A", "/shared_data"]
+      interval: 10s
+      retries: 3
+      start_period: 5s
 
   consumer_defensive:
     build: .
@@ -36,6 +49,11 @@ services:
       - SECTOR=Consumer_Defensive
     volumes:
       - nova_shared_data:/shared_data
+    healthcheck:
+      test: ["CMD", "ls", "-A", "/shared_data"]
+      interval: 10s
+      retries: 3
+      start_period: 5s
 
   energy:
     build: .
@@ -45,6 +63,11 @@ services:
       - SECTOR=Energy
     volumes:
       - nova_shared_data:/shared_data
+    healthcheck:
+      test: ["CMD", "ls", "-A", "/shared_data"]
+      interval: 10s
+      retries: 3
+      start_period: 5s
 
   financials:
     build: .
@@ -54,6 +77,11 @@ services:
       - SECTOR=Financials
     volumes:
       - nova_shared_data:/shared_data
+    healthcheck:
+      test: ["CMD", "ls", "-A", "/shared_data"]
+      interval: 10s
+      retries: 3
+      start_period: 5s
 
   healthcare:
     build: .
@@ -63,6 +91,11 @@ services:
       - SECTOR=Healthcare
     volumes:
       - nova_shared_data:/shared_data
+    healthcheck:
+      test: ["CMD", "ls", "-A", "/shared_data"]
+      interval: 10s
+      retries: 3
+      start_period: 5s
 
   industrials:
     build: .
@@ -72,6 +105,11 @@ services:
       - SECTOR=Industrials
     volumes:
       - nova_shared_data:/shared_data
+    healthcheck:
+      test: ["CMD", "ls", "-A", "/shared_data"]
+      interval: 10s
+      retries: 3
+      start_period: 5s
 
   real_estate:
     build: .
@@ -81,6 +119,11 @@ services:
       - SECTOR=Real_Estate
     volumes:
       - nova_shared_data:/shared_data
+    healthcheck:
+      test: ["CMD", "ls", "-A", "/shared_data"]
+      interval: 10s
+      retries: 3
+      start_period: 5s
 
   technology:
     build: .
@@ -90,6 +133,11 @@ services:
       - SECTOR=Technology
     volumes:
       - nova_shared_data:/shared_data
+    healthcheck:
+      test: ["CMD", "ls", "-A", "/shared_data"]
+      interval: 10s
+      retries: 3
+      start_period: 5s
 
   utilities:
     build: .
@@ -99,6 +147,11 @@ services:
       - SECTOR=Utilities
     volumes:
       - nova_shared_data:/shared_data
+    healthcheck:
+      test: ["CMD", "ls", "-A", "/shared_data"]
+      interval: 10s
+      retries: 3
+      start_period: 5s
 
   analysis:
     build: .
@@ -107,28 +160,28 @@ services:
     volumes:
       - nova_shared_data:/shared_data
     depends_on:
-      technology:
-        condition: service_completed_successfully
-      healthcare:
-        condition: service_completed_successfully
-      financials:
-        condition: service_completed_successfully
       basic_materials:
-        condition: service_completed_successfully
+        condition: service_healthy
       communication_services:
-        condition: service_completed_successfully
+        condition: service_healthy
       consumer_cyclical:
-        condition: service_completed_successfully
+        condition: service_healthy
       consumer_defensive:
-        condition: service_completed_successfully
+        condition: service_healthy
       energy:
-        condition: service_completed_successfully
+        condition: service_healthy
+      financials:
+        condition: service_healthy
+      healthcare:
+        condition: service_healthy
       industrials:
-        condition: service_completed_successfully
+        condition: service_healthy
       real_estate:
-        condition: service_completed_successfully
+        condition: service_healthy
+      technology:
+        condition: service_healthy
       utilities:
-        condition: service_completed_successfully
+        condition: service_healthy
 
 volumes:
   nova_shared_data:
