@@ -645,6 +645,11 @@ for ticker, data in ticker_results.items():
     data["cumulative_total_spent_calls"] = format_money(data["cumulative_total_spent_calls"])
     data["cumulative_total_spent_puts"] = format_money(data["cumulative_total_spent_puts"])
 
+# Determine the most bullish and bearish sectors
+top_bullish_sector = max(sector_aggregates, key=lambda x: sector_aggregates[x]["average_score"], default="Unknown")
+top_bearish_sector = min(sector_aggregates, key=lambda x: sector_aggregates[x]["average_score"], default="Unknown")
+
+
 # 3) Build your summary results
 summary_results = {
     "top_10_bullish_by_calls": top_10_bullish,
