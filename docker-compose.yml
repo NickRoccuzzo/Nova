@@ -102,7 +102,7 @@ services:
 
   analysis:
     build: .
-    command: ["sh", "-c", "python analysis.py && exit"]
+    command: ["sh", "-c", "export RUN_ANALYSIS=true && python analysis.py && exit"]
     container_name: analysis_container
     volumes:
       - nova_shared_data:/shared_data
