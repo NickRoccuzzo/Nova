@@ -571,106 +571,16 @@ for ticker_folder in os.listdir(BASE_FOLDER):
                 except Exception as e:
                     logging.error(f"Error copying {file_path} to {old_file_path}: {e}")
 
-# -------------------------
-# AGGREGATE DATA BY SECTOR & INDUSTRY
-# -------------------------
-sector_aggregates = {}
-industry_aggregates = {}
-
-for ticker, data in ticker_results.items():
-    sector = data.get("sector", "Unknown")
-    industry = data.get("industry", "Unknown")
-
-    if sector not in sector_aggregates:
-        sector_aggregates[sector] = {
-            "total_score": 0,
-            "ticker_count": 0,
-            "total_unusual_spent": 0,
-            "total_calls_spent": 0,
-            "total_puts_spent": 0
-        }
-    sector_aggregates[sector]["total_score"] += data["score"]
-    sector_aggregates[sector]["ticker_count"] += 1
-    sector_aggregates[sector]["total_unusual_spent"] += data["total_unusual_spent"]
-    sector_aggregates[sector]["total_calls_spent"] += data["cumulative_total_spent_calls"]
-    sector_aggregates[sector]["total_puts_spent"] += data["cumulative_total_spent_puts"]
-
-    industry_key = f"{sector}|{industry}"
-    if industry_key not in industry_aggregates:
-        industry_aggregates[industry_key] = {
-            "total_score": 0,
-            "ticker_count": 0,
-            "total_unusual_spent": 0,
-            "total_calls_spent": 0,
-            "total_puts_spent": 0
-        }
-    industry_aggregates[industry_key]["total_score"] += data["score"]
-    industry_aggregates[industry_key]["ticker_count"] += 1
-    industry_aggregates[industry_key]["total_unusual_spent"] += data["total_unusual_spent"]
-    industry_aggregates[industry_key]["total_calls_spent"] += data["cumulative_total_spent_calls"]
-    industry_aggregates[industry_key]["total_puts_spent"] += data["cumulative_total_spent_puts"]
-
-# Compute averages and format totals
-for sector, agg in sector_aggregates.items():
-    agg["average_score"] = agg["total_score"] / agg["ticker_count"] if agg["ticker_count"] > 0 else 0
-    agg["formatted_total_unusual_spent"] = format_money(agg["total_unusual_spent"])
-    agg["formatted_total_calls_spent"] = format_money(agg["total_calls_spent"])
-    agg["formatted_total_puts_spent"] = format_money(agg["total_puts_spent"])
-
-for industry_key, agg in industry_aggregates.items():
-    agg["average_score"] = agg["total_score"] / agg["ticker_count"] if agg["ticker_count"] > 0 else 0
-    agg["formatted_total_unusual_spent"] = format_money(agg["total_unusual_spent"])
-    agg["formatted_total_calls_spent"] = format_money(agg["total_calls_spent"])
-    agg["formatted_total_puts_spent"] = format_money(agg["total_puts_spent"])
-
-# Format monetary fields in ticker_results
-for ticker, data in ticker_results.items():
-    data["total_unusual_spent"] = format_money(data["total_unusual_spent"])
-    data["cumulative_total_spent_calls"] = format_money(data["cumulative_total_spent_calls"])
-    data["cumulative_total_spent_puts"] = format_money(data["cumulative_total_spent_puts"])
-
-# 1) Sort before formatting
-#    Sort by "cumulative_total_spent_calls" descending
-sorted_by_calls = sorted(
-    ticker_results.items(), 
-    key=lambda item: item[1]["cumulative_total_spent_calls"],  # numeric comparison
-    reverse=True
-)
-top_10_bullish = dict(sorted_by_calls[:10])
-
-#    Sort by "cumulative_total_spent_puts" descending
-sorted_by_puts = sorted(
-    ticker_results.items(),
-    key=lambda item: item[1]["cumulative_total_spent_puts"],  # numeric comparison
-    reverse=True
-)
-top_10_bearish = dict(sorted_by_puts[:10])
-
-# (Optional) If you still want the old "score-based" sorting for all_tickers:
-sorted_ticker_results = dict(
-    sorted(ticker_results.items(), key=lambda item: item[1]["score"], reverse=True)
-)
-
-# 2) Now format monetary fields AFTER we’ve done the numeric sort
-for ticker, data in ticker_results.items():
-    data["total_unusual_spent"] = format_money(data["total_unusual_spent"])
-    data["cumulative_total_spent_calls"] = format_money(data["cumulative_total_spent_calls"])
-    data["cumulative_total_spent_puts"] = format_money(data["cumulative_total_spent_puts"])
-
-# Determine the most bullish and bearish sectors
-top_bullish_sector = max(sector_aggregates, key=lambda x: sector_aggregates[x]["average_score"], default="Unknown")
-top_bearish_sector = min(sector_aggregates, key=lambda x: sector_aggregates[x]["average_score"], default="Unknown")
-
 
 # 3) Build your summary results
 summary_results = {
-    "top_10_bullish_by_calls": top_10_bullish,
-    "top_10_bearish_by_puts": top_10_bearish,
+#    "top_10_bullish_by_calls": top_10_bullish,
+#    "top_10_bearish_by_puts": top_10_bearish,
     "all_tickers": sorted_ticker_results,   # still sorted by score if you like
-    "sector_summary": sector_aggregates,
-    "industry_summary": industry_aggregates,
-    "top_bullish_sector": top_bullish_sector,
-    "top_bearish_sector": top_bearish_sector
+#    "sector_summary": sector_aggregates,
+#    "industry_summary": industry_aggregates,
+#    "top_bullish_sector": top_bullish_sector,
+#    "top_bearish_sector": top_bearish_sector
 }
 
 summary_file = os.path.join(OUTPUT_FOLDER, "summary_results2.json")
