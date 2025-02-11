@@ -57,16 +57,27 @@ def parse_total_spent(total_spent_str: str) -> float:
 
 def format_money(amount):
     """
-    Format a monetary value as a string with a dollar sign, commas, and no decimals.
-    This function assumes the input is already a float or int.
+    Format a monetary value as a string with a dollar sign, commas,
+    and:
+      - .0 if it's effectively an integer (e.g. 695135.0 -> "$695,135.0")
+      - .2f if it has a fractional component (e.g. 28.47 -> "$28.47")
     """
-    try:
-        if not isinstance(amount, (int, float)):
-            amount = parse_total_spent(str(amount))  # Convert before formatting
 
-        return f"${amount:,.0f}"  # Format with commas and dollar sign
+    try:
+        # Convert non-numeric inputs via parse_total_spent if needed
+        if not isinstance(amount, (int, float)):
+            amount = parse_total_spent(str(amount))
+
+        # Check if it's effectively an integer (allowing tiny floating precision errors)
+        if abs(amount - round(amount)) < 1e-9:
+            # Format with 1 decimal place -> .0
+            return f"${amount:,.1f}"
+        else:
+            # Otherwise format with two decimals
+            return f"${amount:,.2f}"
     except (ValueError, TypeError):
-        return "Invalid Amount"  # Handle failed conversions
+        return "Invalid Amount"
+
 
 
 # ----- WEIGHTED OPEN INTEREST SCORING -----
@@ -572,10 +583,17 @@ for ticker_folder in os.listdir(BASE_FOLDER):
                     logging.error(f"Error copying {file_path} to {old_file_path}: {e}")
 
 
-# Optionally still sort the tickers by score (or any field):
+# OPTIONAL: Sort by score if you want
 sorted_ticker_results = dict(
     sorted(ticker_results.items(), key=lambda item: item[1]["score"], reverse=True)
 )
+
+# Format monetary fields as requested
+for ticker, data in sorted_ticker_results.items():
+    data["total_unusual_spent"] = format_money(data["total_unusual_spent"])
+    data["cumulative_total_spent_calls"] = format_money(data["cumulative_total_spent_calls"])
+    data["cumulative_total_spent_puts"] = format_money(data["cumulative_total_spent_puts"])
+    data["current_price"] = format_money(data["current_price"])
 
 summary_results = {
     "all_tickers": sorted_ticker_results
