@@ -572,9 +572,13 @@ for ticker_folder in os.listdir(BASE_FOLDER):
                     logging.error(f"Error copying {file_path} to {old_file_path}: {e}")
 
 
-# 3) Build your summary results
+# Optionally still sort the tickers by score (or any field):
+sorted_ticker_results = dict(
+    sorted(ticker_results.items(), key=lambda item: item[1]["score"], reverse=True)
+)
+
 summary_results = {
-    "all_tickers": sorted_ticker_results   # still sorted by score if you like
+    "all_tickers": sorted_ticker_results
 }
 
 summary_file = os.path.join(OUTPUT_FOLDER, "summary_results2.json")
