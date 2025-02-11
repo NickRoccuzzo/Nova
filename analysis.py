@@ -574,13 +574,7 @@ for ticker_folder in os.listdir(BASE_FOLDER):
 
 # 3) Build your summary results
 summary_results = {
-#    "top_10_bullish_by_calls": top_10_bullish,
-#    "top_10_bearish_by_puts": top_10_bearish,
     "all_tickers": sorted_ticker_results   # still sorted by score if you like
-#    "sector_summary": sector_aggregates,
-#    "industry_summary": industry_aggregates,
-#    "top_bullish_sector": top_bullish_sector,
-#    "top_bearish_sector": top_bearish_sector
 }
 
 summary_file = os.path.join(OUTPUT_FOLDER, "summary_results2.json")
