@@ -74,7 +74,7 @@ def process_ticker(ticker):
         logging.error(f"Failed processing {ticker}: {e}")
 
     # Add a delay to help avoid rate limiting.
-    time.sleep(3)  # Adjust the delay as needed.
+    time.sleep(5)  # Adjust the delay as needed.
 
 
 def convert_keys_for_json(obj):
