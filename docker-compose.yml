@@ -1,187 +1,202 @@
+version: "3.9"
 services:
+  ############################################################################
+  # GROUP 1
+  ############################################################################
   basic_materials:
     build: .
-    command: ["sh", "-c", "python Nova.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit 0"]
     container_name: worker_basic_materials
     environment:
       - SECTOR=Basic_Materials
     volumes:
       - nova_shared_data:/shared_data
-    healthcheck:
-      test: ["CMD", "ls", "-A", "/shared_data"]
-      interval: 10s
-      retries: 3
-      start_period: 5s
 
   communication_services:
     build: .
-    command: ["sh", "-c", "python Nova.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit 0"]
     container_name: worker_communication_services
     environment:
       - SECTOR=Communication_Services
     volumes:
       - nova_shared_data:/shared_data
-    healthcheck:
-      test: ["CMD", "ls", "-A", "/shared_data"]
-      interval: 10s
-      retries: 3
-      start_period: 5s
 
   consumer_cyclical:
     build: .
-    command: ["sh", "-c", "python Nova.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit 0"]
     container_name: worker_consumer_cyclical
     environment:
       - SECTOR=Consumer_Cyclical
     volumes:
       - nova_shared_data:/shared_data
-    healthcheck:
-      test: ["CMD", "ls", "-A", "/shared_data"]
-      interval: 10s
-      retries: 3
-      start_period: 5s
 
+  # Dummy container that waits for group 1 to succeed
+  group1_done:
+    image: busybox
+    container_name: group1_done
+    depends_on:
+      basic_materials:
+        condition: service_completed_successfully
+      communication_services:
+        condition: service_completed_successfully
+      consumer_cyclical:
+        condition: service_completed_successfully
+    command: ["sh", "-c", "echo 'Group 1 is done'"]
+
+  ############################################################################
+  # GROUP 2
+  ############################################################################
   consumer_defensive:
     build: .
-    command: ["sh", "-c", "python Nova.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit 0"]
     container_name: worker_consumer_defensive
     environment:
       - SECTOR=Consumer_Defensive
     volumes:
       - nova_shared_data:/shared_data
-    healthcheck:
-      test: ["CMD", "ls", "-A", "/shared_data"]
-      interval: 10s
-      retries: 3
-      start_period: 5s
+    depends_on:
+      group1_done:
+        condition: service_completed_successfully
 
   energy:
     build: .
-    command: ["sh", "-c", "python Nova.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit 0"]
     container_name: worker_energy
     environment:
       - SECTOR=Energy
     volumes:
       - nova_shared_data:/shared_data
-    healthcheck:
-      test: ["CMD", "ls", "-A", "/shared_data"]
-      interval: 10s
-      retries: 3
-      start_period: 5s
+    depends_on:
+      group1_done:
+        condition: service_completed_successfully
 
   financials:
     build: .
-    command: ["sh", "-c", "python Nova.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit 0"]
     container_name: worker_financials
     environment:
       - SECTOR=Financials
     volumes:
       - nova_shared_data:/shared_data
-    healthcheck:
-      test: ["CMD", "ls", "-A", "/shared_data"]
-      interval: 10s
-      retries: 3
-      start_period: 5s
+    depends_on:
+      group1_done:
+        condition: service_completed_successfully
 
+  # Dummy container that waits for group 2 to succeed
+  group2_done:
+    image: busybox
+    container_name: group2_done
+    depends_on:
+      consumer_defensive:
+        condition: service_completed_successfully
+      energy:
+        condition: service_completed_successfully
+      financials:
+        condition: service_completed_successfully
+    command: ["sh", "-c", "echo 'Group 2 is done'"]
+
+  ############################################################################
+  # GROUP 3
+  ############################################################################
   healthcare:
     build: .
-    command: ["sh", "-c", "python Nova.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit 0"]
     container_name: worker_healthcare
     environment:
       - SECTOR=Healthcare
     volumes:
       - nova_shared_data:/shared_data
-    healthcheck:
-      test: ["CMD", "ls", "-A", "/shared_data"]
-      interval: 10s
-      retries: 3
-      start_period: 5s
+    depends_on:
+      group2_done:
+        condition: service_completed_successfully
 
   industrials:
     build: .
-    command: ["sh", "-c", "python Nova.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit 0"]
     container_name: worker_industrials
     environment:
       - SECTOR=Industrials
     volumes:
       - nova_shared_data:/shared_data
-    healthcheck:
-      test: ["CMD", "ls", "-A", "/shared_data"]
-      interval: 10s
-      retries: 3
-      start_period: 5s
+    depends_on:
+      group2_done:
+        condition: service_completed_successfully
 
   real_estate:
     build: .
-    command: ["sh", "-c", "python Nova.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit 0"]
     container_name: worker_real_estate
     environment:
       - SECTOR=Real_Estate
     volumes:
       - nova_shared_data:/shared_data
-    healthcheck:
-      test: ["CMD", "ls", "-A", "/shared_data"]
-      interval: 10s
-      retries: 3
-      start_period: 5s
+    depends_on:
+      group2_done:
+        condition: service_completed_successfully
 
+  # Dummy container that waits for group 3 to succeed
+  group3_done:
+    image: busybox
+    container_name: group3_done
+    depends_on:
+      healthcare:
+        condition: service_completed_successfully
+      industrials:
+        condition: service_completed_successfully
+      real_estate:
+        condition: service_completed_successfully
+    command: ["sh", "-c", "echo 'Group 3 is done'"]
+
+  ############################################################################
+  # GROUP 4
+  ############################################################################
   technology:
     build: .
-    command: ["sh", "-c", "python Nova.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit 0"]
     container_name: worker_technology
     environment:
       - SECTOR=Technology
     volumes:
       - nova_shared_data:/shared_data
-    healthcheck:
-      test: ["CMD", "ls", "-A", "/shared_data"]
-      interval: 10s
-      retries: 3
-      start_period: 5s
+    depends_on:
+      group3_done:
+        condition: service_completed_successfully
 
   utilities:
     build: .
-    command: ["sh", "-c", "python Nova.py && exit"]
+    command: ["sh", "-c", "python Nova.py && exit 0"]
     container_name: worker_utilities
     environment:
       - SECTOR=Utilities
     volumes:
       - nova_shared_data:/shared_data
-    healthcheck:
-      test: ["CMD", "ls", "-A", "/shared_data"]
-      interval: 10s
-      retries: 3
-      start_period: 5s
+    depends_on:
+      group3_done:
+        condition: service_completed_successfully
 
+  # Dummy container that waits for group 4 to succeed
+  group4_done:
+    image: busybox
+    container_name: group4_done
+    depends_on:
+      technology:
+        condition: service_completed_successfully
+      utilities:
+        condition: service_completed_successfully
+    command: ["sh", "-c", "echo 'Group 4 is done'"]
+
+  ############################################################################
+  # FINAL ANALYSIS
+  ############################################################################
   analysis:
     build: .
-    command: ["sh", "-c", "export RUN_ANALYSIS=true && python analysis.py && exit"]
     container_name: analysis_container
+    command: ["sh", "-c", "export RUN_ANALYSIS=true && python analysis.py && exit 0"]
     volumes:
       - nova_shared_data:/shared_data
     depends_on:
-      basic_materials:
-        condition: service_healthy
-      communication_services:
-        condition: service_healthy
-      consumer_cyclical:
-        condition: service_healthy
-      consumer_defensive:
-        condition: service_healthy
-      energy:
-        condition: service_healthy
-      financials:
-        condition: service_healthy
-      healthcare:
-        condition: service_healthy
-      industrials:
-        condition: service_healthy
-      real_estate:
-        condition: service_healthy
-      technology:
-        condition: service_healthy
-      utilities:
-        condition: service_healthy
+      group4_done:
+        condition: service_completed_successfully
 
 volumes:
   nova_shared_data:
