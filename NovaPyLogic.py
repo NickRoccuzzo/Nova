@@ -4,6 +4,7 @@ import pandas as pd
 import time
 import numpy as np
 import json
+import random
 import logging
 from datetime import datetime
 import yfinance as yf
@@ -51,22 +52,50 @@ def preprocess_dates(data_dir, file_suffix):
     return dict(sorted(sorted_data.items(), key=lambda x: datetime.strptime(x[0], '%m/%d/%y')))
 
 
+CACHE_FILE = "/shared_data/stock_cache.json"
+
+
+def load_cache():
+    if os.path.exists(CACHE_FILE):
+        with open(CACHE_FILE, "r") as f:
+            return json.load(f)
+    return {}
+
+
+def save_cache():
+    with open(CACHE_FILE, "w") as f:
+        json.dump(stock_cache, f, indent=2)
+
+
+stock_cache = load_cache()  # Load existing cache
+
+
 def fetch_stock_data(ticker):
-    """
-    Fetch stock price data with retries.
-    """
+    """Fetch stock price and company name, caching results."""
+    if ticker in stock_cache:
+        logging.info(f"Using cached stock data for {ticker}")
+        return stock_cache[ticker]
+
     stock = yf.Ticker(ticker)
 
-    for attempt in range(5):  
+    for attempt in range(5):
         try:
+            time.sleep(random.uniform(0.5, 1.5))  # Random delay before API call
             current_data = stock.history(period="1d")
+            company_name = stock.info.get('longName', 'N/A')
+
             if not current_data.empty:
-                return current_data['Close'].iloc[-1]
+                stock_price = current_data['Close'].iloc[-1]
+                stock_cache[ticker] = (stock_price, company_name)
+                save_cache()  # Save to disk
+                return stock_price, company_name
         except Exception as e:
             logging.error(f"Attempt {attempt + 1} failed for {ticker}: {e}")
-            time.sleep(2 ** attempt)  
+            time.sleep(2 ** attempt)
 
-    return 0.0   # Default value if all attempts fail
+    logging.warning(f"Failed to fetch stock data for {ticker}")
+    return 0.0, "Unknown"
+
 
 
 def format_dollar_amount(amount):
@@ -113,9 +142,7 @@ def gather_options_data(ticker):
     top_volume_contracts = []
 
     try:
-        stock = yf.Ticker(ticker)
-        current_price = fetch_stock_data(ticker)
-        company_name = stock.info.get('longName', 'N/A')
+        current_price, company_name = fetch_stock_data(ticker)
     except Exception as e:
         logging.error(f"Failed to fetch data for {ticker}: {e}")
         current_price, company_name = 0.0, "Unknown"
