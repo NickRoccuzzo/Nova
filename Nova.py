@@ -1,5 +1,6 @@
 import os
 import json
+import random
 import yfinance as yf
 import numpy as np
 import math
@@ -74,7 +75,7 @@ def process_ticker(ticker):
         logging.error(f"Failed processing {ticker}: {e}")
 
     # Add a delay to help avoid rate limiting.
-    time.sleep(5)  # Adjust the delay as needed.
+    time.sleep(random.uniform(3, 7))  # Randomized delay between 3-7 seconds
 
 
 def convert_keys_for_json(obj):
@@ -92,6 +93,7 @@ def convert_keys_for_json(obj):
     elif isinstance(obj, np.ndarray):
         return obj.tolist()
     return obj
+
 
 
 def main():
