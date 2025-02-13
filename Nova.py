@@ -1,6 +1,5 @@
 import os
 import json
-import random
 import yfinance as yf
 import numpy as np
 import math
@@ -8,6 +7,7 @@ import time
 import logging
 import concurrent.futures  # For parallel execution
 from NovaPyLogic import gather_options_data
+
 
 # Configure logging
 logging.basicConfig(
@@ -75,7 +75,7 @@ def process_ticker(ticker):
         logging.error(f"Failed processing {ticker}: {e}")
 
     # Add a delay to help avoid rate limiting.
-    time.sleep(random.uniform(3, 7))  # Randomized delay between 3-7 seconds
+    time.sleep(5)  # Adjust the delay as needed.
 
 
 def convert_keys_for_json(obj):
@@ -93,7 +93,6 @@ def convert_keys_for_json(obj):
     elif isinstance(obj, np.ndarray):
         return obj.tolist()
     return obj
-
 
 
 def main():
