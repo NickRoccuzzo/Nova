@@ -16,13 +16,13 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
-# Get assigned sector from Docker ENV
+# Get assigned sector from Docker ENV (if a sector isn't assigned, error message will be written) #
 SECTOR = os.getenv("SECTOR")
 
 if not SECTOR:
     raise ValueError("SECTOR environment variable is not set. Each container must be assigned a sector.")
 
-# Load tickers for this sector
+# Load tickers for the assigned sector
 with open("tickers.json", "r") as f:
     tickers_data = json.load(f)
 
@@ -34,14 +34,14 @@ industries = tickers_data[SECTOR]  # Industries within this sector
 
 def save_options_data(ticker):
     """ Retrieves options chain data for a given ticker and stores results as CSV. """
-    base_dir = "/shared_data"  # Use shared Docker volume
-    ticker_dir = os.path.join(base_dir, ticker)
-    os.makedirs(ticker_dir, exist_ok=True)
+    base_folder = "/shared_data"  # Use shared Docker volume
+    ticker_folder = os.path.join(base_folder, ticker)
+    os.makedirs(ticker_folder, exist_ok=True)
 
-    calls_dir = os.path.join(ticker_dir, "CALLS")
-    puts_dir = os.path.join(ticker_dir, "PUTS")
-    os.makedirs(calls_dir, exist_ok=True)
-    os.makedirs(puts_dir, exist_ok=True)
+    calls_folder = os.path.join(ticker_folder, "CALLS")
+    puts_folder = os.path.join(ticker_folder, "PUTS")
+    os.makedirs(calls_folder, exist_ok=True)
+    os.makedirs(puts_folder, exist_ok=True)
 
     stock = yf.Ticker(ticker)
     exp_dates = stock.options
@@ -53,8 +53,8 @@ def save_options_data(ticker):
     for date in exp_dates:
         try:
             opt = stock.option_chain(date)
-            opt.calls.to_csv(os.path.join(calls_dir, f"{date.replace('-', '')}_CALLS.csv"))
-            opt.puts.to_csv(os.path.join(puts_dir, f"{date.replace('-', '')}_PUTS.csv"))
+            opt.calls.to_csv(os.path.join(calls_folder, f"{date.replace('-', '')}_CALLS.csv"))
+            opt.puts.to_csv(os.path.join(puts_folder, f"{date.replace('-', '')}_PUTS.csv"))
         except Exception as e:
             logging.error(f"Error processing {ticker} for expiration {date}: {e}")
 
