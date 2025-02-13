@@ -5,7 +5,6 @@ import numpy as np
 import math
 import time
 import logging
-import concurrent.futures  # For parallel execution
 from NovaPyLogic import gather_options_data
 
 
@@ -96,13 +95,13 @@ def convert_keys_for_json(obj):
 
 
 def main():
-    """ Main execution: Fetches options data for all tickers in this sector in parallel. """
+    """ Main execution: Fetches options data for all tickers in this sector sequentially. """
     all_tickers = [ticker for industry in industries.values() for ticker in industry]
 
-    logging.info(f"Processing {len(all_tickers)} tickers for sector '{SECTOR}'.")
+    logging.info(f"Processing {len(all_tickers)} tickers for sector '{SECTOR}' sequentially.")
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-        executor.map(process_ticker, all_tickers)
+    for ticker in all_tickers:
+        process_ticker(ticker)  # Process tickers one by one
 
     logging.info(f"All tickers in sector '{SECTOR}' processed successfully.")
 
