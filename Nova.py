@@ -76,9 +76,6 @@ def process_ticker(ticker):
     except Exception as e:
         logging.error(f"Failed processing {ticker}: {e}")
 
-    # Add a delay to help avoid rate limiting.
-    time.sleep(random.uniform(3, 7))  # Randomized delay between 3-7 seconds
-
 
 def convert_keys_for_json(obj):
     """ Converts NumPy values into JSON-friendly types. """
@@ -103,7 +100,7 @@ def worker():
         if ticker is None:
             break  # Stop worker
         process_ticker(ticker)
-        time.sleep(random.uniform(5, 10))  # Randomized delay
+        time.sleep(random.uniform(5, 15))  # Randomized delay
         ticker_queue.task_done()
 
 
@@ -115,9 +112,9 @@ def main():
     global ticker_queue
     ticker_queue = queue.Queue()
 
-    # Launch 3 worker threads (instead of 5)
+    # Launch 2 worker threads
     threads = []
-    for _ in range(3):
+    for _ in range(2):
         thread = Thread(target=worker)
         thread.start()
         threads.append(thread)
@@ -130,7 +127,7 @@ def main():
     ticker_queue.join()
 
     # Stop workers
-    for _ in range(3):
+    for _ in range(2):
         ticker_queue.put(None)
     for thread in threads:
         thread.join()
