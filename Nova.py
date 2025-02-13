@@ -1,15 +1,13 @@
 import os
 import json
-import random
 import yfinance as yf
 import numpy as np
 import math
-import queue
-from threading import Thread
 import time
 import logging
 import concurrent.futures  # For parallel execution
 from NovaPyLogic import gather_options_data
+
 
 # Configure logging
 logging.basicConfig(
@@ -77,7 +75,7 @@ def process_ticker(ticker):
         logging.error(f"Failed processing {ticker}: {e}")
 
     # Add a delay to help avoid rate limiting.
-    time.sleep(random.uniform(3, 7))  # Randomized delay between 3-7 seconds
+    time.sleep(5)  # Adjust the delay as needed.
 
 
 def convert_keys_for_json(obj):
@@ -97,43 +95,14 @@ def convert_keys_for_json(obj):
     return obj
 
 
-def worker():
-    while True:
-        ticker = ticker_queue.get()
-        if ticker is None:
-            break  # Stop worker
-        process_ticker(ticker)
-        time.sleep(random.uniform(3, 7))  # Randomized delay
-        ticker_queue.task_done()
-
-
 def main():
-    """ Uses a queue-based threading system to limit request rates """
+    """ Main execution: Fetches options data for all tickers in this sector in parallel. """
     all_tickers = [ticker for industry in industries.values() for ticker in industry]
+
     logging.info(f"Processing {len(all_tickers)} tickers for sector '{SECTOR}'.")
 
-    global ticker_queue
-    ticker_queue = queue.Queue()
-
-    # Launch 3 worker threads (instead of 5)
-    threads = []
-    for _ in range(3):
-        thread = Thread(target=worker)
-        thread.start()
-        threads.append(thread)
-
-    # Add tickers to the queue
-    for ticker in all_tickers:
-        ticker_queue.put(ticker)
-
-    # Wait for all tasks to finish
-    ticker_queue.join()
-
-    # Stop workers
-    for _ in range(3):
-        ticker_queue.put(None)
-    for thread in threads:
-        thread.join()
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        executor.map(process_ticker, all_tickers)
 
     logging.info(f"All tickers in sector '{SECTOR}' processed successfully.")
 
