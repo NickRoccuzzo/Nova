@@ -1,139 +1,210 @@
+
+# -- MODULES -- #
 import os
-import json
-import random
-import yfinance as yf
-import numpy as np
-import math
-import queue
-from threading import Thread
+import pandas as pd
 import time
+import random
+import numpy as np
+import json
 import logging
-import concurrent.futures  # For parallel execution
-from NovaPyLogic import gather_options_data
+from datetime import datetime
+import yfinance as yf
 
 # Configure logging
 logging.basicConfig(
-    filename="nova.log",
+    filename="novapylogic.log",
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
-# Get assigned sector from Docker ENV (if a sector isn't assigned, error message will be written) #
-SECTOR = os.getenv("SECTOR")
-
-if not SECTOR:
-    raise ValueError("SECTOR environment variable is not set. Each container must be assigned a sector.")
-
-# Load tickers for the assigned sector
-with open("tickers.json", "r") as f:
-    tickers_data = json.load(f)
-
-if SECTOR not in tickers_data:
-    raise ValueError(f"Sector '{SECTOR}' not found in tickers.json.")
-
-industries = tickers_data[SECTOR]  # Industries within this sector
+# Use Docker volume path for shared storage
+TICKER_DIR = os.getenv("TICKER_DIR", "/shared_data")
 
 
-def save_options_data(ticker):
-    """ Retrieves options chain data for a given ticker and stores results as CSV. """
-    base_folder = "/shared_data"  # Use shared Docker volume
-    ticker_folder = os.path.join(base_folder, ticker)
-    os.makedirs(ticker_folder, exist_ok=True)
+def preprocess_dates(data_dir, file_suffix):
+    """
+    Preprocess and sort option chain data by expiration dates.
+    """
+    sorted_data = {}
 
-    calls_folder = os.path.join(ticker_folder, "CALLS")
-    puts_folder = os.path.join(ticker_folder, "PUTS")
-    os.makedirs(calls_folder, exist_ok=True)
-    os.makedirs(puts_folder, exist_ok=True)
+    if not os.path.exists(data_dir):
+        logging.warning(f"Directory {data_dir} does not exist. Skipping...")
+        return sorted_data
+
+    for filename in os.listdir(data_dir):
+        if filename.endswith(file_suffix + ".csv"):
+            try:
+                date_str = filename.replace("_", "").split(file_suffix)[0]
+                expiration_date = datetime.strptime(date_str, '%Y%m%d')
+                formatted_date = expiration_date.strftime('%m/%d/%y')
+
+                file_path = os.path.join(data_dir, filename)
+                df = pd.read_csv(file_path)
+
+                if "openInterest" not in df.columns or "strike" not in df.columns:
+                    logging.warning(f"Missing columns in {file_path}. Available: {df.columns}")
+
+                sorted_data[formatted_date] = df
+
+            except ValueError as e:
+                logging.error(f"Error processing {filename}: {e}")
+
+    return dict(sorted(sorted_data.items(), key=lambda x: datetime.strptime(x[0], '%m/%d/%y')))
+
+
+CACHE_FILE = "/shared_data/stock_cache.json"
+
+
+def load_cache():
+    if os.path.exists(CACHE_FILE):
+        with open(CACHE_FILE, "r") as f:
+            return json.load(f)
+    return {}
+
+
+def save_cache():
+    with open(CACHE_FILE, "w") as f:
+        json.dump(stock_cache, f, indent=2)
+
+
+stock_cache = load_cache()  # Load existing cache
+
+
+def fetch_stock_data(ticker):
+    """Fetch stock price and company name, caching only the company name."""
+    if ticker in stock_cache:
+        company_name = stock_cache[ticker]  # Retrieve cached name
+    else:
+        company_name = "Unknown"  # Default if API fails
 
     stock = yf.Ticker(ticker)
-    exp_dates = stock.options
 
-    if not exp_dates:
-        logging.warning(f"No option chain found for {ticker}.")
-        return
-
-    for date in exp_dates:
+    for attempt in range(5):
         try:
-            opt = stock.option_chain(date)
-            opt.calls.to_csv(os.path.join(calls_folder, f"{date.replace('-', '')}_CALLS.csv"))
-            opt.puts.to_csv(os.path.join(puts_folder, f"{date.replace('-', '')}_PUTS.csv"))
+            time.sleep(random.uniform(1.5, 5))  # Random delay before API call
+            current_data = stock.history(period="1d")
+            company_name = stock.info.get('longName', company_name)  # Update if available
+
+            if not current_data.empty:
+                stock_price = current_data['Close'].iloc[-1]  # Don't cache this
+                stock_cache[ticker] = company_name  # Cache only the name
+                save_cache()  # Save updated cache to disk
+                return stock_price, company_name
         except Exception as e:
-            logging.error(f"Error processing {ticker} for expiration {date}: {e}")
+            logging.error(f"Attempt {attempt + 1} failed for {ticker}: {e}")
+            time.sleep(2 ** attempt)  # Exponential backoff
+
+    logging.warning(f"Failed to fetch stock data for {ticker}")
+    return 0.0, company_name  # Return the last known company name
 
 
-def process_ticker(ticker):
-    """Processes a single ticker: downloads CSVs, gathers data, and saves JSON output."""
-    save_options_data(ticker)
+
+
+def format_dollar_amount(amount):
+    """
+    Format numbers into human-readable currency format.
+    """
+    if amount >= 1_000_000_000:
+        return f"${amount / 1_000_000_000:.1f}B"
+    elif amount >= 1_000_000:
+        return f"${amount / 1_000_000:.1f}M"
+    elif amount >= 1_000:
+        return f"${amount / 1_000:.1f}K"
+    else:
+        return f"${amount:.2f}"
+
+
+def gather_options_data(ticker):
+    """
+    Extracts insights from options chain data.
+    """
+    ticker_path = os.path.join(TICKER_DIR, ticker)
+
+    calls_folder = os.path.join(ticker_path, "CALLS")
+    puts_folder = os.path.join(ticker_path, "PUTS")
+
+    if not os.path.exists(calls_folder) or not os.path.exists(puts_folder):
+        logging.warning(f"Missing data for {ticker}. Skipping...")
+        return {}
+
+    calls_data = preprocess_dates(calls_folder, "CALLS")
+    puts_data = preprocess_dates(puts_folder, "PUTS")
+
+    calls_oi = {date: df['openInterest'].sum() for date, df in calls_data.items() if not df.empty}
+    puts_oi = {date: df['openInterest'].sum() for date, df in puts_data.items() if not df.empty}
+    calls_volume = {date: df['volume'].sum() for date, df in calls_data.items() if not df.empty}
+    puts_volume = {date: df['volume'].sum() for date, df in puts_data.items() if not df.empty}
+
+    logging.info(f"Processed OI -> Calls: {calls_oi}, Puts: {puts_oi}")
+    logging.info(f"Processed Volume -> Calls: {calls_volume}, Puts: {puts_volume}")
+
+    max_strike_calls, second_max_strike_calls, third_max_strike_calls = {}, {}, {}
+    max_strike_puts, second_max_strike_puts, third_max_strike_puts = {}, {}, {}
+    avg_strike = {}
+    top_volume_contracts = []
 
     try:
-        data_dict = gather_options_data(ticker)
-        clean_data = convert_keys_for_json(data_dict)
-        output_path = os.path.join("/shared_data", ticker, f"{ticker}_raw.json")
-        with open(output_path, "w") as f_out:
-            json.dump(clean_data, f_out, indent=2)
-        logging.info(f"Successfully processed {ticker}")
+        current_price, company_name = fetch_stock_data(ticker)
     except Exception as e:
-        logging.error(f"Failed processing {ticker}: {e}")
+        logging.error(f"Failed to fetch data for {ticker}: {e}")
+        current_price, company_name = 0.0, "Unknown"
 
+    def process_option_data(option_data, max_strike_dicts, option_type):
+        for date, df in option_data.items():
+            if not df.empty:
+                sorted_data = df.sort_values(by='openInterest', ascending=False)
 
-def convert_keys_for_json(obj):
-    """ Converts NumPy values into JSON-friendly types. """
-    if isinstance(obj, dict):
-        return {str(k): convert_keys_for_json(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [convert_keys_for_json(x) for x in obj]
-    elif isinstance(obj, np.integer):
-        return int(obj)
-    elif isinstance(obj, np.floating):
-        return round(float(obj), 2) if not math.isnan(obj) else None
-    elif isinstance(obj, np.bool_):
-        return bool(obj)
-    elif isinstance(obj, np.ndarray):
-        return obj.tolist()
-    return obj
+                max_strike_dicts[0][date] = sorted_data.iloc[0]['strike'] if len(sorted_data) > 0 else 0
+                max_strike_dicts[1][date] = sorted_data.iloc[1]['strike'] if len(sorted_data) > 1 else 0
+                max_strike_dicts[2][date] = sorted_data.iloc[2]['strike'] if len(sorted_data) > 2 else 0
 
+                # ✅ Fix idxmax() bug: Check if DataFrame is empty before calling idxmax()
+                if not df.empty and df['volume'].notna().any():
+                    highest_volume_idx = df['volume'].idxmax()
+                    highest_volume = df.loc[highest_volume_idx]
+                    total_spent = highest_volume['volume'] * highest_volume['lastPrice'] * 100
+                    formatted_spent = format_dollar_amount(total_spent)
 
-def worker():
-    while True:
-        ticker = ticker_queue.get()
-        if ticker is None:
-            break  # Stop worker
-        process_ticker(ticker)
-        time.sleep(random.uniform(5, 15))  # Randomized delay
-        ticker_queue.task_done()
+                    unusual = highest_volume['volume'] > highest_volume['openInterest']
 
+                    top_volume_contracts.append({
+                        'type': option_type,
+                        'strike': highest_volume['strike'],
+                        'volume': highest_volume['volume'],
+                        'openInterest': highest_volume['openInterest'],
+                        'date': date,
+                        'total_spent': formatted_spent,
+                        'unusual': unusual
+                    })
 
-def main():
-    """ Uses a queue-based threading system to limit request rates """
-    all_tickers = [ticker for industry in industries.values() for ticker in industry]
-    logging.info(f"Processing {len(all_tickers)} tickers for sector '{SECTOR}'.")
+    process_option_data(calls_data, [max_strike_calls, second_max_strike_calls, third_max_strike_calls], "CALL")
+    process_option_data(puts_data, [max_strike_puts, second_max_strike_puts, third_max_strike_puts], "PUT")
 
-    global ticker_queue
-    ticker_queue = queue.Queue()
+    for date in max_strike_calls.keys():
+        if date in max_strike_puts and (calls_oi.get(date, 0) + puts_oi.get(date, 0) > 0):
+            total_oi = calls_oi.get(date, 0) + puts_oi.get(date, 0)
+            if total_oi > 0:
+                avg_strike[date] = (
+                    (max_strike_calls[date] * calls_oi.get(date, 0) +
+                     max_strike_puts[date] * puts_oi.get(date, 0)) / total_oi
+                )
+            else:
+                avg_strike[date] = np.nan
 
-    # Launch 2 worker threads
-    threads = []
-    for _ in range(2):
-        thread = Thread(target=worker)
-        thread.start()
-        threads.append(thread)
-
-    # Add tickers to the queue
-    for ticker in all_tickers:
-        ticker_queue.put(ticker)
-
-    # Wait for all tasks to finish
-    ticker_queue.join()
-
-    # Stop workers
-    for _ in range(2):
-        ticker_queue.put(None)
-    for thread in threads:
-        thread.join()
-
-    logging.info(f"All tickers in sector '{SECTOR}' processed successfully.")
-
-
-if __name__ == "__main__":
-    main()
+    return {
+        "calls_oi": calls_oi,
+        "puts_oi": puts_oi,
+        "calls_volume": calls_volume,
+        "puts_volume": puts_volume,
+        "max_strike_calls": max_strike_calls,
+        "second_max_strike_calls": second_max_strike_calls,
+        "third_max_strike_calls": third_max_strike_calls,
+        "max_strike_puts": max_strike_puts,
+        "second_max_strike_puts": second_max_strike_puts,
+        "third_max_strike_puts": third_max_strike_puts,
+        "avg_strike": avg_strike,
+        "top_volume_contracts": top_volume_contracts,
+        "current_price": current_price,
+        "company_name": company_name
+    }
