@@ -1,13 +1,13 @@
 {
     "Basic_Materials": {
-        "Agricultural_Imports": ["CF", "CTVA", "MOS"],
-        "Aluminum": ["AA"],
+        "Agricultural_Imports": ["CF", "CTVA", "MOS", "FMC"],
+        "Aluminum": ["AA", "CENX"],
         "Building_Materials": ["CRH", "SUM"],
-        "Chemicals": ["ASPI", "CE", "DOW", "HUN", "TROX"],
+        "Chemicals": ["ASPI", "CE", "DOW", "HUN", "OLN", "ORGN", "TROX"],
         "Copper": ["FCX"],
         "Gold": ["CDE", "GORO", "NEM", "NG", "SSRM", "GLD", "GOLD", "GDX"],
         "Silver": ["SLV", "AG"],
-        "Industrial_Metals_and_Mining": ["ABAT", "MP", "UAMY", "RIO"],
+        "Industrial_Metals_and_Mining": ["ABAT", "MP", "UAMY", "RIO", "OMEX"],
         "Precious_Metals_and_Mining": ["HL", "LODE"],
         "Specialty_Chemicals": ["ALB", "APD", "AXTA", "CC", "DD", "ECL", "EMN", "ESI", "GEVO", "IFF", "PPG", "PRM", "SHW"],
         "Steel": ["CLF", "NUE", "STLD", "X"]
