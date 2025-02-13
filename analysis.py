@@ -1,25 +1,27 @@
 import os
-import numpy as np
 import json
 import logging
 import shutil
-import time
+import sqlite3
 from typing import Dict, Any, Optional
 
-# Setup logging
+
+# Setup Logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 # Define folders and files
 BASE_FOLDER = "/shared_data"                       # The shared volume
 TICKERS_MAPPING_FILE = "/shared_data/tickers.json" # Mapping file expected in shared_data
 OUTPUT_FOLDER = "/shared_data/nova_analysis"       # Where to write the final analysis
-TRACKED_CHANGES_FILE = os.path.join(OUTPUT_FOLDER, "tracked_changes.json")  # Consolidated changes
+DATABASE_FILE = "/shared_data/my_analysis.db"
+
 
 # Ensure the output folder exists
 if not os.path.exists(OUTPUT_FOLDER):
     os.makedirs(OUTPUT_FOLDER)
 
-# Failsafe: if tickers.json is not in /shared_data, copy it from /app (assuming it’s there)
+# Failsafe: if tickers.json is not in /shared_data, copy it from /app (assuming it’s there, but it should always be)
 if not os.path.exists(TICKERS_MAPPING_FILE):
     try:
         shutil.copy('/app/tickers.json', TICKERS_MAPPING_FILE)
@@ -29,31 +31,376 @@ if not os.path.exists(TICKERS_MAPPING_FILE):
 
 # Dictionary to store results for each ticker (score, etc.)
 ticker_results = {}
-# Dictionary to store all changes for every ticker
-tracked_changes = {}
+
+
+# -- SQLITE DATABASE SECTION -- #
+
+
+def setup_database(db_file: str):
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS raw_json_data (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ticker TEXT NOT NULL,
+            json_content TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS tracked_changes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ticker TEXT NOT NULL,
+            change_type TEXT NOT NULL,
+            date_key TEXT,
+            old_value TEXT,
+            new_value TEXT,
+            diff TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+
+def fetch_latest_json_for_ticker(db_file: str, ticker: str):
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT json_content
+        FROM raw_json_data
+        WHERE ticker = ?
+        ORDER BY created_at DESC
+        LIMIT 1
+    ''', (ticker,))
+    row = cursor.fetchone()
+    conn.close()
+    if row:
+        return row[0]  # json_content
+    return None
+
+
+def insert_raw_json(db_file: str, ticker: str, json_content: str):
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO raw_json_data (ticker, json_content)
+        VALUES (?, ?)
+    ''', (ticker, json_content))
+    conn.commit()
+    conn.close()
+
+
+def store_tracked_changes(changes: list):
+    """
+    Insert each change record into the 'tracked_changes' table.
+    """
+    if not changes:
+        return
+    conn = sqlite3.connect(DATABASE_FILE)
+    cursor = conn.cursor()
+
+    for change in changes:
+        cursor.execute('''
+            INSERT INTO tracked_changes 
+            (ticker, change_type, date_key, old_value, new_value, diff)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', (
+            change["ticker"],
+            change["change_type"],
+            change.get("date_key", None),
+            change.get("old_value", ""),
+            change.get("new_value", ""),
+            change.get("diff", "")
+        ))
+    conn.commit()
+    conn.close()
+
+
+def store_raw_data_in_db(file_path: str, ticker: str):
+    """
+    Reads the new _raw.json, compares to old data if any,
+    and stores both the new JSON and the tracked changes.
+    """
+    # 1) Parse the new file
+    try:
+        with open(file_path, 'r') as f:
+            new_json_str = f.read()
+        new_data = json.loads(new_json_str)
+    except Exception as e:
+        logging.error(f"Could not read or parse {file_path}: {e}")
+        return
+
+    # 2) Fetch the old data from the DB
+    old_json_str = fetch_latest_json_for_ticker(DATABASE_FILE, ticker)
+    if old_json_str:
+        old_data = json.loads(old_json_str)
+
+        # 3) Compare old vs. new
+        changes = compare_raw_data(old_data, new_data, ticker)
+
+        # 4) Store changes in DB (if any)
+        if changes:  # changes will be a list of dictionary rows
+            store_tracked_changes(changes)
+    else:
+        logging.info(f"No old data found for {ticker}, inserting the new JSON as first record.")
+
+    # 5) Insert the new JSON
+    insert_raw_json(DATABASE_FILE, ticker, new_json_str)
+    logging.info(f"Inserted new raw JSON data for {ticker} into the database.")
+
+
+# -- COMPARISON LOGIC -- #
+
+
+def compare_raw_data(old_data: dict, new_data: dict, ticker: str):
+    """
+    Compare relevant fields in old_data vs. new_data and return
+    a list of 'change' dictionaries, each describing the difference.
+    """
+    changes = []
+
+    # 1) Compare calls_oi, puts_oi, etc. (all dicts keyed by date) for absolute +/- difference
+    date_based_fields = [
+        "calls_oi", "puts_oi",
+        "max_strike_calls", "second_max_strike_calls", "third_max_strike_calls",
+        "max_strike_puts", "second_max_strike_puts", "third_max_strike_puts"
+    ]
+
+    for field_name in date_based_fields:
+        old_dict = old_data.get(field_name, {})
+        new_dict = new_data.get(field_name, {})
+
+        # For each date in the new data, compare old vs new
+        for date_key, new_val in new_dict.items():
+            old_val = old_dict.get(date_key)
+            if old_val is not None and old_val != new_val:
+                diff_num = new_val - old_val
+                # Format difference with sign
+                diff_str = f"{'+' if diff_num >= 0 else ''}{diff_num}"
+
+                changes.append({
+                    "ticker": ticker,
+                    "change_type": field_name,
+                    "date_key": date_key,
+                    "old_value": str(old_val),
+                    "new_value": str(new_val),
+                    "diff": diff_str
+                })
+            elif old_val is None:
+                # This date_key is new in the new_data
+                changes.append({
+                    "ticker": ticker,
+                    "change_type": field_name,
+                    "date_key": date_key,
+                    "old_value": "N/A",
+                    "new_value": str(new_val),
+                    "diff": "NEW"
+                })
+
+        # Also check if something existed in old but not in new
+        for date_key in old_dict.keys():
+            if date_key not in new_dict:
+                old_val = old_dict[date_key]
+                changes.append({
+                    "ticker": ticker,
+                    "change_type": field_name,
+                    "date_key": date_key,
+                    "old_value": str(old_val),
+                    "new_value": "N/A",
+                    "diff": "REMOVED"
+                })
+
+    # 2) Compare avg_strike with percentage changes
+    old_avg = old_data.get("avg_strike", {})
+    new_avg = new_data.get("avg_strike", {})
+    for date_key, new_val in new_avg.items():
+        old_val = old_avg.get(date_key)
+        if old_val is not None and old_val != new_val:
+            if old_val != 0:
+                pct_diff = ((new_val - old_val) / old_val) * 100
+            else:
+                pct_diff = 999.99  # Arbitrary large if old_val is zero
+            diff_str = f"{pct_diff:+.2f}%"
+            changes.append({
+                "ticker": ticker,
+                "change_type": "avg_strike",
+                "date_key": date_key,
+                "old_value": f"{old_val:.2f}",
+                "new_value": f"{new_val:.2f}",
+                "diff": diff_str
+            })
+        elif old_val is None:
+            # new date in avg_strike
+            changes.append({
+                "ticker": ticker,
+                "change_type": "avg_strike",
+                "date_key": date_key,
+                "old_value": "N/A",
+                "new_value": f"{new_val:.2f}",
+                "diff": "NEW"
+            })
+
+    for date_key in old_avg.keys():
+        if date_key not in new_avg:
+            old_val = old_avg[date_key]
+            changes.append({
+                "ticker": ticker,
+                "change_type": "avg_strike",
+                "date_key": date_key,
+                "old_value": f"{old_val:.2f}",
+                "new_value": "N/A",
+                "diff": "REMOVED"
+            })
+
+    # 3) Compare top_volume_contracts
+    # We'll match "contracts" by a unique combination of (type, date, strike).
+    # Then compare volume, openInterest, total_spent, unusual, etc.
+
+    old_contracts = old_data.get("top_volume_contracts", [])
+    new_contracts = new_data.get("top_volume_contracts", [])
+
+    # Build a lookup dict for old contracts
+    old_lookup = {}
+    for c in old_contracts:
+        key = contract_signature(c)  # We'll define it below
+        old_lookup[key] = c
+
+    # Check new vs old
+    for c_new in new_contracts:
+        key = contract_signature(c_new)
+        c_old = old_lookup.get(key)
+
+        if not c_old:
+            # Entirely new contract
+            changes.append({
+                "ticker": ticker,
+                "change_type": "top_volume_contracts",
+                "date_key": c_new["date"],
+                "old_value": "N/A",
+                "new_value": f"{c_new}",
+                "diff": "NEW CONTRACT"
+            })
+        else:
+            # Compare fields: strike, volume, openInterest, total_spent, unusual
+            # If strike changed (rare?), do a % diff
+            if c_old["strike"] != c_new["strike"]:
+                strike_old = c_old["strike"]
+                strike_new = c_new["strike"]
+                if strike_old != 0:
+                    strike_diff_pct = ((strike_new - strike_old) / strike_old) * 100
+                else:
+                    strike_diff_pct = 999.99
+                changes.append({
+                    "ticker": ticker,
+                    "change_type": "top_volume_contracts.strike",
+                    "date_key": c_new["date"],
+                    "old_value": str(strike_old),
+                    "new_value": str(strike_new),
+                    "diff": f"{strike_diff_pct:+.2f}%"
+                })
+
+            # Compare volume (absolute difference)
+            if c_old["volume"] != c_new["volume"]:
+                vol_diff = c_new["volume"] - c_old["volume"]
+                changes.append({
+                    "ticker": ticker,
+                    "change_type": "top_volume_contracts.volume",
+                    "date_key": c_new["date"],
+                    "old_value": str(c_old["volume"]),
+                    "new_value": str(c_new["volume"]),
+                    "diff": f"{vol_diff:+}"
+                })
+
+            # Compare openInterest (absolute difference)
+            if c_old["openInterest"] != c_new["openInterest"]:
+                oi_diff = c_new["openInterest"] - c_old["openInterest"]
+                changes.append({
+                    "ticker": ticker,
+                    "change_type": "top_volume_contracts.openInterest",
+                    "date_key": c_new["date"],
+                    "old_value": str(c_old["openInterest"]),
+                    "new_value": str(c_new["openInterest"]),
+                    "diff": f"{oi_diff:+}"
+                })
+
+            # Compare total_spent -> Need to parse it to compare numeric values
+            if c_old["total_spent"] != c_new["total_spent"]:
+                # Optionally parse to float for real differences
+                old_spent = parse_total_spent(c_old["total_spent"])
+                new_spent = parse_total_spent(c_new["total_spent"])
+                diff_spent = new_spent - old_spent
+                diff_spent_str = f"{diff_spent:+.2f}"
+                changes.append({
+                    "ticker": ticker,
+                    "change_type": "top_volume_contracts.total_spent",
+                    "date_key": c_new["date"],
+                    "old_value": c_old["total_spent"],
+                    "new_value": c_new["total_spent"],
+                    "diff": diff_spent_str
+                })
+
+            # Compare unusual
+            if c_old["unusual"] != c_new["unusual"]:
+                changes.append({
+                    "ticker": ticker,
+                    "change_type": "top_volume_contracts.unusual",
+                    "date_key": c_new["date"],
+                    "old_value": str(c_old["unusual"]),
+                    "new_value": str(c_new["unusual"]),
+                    "diff": "CHANGED"
+                })
+
+    # Check for removed contracts (in old but not in new)
+    new_lookup = {contract_signature(c): c for c in new_contracts}
+    for c_old in old_contracts:
+        key = contract_signature(c_old)
+        if key not in new_lookup:
+            changes.append({
+                "ticker": ticker,
+                "change_type": "top_volume_contracts",
+                "date_key": c_old["date"],
+                "old_value": f"{c_old}",
+                "new_value": "N/A",
+                "diff": "REMOVED CONTRACT"
+            })
+
+    return changes
+
+
+def contract_signature(contract: dict) -> str:
+    """Create a unique signature for a contract."""
+    return f"{contract.get('type')}|{contract.get('date')}|{contract.get('strike')}"
+
+
+# -- ANALYSIS LOGIC -- #
+
 
 def parse_total_spent(total_spent_str: str) -> float:
-    """
-    Convert a monetary string (e.g., '$30.8K', '$1.2M', or '$564.00') to a float value.
-    """
+    """A quick parse function to convert strings like '$5.0M' to float(5000000)."""
+    # You can adapt your existing parse_total_spent logic here
+    import re
+    import math
+
+    val = total_spent_str.strip().replace('$', '').replace(',', '')
+
+    # Check for suffix
+    multiplier = 1.0
+    if val.endswith('K'):
+        multiplier = 1_000
+        val = val[:-1]
+    elif val.endswith('M'):
+        multiplier = 1_000_000
+        val = val[:-1]
+    elif val.endswith('B'):
+        multiplier = 1_000_000_000
+        val = val[:-1]
+
     try:
-        value_str = total_spent_str.replace("$", "").replace(",", "").strip()
-        multiplier = 1
+        return float(val) * multiplier
+    except:
+        return 0.0
 
-        if value_str.endswith("K"):
-            multiplier = 1_000
-            value_str = value_str[:-1]  # Remove 'K'
-        elif value_str.endswith("M"):
-            multiplier = 1_000_000
-            value_str = value_str[:-1]  # Remove 'M'
-        elif value_str.endswith("B"):
-            multiplier = 1_000_000_000
-            value_str = value_str[:-1]  # Remove 'B'
-
-        return float(value_str) * multiplier  # Convert to float and apply multiplier
-    except Exception as e:
-        logging.error(f"Error parsing total_spent value '{total_spent_str}': {e}")
-        return 0.0  # Return 0 if parsing fails
 
 def format_money(amount):
     """
@@ -79,8 +426,6 @@ def format_money(amount):
         return "Invalid Amount"
 
 
-
-# ----- WEIGHTED OPEN INTEREST SCORING -----
 def weighted_open_interest_scoring(calls_oi: Dict[str, float], puts_oi: Dict[str, float]) -> float:
     import numpy as np
     total_score = 0
@@ -112,6 +457,7 @@ def weighted_open_interest_scoring(calls_oi: Dict[str, float], puts_oi: Dict[str
                 total_score -= 1
 
     return total_score
+
 
 def analyze_ticker_json(file_path):
     """
@@ -307,201 +653,7 @@ def analyze_ticker_json(file_path):
     return result
 
 
-# ---------------
-# COMPARISON LOGIC RETURNING DICTS (not CSV)
-# ---------------
-def compare_oi_fields(old_data, new_data):
-    """
-    Compare calls_oi and puts_oi, returning a dict of changes:
-    {
-      "calls_oi": [
-         {"date": "02/07/25", "old": 7157, "new": 8157, "diff": 1000},
-         ...
-      ],
-      "puts_oi": [...]
-    }
-    """
-    changes = {
-        "calls_oi": [],
-        "puts_oi": []
-    }
-    calls_old = old_data.get("calls_oi", {})
-    calls_new = new_data.get("calls_oi", {})
-    puts_old = old_data.get("puts_oi", {})
-    puts_new = new_data.get("puts_oi", {})
-
-    # calls_oi
-    all_dates = set(calls_old.keys()) | set(calls_new.keys())
-    for d in sorted(all_dates):
-        old_val = float(calls_old.get(d, 0))
-        new_val = float(calls_new.get(d, 0))
-        if old_val != new_val:
-            changes["calls_oi"].append({
-                "date": d,
-                "old": old_val,
-                "new": new_val,
-                "diff": new_val - old_val
-            })
-
-    # puts_oi
-    all_dates = set(puts_old.keys()) | set(puts_new.keys())
-    for d in sorted(all_dates):
-        old_val = float(puts_old.get(d, 0))
-        new_val = float(puts_new.get(d, 0))
-        if old_val != new_val:
-            changes["puts_oi"].append({
-                "date": d,
-                "old": old_val,
-                "new": new_val,
-                "diff": new_val - old_val
-            })
-
-    return changes
-
-def compare_strike_fields(old_data, new_data):
-    """
-    Compare max_strike_calls/puts, second_max_strike_calls/puts, third_max_strike_calls/puts
-    returning a dict of changes like:
-    {
-      "max_strike_calls": [ ... ],
-      "max_strike_puts": [ ... ],
-      ...
-    }
-    """
-    fields = [
-        "max_strike_calls", "max_strike_puts",
-        "second_max_strike_calls", "second_max_strike_puts",
-        "third_max_strike_calls", "third_max_strike_puts"
-    ]
-    changes = {}
-
-    for field in fields:
-        old_dict = old_data.get(field, {})
-        new_dict = new_data.get(field, {})
-        field_changes = []
-        all_dates = set(old_dict.keys()) | set(new_dict.keys())
-        for d in sorted(all_dates):
-            old_val = float(old_dict.get(d, 0))
-            new_val = float(new_dict.get(d, 0))
-            if old_val != new_val:
-                field_changes.append({
-                    "date": d,
-                    "old": old_val,
-                    "new": new_val,
-                    "diff": new_val - old_val
-                })
-        changes[field] = field_changes
-
-    return changes
-
-def compare_top_volume_contracts(old_data, new_data):
-    """
-    Compare top_volume_contracts. Returns a dict like:
-    {
-      "top_volume_contracts": [
-         {
-            "signature": "CALL|38.0|02/07/25",
-            "field": "volume",
-            "old": 498.0,
-            "new": 600.0,
-            "diff": 102.0
-         },
-         { "signature": ..., "field": "CONTRACT_STATUS", "old": "MISSING", "new": "ADDED" },
-         ...
-      ]
-    }
-    """
-    old_contracts = old_data.get("top_volume_contracts", [])
-    new_contracts = new_data.get("top_volume_contracts", [])
-    changes = {"top_volume_contracts": []}
-
-    # Build dicts keyed by a signature
-    old_dict = {}
-    for c in old_contracts:
-        sig = contract_signature(c)
-        old_dict[sig] = c
-
-    new_dict = {}
-    for c in new_contracts:
-        sig = contract_signature(c)
-        new_dict[sig] = c
-
-    all_sigs = set(old_dict.keys()) | set(new_dict.keys())
-
-    fields_to_compare = ["strike", "volume", "openInterest", "date", "total_spent", "unusual"]
-
-    for sig in sorted(all_sigs):
-        old_c = old_dict.get(sig, {})
-        new_c = new_dict.get(sig, {})
-
-        if not old_c and new_c:
-            # brand new contract
-            changes["top_volume_contracts"].append({
-                "signature": sig,
-                "field": "CONTRACT_STATUS",
-                "old": "MISSING",
-                "new": "ADDED",
-                "diff": None
-            })
-            continue
-        elif old_c and not new_c:
-            # removed contract
-            changes["top_volume_contracts"].append({
-                "signature": sig,
-                "field": "CONTRACT_STATUS",
-                "old": "REMOVED",
-                "new": "MISSING",
-                "diff": None
-            })
-            continue
-
-        # Compare field by field
-        for f_name in fields_to_compare:
-            old_val = old_c.get(f_name)
-            new_val = new_c.get(f_name)
-            if old_val == new_val:
-                continue
-            diff = compute_difference(f_name, old_val, new_val)
-            changes["top_volume_contracts"].append({
-                "signature": sig,
-                "field": f_name,
-                "old": old_val,
-                "new": new_val,
-                "diff": diff
-            })
-
-    return changes
-
-def contract_signature(contract):
-    """
-    Unique signature for a contract based on (type, strike, date).
-    """
-    ctype = contract.get("type", "UNKNOWN")
-    strike = contract.get("strike", "UNKNOWN")
-    date = contract.get("date", "UNKNOWN")
-    return f"{ctype}|{strike}|{date}"
-
-def compute_difference(field_name, old_val, new_val):
-    if field_name in ["strike", "volume", "openInterest"]:
-        old_num = float(old_val) if is_number(old_val) else 0.0
-        new_num = float(new_val) if is_number(new_val) else 0.0
-        return new_num - old_num
-    if field_name == "total_spent":
-        old_num = parse_total_spent(old_val) if old_val else 0.0
-        new_num = parse_total_spent(new_val) if new_val else 0.0
-        return new_num - old_num
-    if field_name == "unusual":
-        return 1 if old_val != new_val else 0
-    if field_name == "date":
-        return "CHANGED" if old_val != new_val else None
-    return None
-
-def is_number(val):
-    try:
-        float(val)
-        return True
-    except:
-        return False
+# -- THE 'MAIN' SECTION -- #
 
 
 # -------------------------
@@ -522,13 +674,14 @@ except Exception as e:
 # -------------------------
 # PROCESS TICKER FOLDERS
 # -------------------------
+# First, ensure DB is set up
+setup_database(DATABASE_FILE)
+
 for ticker_folder in os.listdir(BASE_FOLDER):
-    # Skip the output directory and any files that aren’t directories
     if ticker_folder == os.path.basename(OUTPUT_FOLDER):
         continue
     folder_path = os.path.join(BASE_FOLDER, ticker_folder)
     if os.path.isdir(folder_path):
-        # Normalize folder name (assuming folder names are ticker symbols)
         ticker_symbol = ticker_folder.upper()
 
         for file in os.listdir(folder_path):
@@ -536,51 +689,14 @@ for ticker_folder in os.listdir(BASE_FOLDER):
                 file_path = os.path.join(folder_path, file)
                 logging.info(f"Processing: {file_path}")
 
-                # -------------------------------------------------------------
-                # 1) Compare Old vs. New (raw data) if we have an old.json
-                # -------------------------------------------------------------
-                old_file_path = os.path.join(folder_path, "old.json")
-                if os.path.exists(old_file_path):
-                    try:
-                        with open(old_file_path, "r") as f:
-                            old_data = json.load(f)
-                        with open(file_path, "r") as f:
-                            new_data = json.load(f)
+                # 1) Analyze the ticker to get scoring and metrics
+                analysis_result = analyze_ticker_json(file_path)
+                if analysis_result:
+                    # Put the result in ticker_results under the symbol
+                    ticker_results[ticker_symbol] = analysis_result
 
-                        # We'll gather changes in a single dict for this ticker
-                        changes_for_ticker = {}
-
-                        # calls_oi/puts_oi changes
-                        changes_for_ticker["oi_changes"] = compare_oi_fields(old_data, new_data)
-
-                        # max_strike calls/puts (and second, third)
-                        changes_for_ticker["strike_changes"] = compare_strike_fields(old_data, new_data)
-
-                        # top_volume_contracts changes
-                        changes_for_ticker["contracts_changes"] = compare_top_volume_contracts(old_data, new_data)
-
-                        # Now put these in the global "tracked_changes" under the ticker symbol
-                        tracked_changes[ticker_symbol] = changes_for_ticker
-
-                    except Exception as e:
-                        logging.error(f"Error comparing old vs new data for {ticker_symbol}: {e}")
-
-                # -------------------------------------------------------------
-                # 2) Perform the normal analysis scoring
-                # -------------------------------------------------------------
-                result = analyze_ticker_json(file_path)
-                if result is not None:
-                    mapping = ticker_to_sector_industry.get(ticker_symbol, {"sector": "Unknown", "industry": "Unknown"})
-                    result.update(mapping)
-                    ticker_results[ticker_folder] = result
-
-                # -------------------------------------------------------------
-                # 3) Copy new raw data to old.json for next run
-                # -------------------------------------------------------------
-                try:
-                    shutil.copy(file_path, old_file_path)
-                except Exception as e:
-                    logging.error(f"Error copying {file_path} to {old_file_path}: {e}")
+                # 2) Store the raw data in the DB, which also compares old/new
+                store_raw_data_in_db(file_path, ticker_symbol)
 
 
 # OPTIONAL: Sort by score if you want
