@@ -101,8 +101,11 @@ def gather_options_data(ticker):
 
     calls_oi = {date: df['openInterest'].sum() for date, df in calls_data.items() if not df.empty}
     puts_oi = {date: df['openInterest'].sum() for date, df in puts_data.items() if not df.empty}
+    calls_volume = {date: df['volume'].sum() for date, df in calls_data.items() if not df.empty}
+    puts_volume = {date: df['volume'].sum() for date, df in puts_data.items() if not df.empty}
 
     logging.info(f"Processed OI -> Calls: {calls_oi}, Puts: {puts_oi}")
+    logging.info(f"Processed Volume -> Calls: {calls_volume}, Puts: {puts_volume}")
 
     max_strike_calls, second_max_strike_calls, third_max_strike_calls = {}, {}, {}
     max_strike_puts, second_max_strike_puts, third_max_strike_puts = {}, {}, {}
@@ -162,6 +165,8 @@ def gather_options_data(ticker):
     return {
         "calls_oi": calls_oi,
         "puts_oi": puts_oi,
+        "calls_volume": calls_volume,
+        "puts_volume": puts_volume,
         "max_strike_calls": max_strike_calls,
         "second_max_strike_calls": second_max_strike_calls,
         "third_max_strike_calls": third_max_strike_calls,
