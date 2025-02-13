@@ -49,7 +49,7 @@ def save_options_data(stock, ticker, exp_dates):
     for date in exp_dates:
         try:
             # Short delay to reduce risk of throttling between each expiration date
-            time.sleep(2)
+            time.sleep(0.10)
             opt = stock.option_chain(date)
             opt.calls.to_csv(os.path.join(calls_folder, f"{date.replace('-', '')}_CALLS.csv"))
             opt.puts.to_csv(os.path.join(puts_folder, f"{date.replace('-', '')}_PUTS.csv"))
