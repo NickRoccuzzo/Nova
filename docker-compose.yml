@@ -29,7 +29,7 @@ services:
 
   consumer_cyclical:
     build: .
-    command: ["sh", "-c", "python Nova.py"]
+    command: ["sh", "-c", "python Nova.py && exit"]
     container_name: worker_consumer_cyclical
     environment:
       - SECTOR=Consumer_Cyclical
