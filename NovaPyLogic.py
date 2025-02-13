@@ -10,7 +10,7 @@ import yfinance as yf
 
 # Configure logging
 logging.basicConfig(
-    filename="nova_logic.log",
+    filename="novapylogic.log",
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S"
@@ -89,15 +89,15 @@ def gather_options_data(ticker):
     """
     ticker_path = os.path.join(TICKER_DIR, ticker)
 
-    calls_dir = os.path.join(ticker_path, "CALLS")
-    puts_dir = os.path.join(ticker_path, "PUTS")
+    calls_folder = os.path.join(ticker_path, "CALLS")
+    puts_folder = os.path.join(ticker_path, "PUTS")
 
-    if not os.path.exists(calls_dir) or not os.path.exists(puts_dir):
+    if not os.path.exists(calls_folder) or not os.path.exists(puts_folder):
         logging.warning(f"Missing data for {ticker}. Skipping...")
         return {}
 
-    calls_data = preprocess_dates(calls_dir, "CALLS")
-    puts_data = preprocess_dates(puts_dir, "PUTS")
+    calls_data = preprocess_dates(calls_folder, "CALLS")
+    puts_data = preprocess_dates(puts_folder, "PUTS")
 
     calls_oi = {date: df['openInterest'].sum() for date, df in calls_data.items() if not df.empty}
     puts_oi = {date: df['openInterest'].sum() for date, df in puts_data.items() if not df.empty}
