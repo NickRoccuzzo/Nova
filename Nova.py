@@ -101,7 +101,7 @@ def main():
 
     logging.info(f"Processing {len(all_tickers)} tickers for sector '{SECTOR}'.")
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
         executor.map(process_ticker, all_tickers)
 
     logging.info(f"All tickers in sector '{SECTOR}' processed successfully.")
