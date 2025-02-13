@@ -80,7 +80,7 @@ def fetch_stock_data(ticker):
 
     for attempt in range(5):
         try:
-            time.sleep(random.uniform(0.5, 1.5))  # Random delay before API call
+            time.sleep(random.uniform(3, 5))  # Random delay before API call
             current_data = stock.history(period="1d")
             company_name = stock.info.get('longName', 'N/A')
 
