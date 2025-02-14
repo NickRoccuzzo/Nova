@@ -644,7 +644,7 @@ def analyze_ticker_json(file_path):
     result = {
         "score": total_score,
         "unusual_contracts_count": unusual_contracts_count,
-        "total_unusual_spent": total_unusual_spent,  
+        "total_unusual_spent": total_unusual_spent,
         "cumulative_total_spent_calls": cumulative_total_spent_calls,
         "cumulative_total_spent_puts": cumulative_total_spent_puts,
         "current_price": current_price,
@@ -721,3 +721,45 @@ with open(summary_file, "w") as outfile:
 
 logging.info("Scoring Complete")
 logging.info(f"Results saved to: {summary_file}")
+
+# -- Export tracked changes to JSON (tracked_changes) -- #
+def export_tracked_changes_to_json(db_file: str, output_folder: str):
+    """
+    Query the 'tracked_changes' table from the provided SQLite database
+    and write it to 'tracked_changes.json' in the output folder.
+    """
+    import sqlite3  # re-import here for clarity, though it's at top too
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+
+    tracked_changes_data = []
+    try:
+        cursor.execute("SELECT * FROM tracked_changes")
+        rows = cursor.fetchall()
+
+        # Grab the column names (id, ticker, change_type, date_key, old_value, new_value, diff, created_at)
+        col_names = [desc[0] for desc in cursor.description]
+
+        # Build list of dicts for JSON serialization
+        for row in rows:
+            row_dict = dict(zip(col_names, row))
+            tracked_changes_data.append(row_dict)
+
+    except sqlite3.Error as e:
+        logging.error(f"Database error while exporting tracked_changes: {e}")
+    finally:
+        conn.close()
+
+    # Construct the output JSON path
+    output_json_path = os.path.join(output_folder, "tracked_changes.json")
+
+    # Write the list of dicts to JSON
+    try:
+        with open(output_json_path, "w", encoding="utf-8") as f:
+            json.dump(tracked_changes_data, f, indent=2)
+        logging.info(f"tracked_changes.json saved to {output_json_path}")
+    except Exception as e:
+        logging.error(f"Failed to write tracked_changes.json: {e}")
+
+
+export_tracked_changes_to_json(DATABASE_FILE, OUTPUT_FOLDER)
