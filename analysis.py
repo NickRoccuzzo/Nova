@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Define folders and files
 BASE_FOLDER = "/shared_data"                       # The shared volume
 TICKERS_MAPPING_FILE = "/shared_data/tickers.json" # Mapping file expected in shared_data
-OUTPUT_FOLDER = "/shared_data/nova_analysis"       # Where to write the final analysis
+OUTPUT_FOLDER = "/Nova_storage"       # Where to write the final analysis
 DATABASE_FILE = "/shared_data/my_analysis.db"
 
 
