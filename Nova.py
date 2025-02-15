@@ -7,6 +7,7 @@ import time
 import logging
 from NovaPyLogic import gather_options_data
 
+
 # Configure logging
 logging.basicConfig(
     filename="nova.log",
@@ -15,11 +16,13 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
+
 # Get assigned sector from Docker ENV (if a sector isn't assigned, error message will be written) #
 SECTOR = os.getenv("SECTOR")
 
 if not SECTOR:
     raise ValueError("SECTOR environment variable is not set. Each container must be assigned a sector.")
+
 
 # Load tickers for the assigned sector
 with open("tickers.json", "r") as f:
@@ -81,7 +84,7 @@ def process_ticker(ticker):
         logging.error(f"Failed processing {ticker}: {e}")
 
     # Add a delay to help avoid rate limiting (adjust as needed).
-    time.sleep(0.5)
+    time.sleep(0.35)
 
 
 def convert_keys_for_json(obj):
