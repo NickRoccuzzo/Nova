@@ -431,8 +431,8 @@ def weighted_open_interest_scoring(calls_oi: Dict[str, float], puts_oi: Dict[str
     total_score = 0
     calls_oi_values = np.array(list(calls_oi.values()))
     puts_oi_values = np.array(list(puts_oi.values()))
-    calls_volume_values = = np.array(list(calls_volume.values()))
-    puts_volume_values = = np.array(list(puts_volume.values()))
+    calls_volume_values = np.array(list(calls_volume.values()))
+    puts_volume_values = np.array(list(puts_volume.values()))
     mean_calls_oi = np.mean(calls_oi_values) if len(calls_oi_values) > 0 else 0
     mean_puts_oi = np.mean(puts_oi_values) if len(puts_oi_values) > 0 else 0
     mean_calls_volume = np.mean(calls_volume_values) if len(calls_volume_values) > 0 else 0
