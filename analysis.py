@@ -382,7 +382,8 @@ def weighted_open_interest_scoring(calls_oi: Dict[str, float], puts_oi: Dict[str
 
 def analyze_ticker_json(file_path: Path) -> Optional[Dict[str, Any]]:
     """
-    Analyze a ticker's raw JSON file to calculate its score and metrics.
+    Analyze a ticker's raw JSON file to calculate its score and metrics,
+    and include volume data.
     """
     try:
         data = json.loads(file_path.read_text(encoding="utf-8"))
@@ -390,8 +391,11 @@ def analyze_ticker_json(file_path: Path) -> Optional[Dict[str, Any]]:
         logging.error(f"Error reading {file_path}: {e}", exc_info=True)
         return None
 
+    # Extract key sections from the JSON data
     calls_oi = data.get("calls_oi", {})
     puts_oi = data.get("puts_oi", {})
+    calls_volume = data.get("calls_volume", {})       # New extraction
+    puts_volume = data.get("puts_volume", {})         # New extraction
     max_strike_calls = data.get("max_strike_calls", {})
     max_strike_puts = data.get("max_strike_puts", {})
     second_max_strike_calls = data.get("second_max_strike_calls", {})
@@ -565,7 +569,9 @@ def analyze_ticker_json(file_path: Path) -> Optional[Dict[str, Any]]:
         "cumulative_total_spent_calls": cumulative_total_spent_calls,
         "cumulative_total_spent_puts": cumulative_total_spent_puts,
         "current_price": current_price,
-        "company_name": company_name
+        "company_name": company_name,
+        "calls_volume": calls_volume,   # Included in final result
+        "puts_volume": puts_volume      # Included in final result
     }
 
 
