@@ -1,12 +1,15 @@
 import os
 import json
-import yfinance as yf
-import numpy as np
-import math
 import time
 import logging
-from NovaPyLogic import gather_options_data
+import math
+from pathlib import Path
+from typing import Any
 
+import yfinance as yf
+import numpy as np
+
+from NovaPyLogic import gather_options_data
 
 # Configure logging
 logging.basicConfig(
@@ -16,34 +19,37 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
-
-# Get assigned sector from Docker ENV (if a sector isn't assigned, error message will be written) #
+# Get assigned sector from Docker ENV
 SECTOR = os.getenv("SECTOR")
-
 if not SECTOR:
     raise ValueError("SECTOR environment variable is not set. Each container must be assigned a sector.")
 
-
 # Load tickers for the assigned sector
-with open("tickers.json", "r") as f:
+tickers_file = Path("tickers.json")
+if not tickers_file.exists():
+    raise FileNotFoundError("tickers.json not found.")
+
+with tickers_file.open("r") as f:
     tickers_data = json.load(f)
 
 if SECTOR not in tickers_data:
     raise ValueError(f"Sector '{SECTOR}' not found in tickers.json.")
 
-industries = tickers_data[SECTOR]  # Industries within this sector
+industries = tickers_data[SECTOR]
 
 
-def save_options_data(stock, ticker, exp_dates):
-    """Retrieves options chain data for a given ticker and stores results as CSV."""
-    base_folder = "/shared_data"  # Use shared Docker volume
-    ticker_folder = os.path.join(base_folder, ticker)
-    os.makedirs(ticker_folder, exist_ok=True)
+def save_options_data(stock: yf.Ticker, ticker: str, exp_dates: list) -> None:
+    """
+    Retrieve options chain data for each expiration date and save as CSV.
+    """
+    base_folder = Path("/shared_data")
+    ticker_folder = base_folder / ticker
+    ticker_folder.mkdir(parents=True, exist_ok=True)
 
-    calls_folder = os.path.join(ticker_folder, "CALLS")
-    puts_folder = os.path.join(ticker_folder, "PUTS")
-    os.makedirs(calls_folder, exist_ok=True)
-    os.makedirs(puts_folder, exist_ok=True)
+    calls_folder = ticker_folder / "CALLS"
+    puts_folder = ticker_folder / "PUTS"
+    calls_folder.mkdir(exist_ok=True)
+    puts_folder.mkdir(exist_ok=True)
 
     if not exp_dates:
         logging.warning(f"No option chain found for {ticker}.")
@@ -51,44 +57,46 @@ def save_options_data(stock, ticker, exp_dates):
 
     for date in exp_dates:
         try:
-            # Short delay to reduce risk of throttling between each expiration date
-            time.sleep(0.10)
+            time.sleep(0.10)  # To reduce the risk of throttling
             opt = stock.option_chain(date)
-            opt.calls.to_csv(os.path.join(calls_folder, f"{date.replace('-', '')}_CALLS.csv"))
-            opt.puts.to_csv(os.path.join(puts_folder, f"{date.replace('-', '')}_PUTS.csv"))
+            calls_csv = calls_folder / f"{date.replace('-', '')}_CALLS.csv"
+            puts_csv = puts_folder / f"{date.replace('-', '')}_PUTS.csv"
+            opt.calls.to_csv(calls_csv)
+            opt.puts.to_csv(puts_csv)
         except Exception as e:
-            logging.error(f"Error processing {ticker} for expiration {date}: {e}")
+            logging.error(f"Error processing {ticker} for expiration {date}: {e}", exc_info=True)
 
 
-def process_ticker(ticker):
-    """Processes a single ticker: downloads CSVs, gathers data, and saves JSON output."""
+def process_ticker(ticker: str) -> None:
+    """
+    Process a single ticker: download options data, generate JSON summary, and save files.
+    """
     try:
-        # Initialize the stock object once, and fetch expiration dates only once
         stock = yf.Ticker(ticker)
         exp_dates = stock.options
 
-        # Save the raw options data as CSV
+        # Save raw CSVs for options data
         save_options_data(stock, ticker, exp_dates)
 
-        # Gather additional insights and save them as JSON
+        # Gather additional insights and write JSON output
         data_dict = gather_options_data(ticker, stock)
         clean_data = convert_keys_for_json(data_dict)
 
-        output_path = os.path.join("/shared_data", ticker, f"{ticker}_raw.json")
-        with open(output_path, "w") as f_out:
+        output_path = Path("/shared_data") / ticker / f"{ticker}_raw.json"
+        with output_path.open("w") as f_out:
             json.dump(clean_data, f_out, indent=2)
 
         logging.info(f"Successfully processed {ticker}")
-
     except Exception as e:
-        logging.error(f"Failed processing {ticker}: {e}")
+        logging.error(f"Failed processing {ticker}: {e}", exc_info=True)
 
-    # Add a delay to help avoid rate limiting (adjust as needed).
     time.sleep(0.35)
 
 
-def convert_keys_for_json(obj):
-    """Converts NumPy values into JSON-friendly types."""
+def convert_keys_for_json(obj: Any) -> Any:
+    """
+    Recursively convert NumPy types into JSON-serializable Python types.
+    """
     if isinstance(obj, dict):
         return {str(k): convert_keys_for_json(v) for k, v in obj.items()}
     elif isinstance(obj, list):
@@ -104,15 +112,14 @@ def convert_keys_for_json(obj):
     return obj
 
 
-def main():
-    """Main execution: Fetches options data for all tickers in this sector sequentially."""
+def main() -> None:
+    """
+    Main execution: process all tickers sequentially.
+    """
     all_tickers = [ticker for industry in industries.values() for ticker in industry]
-
     logging.info(f"Processing {len(all_tickers)} tickers for sector '{SECTOR}' sequentially.")
-
     for ticker in all_tickers:
         process_ticker(ticker)
-
     logging.info(f"All tickers in sector '{SECTOR}' processed successfully.")
 
 
