@@ -474,8 +474,8 @@ def analyze_ticker_json(file_path: Path) -> Optional[Dict[str, Any]]:
     # Top Volume Contracts Scoring & Metrics
     call_unusual_counter = 0
     put_unusual_counter = 0
-    call_unusual_bonus = [20, 40, 70, 85, 110, 130, 145, 175, 200, 250, 275, 300]
-    put_unusual_bonus = [-20, -40, -70, -85, -110, -130, -145, -175, -200, -250, -275, -300]
+    call_unusual_bonus = [10, 20, 30, 50, 65, 90, 115, 140, 175, 200, 220, 250]
+    put_unusual_bonus = [-10, -20, -30, -50, -65, -90, -115, -140, -175, -200, -220, -250]
 
     for contract in top_volume_contracts:
         contract_type = contract.get("type", "")
