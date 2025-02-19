@@ -361,21 +361,21 @@ def weighted_open_interest_scoring(calls_oi: Dict[str, float], puts_oi: Dict[str
         if call_oi > 0 and mean_calls > 0:
             weight = call_oi / mean_calls
             if weight >= 3:
-                total_score += 3
+                total_score += 7.5
             elif weight >= 2:
-                total_score += 2
+                total_score += 5.5
             elif weight >= 1.5:
-                total_score += 1
+                total_score += 2.5
 
     for date, put_oi in puts_oi.items():
         if put_oi > 0 and mean_puts > 0:
             weight = put_oi / mean_puts
             if weight >= 3:
-                total_score -= 3
+                total_score -= 7.5
             elif weight >= 2:
-                total_score -= 2
+                total_score -= 5.5
             elif weight >= 1.5:
-                total_score -= 1
+                total_score -= 2.5
 
     return total_score
 
@@ -421,9 +421,9 @@ def analyze_ticker_json(file_path: Path) -> Optional[Dict[str, Any]]:
         put_val = puts_oi.get(date, 0)
         if call_val > 0 and put_val > 0:
             if call_val / put_val >= 7:
-                total_score += 10
+                total_score += 250
             if put_val / call_val >= 7:
-                total_score -= 10
+                total_score -= 250
 
     # Current Price Scoring using percentage thresholds
     percentage_thresholds = [5, 10, 15, 20, 25, 30, 35]
