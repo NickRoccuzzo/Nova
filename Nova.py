@@ -57,7 +57,6 @@ def save_options_data(stock: yf.Ticker, ticker: str, exp_dates: list) -> None:
 
     for date in exp_dates:
         try:
-            time.sleep(0.10)  # To reduce the risk of throttling
             opt = stock.option_chain(date)
             calls_csv = calls_folder / f"{date.replace('-', '')}_CALLS.csv"
             puts_csv = puts_folder / f"{date.replace('-', '')}_PUTS.csv"
