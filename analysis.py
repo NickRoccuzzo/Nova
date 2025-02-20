@@ -508,15 +508,15 @@ def analyze_ticker_json(file_path: Path) -> Optional[Dict[str, Any]]:
 
         if contract_type == "CALL":
             if volume > open_interest:
-                total_score += 2.5
+                total_score += 5
             if strike_pct_diff >= 20:
-                total_score += 2
+                total_score += 10
             elif strike_pct_diff >= 15:
-                total_score += 1.5
+                total_score += 5
             elif strike_pct_diff >= 10:
-                total_score += 1
+                total_score += 3
             elif strike_pct_diff >= 5:
-                total_score += 0.5
+                total_score += 1
             if spent > 250_000:
                 total_score += 0.25
             if spent > 500_000:
@@ -533,15 +533,15 @@ def analyze_ticker_json(file_path: Path) -> Optional[Dict[str, Any]]:
                 total_score += 5
         elif contract_type == "PUT":
             if volume > open_interest:
-                total_score -= 2.5
+                total_score -= 5
             if strike_pct_diff <= -20:
-                total_score -= 2
+                total_score -= 10
             elif strike_pct_diff <= -15:
-                total_score -= 1.5
+                total_score -= 5
             elif strike_pct_diff <= -10:
-                total_score -= 1
+                total_score -= 3
             elif strike_pct_diff <= -5:
-                total_score -= 0.5
+                total_score -= 1
             if spent > 250_000:
                 total_score -= 0.25
             if spent > 500_000:
@@ -558,9 +558,9 @@ def analyze_ticker_json(file_path: Path) -> Optional[Dict[str, Any]]:
                 total_score -= 5
 
     if cumulative_total_spent_calls > cumulative_total_spent_puts:
-        total_score += 3
+        total_score += 10
     elif cumulative_total_spent_calls < cumulative_total_spent_puts:
-        total_score -= 3
+        total_score -= 10
 
     return {
         "score": total_score,
