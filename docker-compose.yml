@@ -48,12 +48,9 @@ services:
       restart_policy:
         condition: none
     depends_on:
-      basic_materials:
-        condition: service_completed_successfully
-      communication_services:
-        condition: service_completed_successfully
-      consumer_cyclical:
-        condition: service_completed_successfully
+      - basic_materials
+      - communication_services
+      - consumer_cyclical
 
   ############################################################################
   # GROUP 2
@@ -70,8 +67,7 @@ services:
       restart_policy:
         condition: on-failure
     depends_on:
-      group1_done:
-        condition: service_completed_successfully
+      - group1_done
 
   energy:
     build: .
@@ -85,8 +81,7 @@ services:
       restart_policy:
         condition: on-failure
     depends_on:
-      group1_done:
-        condition: service_completed_successfully
+      - group1_done
 
   financials:
     build: .
@@ -100,8 +95,7 @@ services:
       restart_policy:
         condition: on-failure
     depends_on:
-      group1_done:
-        condition: service_completed_successfully
+      - group1_done
 
   # Dummy container that waits for group 2 to succeed
   group2_done:
@@ -112,12 +106,9 @@ services:
       restart_policy:
         condition: none
     depends_on:
-      consumer_defensive:
-        condition: service_completed_successfully
-      energy:
-        condition: service_completed_successfully
-      financials:
-        condition: service_completed_successfully
+      - consumer_defensive
+      - energy
+      - financials
 
   ############################################################################
   # GROUP 3
@@ -134,8 +125,7 @@ services:
       restart_policy:
         condition: on-failure
     depends_on:
-      group2_done:
-        condition: service_completed_successfully
+      - group2_done
 
   industrials:
     build: .
@@ -149,8 +139,7 @@ services:
       restart_policy:
         condition: on-failure
     depends_on:
-      group2_done:
-        condition: service_completed_successfully
+      - group2_done
 
   real_estate:
     build: .
@@ -164,8 +153,7 @@ services:
       restart_policy:
         condition: on-failure
     depends_on:
-      group2_done:
-        condition: service_completed_successfully
+      - group2_done
 
   # Dummy container that waits for group 3 to succeed
   group3_done:
@@ -176,12 +164,9 @@ services:
       restart_policy:
         condition: none
     depends_on:
-      healthcare:
-        condition: service_completed_successfully
-      industrials:
-        condition: service_completed_successfully
-      real_estate:
-        condition: service_completed_successfully
+      - healthcare
+      - industrials
+      - real_estate
 
   ############################################################################
   # GROUP 4
@@ -198,8 +183,7 @@ services:
       restart_policy:
         condition: on-failure
     depends_on:
-      group3_done:
-        condition: service_completed_successfully
+      - group3_done
 
   utilities:
     build: .
@@ -213,8 +197,7 @@ services:
       restart_policy:
         condition: on-failure
     depends_on:
-      group3_done:
-        condition: service_completed_successfully
+      - group3_done
 
   # Dummy container that waits for group 4 to succeed
   group4_done:
@@ -225,10 +208,8 @@ services:
       restart_policy:
         condition: none
     depends_on:
-      technology:
-        condition: service_completed_successfully
-      utilities:
-        condition: service_completed_successfully
+      - technology
+      - utilities
 
   ############################################################################
   # FINAL ANALYSIS
@@ -243,8 +224,7 @@ services:
       restart_policy:
         condition: on-failure
     depends_on:
-      group4_done:
-        condition: service_completed_successfully
+      - group4_done
 
 volumes:
   nova_shared_data:
