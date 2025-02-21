@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+"""
+NovaPyLogic.py - Updated Version
+
+This module processes raw options data (stored as CSVs) to extract insights.
+An asynchronous wrapper for fetching stock data is provided to support
+concurrent network calls when used with asyncio.
+"""
+
 import os
 import re
 from pathlib import Path
@@ -9,6 +18,9 @@ from typing import Dict, List, Any, Optional
 import pandas as pd
 import numpy as np
 import yfinance as yf
+
+# For async support
+import asyncio
 
 # Configure logging
 logging.basicConfig(
@@ -57,6 +69,7 @@ def preprocess_dates(data_dir: Path, file_suffix: str) -> Dict[str, pd.DataFrame
 def fetch_stock_data(ticker: str, stock_obj: Optional[yf.Ticker] = None) -> float:
     """
     Fetch the current closing price for a stock, with retry logic.
+    This is the synchronous version.
     """
     if stock_obj is None:
         stock_obj = yf.Ticker(ticker)
@@ -69,6 +82,26 @@ def fetch_stock_data(ticker: str, stock_obj: Optional[yf.Ticker] = None) -> floa
             logging.error(f"Attempt {attempt + 1} failed for {ticker}: {e}", exc_info=True)
             time.sleep(2 ** attempt)
     logging.error(f"All attempts failed for fetching data for {ticker}. Returning 0.0.")
+    return 0.0
+
+
+async def async_fetch_stock_data(ticker: str, stock_obj: Optional[yf.Ticker] = None) -> float:
+    """
+    Asynchronously fetch the current closing price for a stock.
+    This wraps the blocking stock.history call in run_in_executor.
+    """
+    loop = asyncio.get_running_loop()
+    if stock_obj is None:
+        stock_obj = await loop.run_in_executor(None, lambda: yf.Ticker(ticker))
+    for attempt in range(5):
+        try:
+            current_data = await loop.run_in_executor(None, stock_obj.history, "1d")
+            if not current_data.empty:
+                return float(current_data['Close'].iloc[-1])
+        except Exception as e:
+            logging.error(f"Attempt {attempt + 1} failed for {ticker} (async): {e}", exc_info=True)
+            await asyncio.sleep(2 ** attempt)
+    logging.error(f"All async attempts failed for {ticker}. Returning 0.0.")
     return 0.0
 
 
@@ -153,6 +186,7 @@ def gather_options_data(ticker: str, stock_obj: Optional[yf.Ticker] = None) -> D
         stock_obj = yf.Ticker(ticker)
 
     try:
+        # You can choose to use the synchronous or async version here.
         current_price = fetch_stock_data(ticker, stock_obj)
         company_name = stock_obj.info.get('longName', 'N/A')
     except Exception as e:
