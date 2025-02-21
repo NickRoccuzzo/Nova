@@ -1,10 +1,19 @@
+#!/usr/bin/env python3
+"""
+Nova.py - Asynchronous Version
+
+This script retrieves options chain data for each ticker in the assigned sector
+using asyncio to parallelize network calls. Blocking yfinance calls are wrapped
+in run_in_executor for concurrent execution.
+"""
+
+import asyncio
 import os
 import json
-import time
 import logging
 import math
 from pathlib import Path
-from typing import Any
+from typing import Any, List
 
 import yfinance as yf
 import numpy as np
@@ -38,7 +47,26 @@ if SECTOR not in tickers_data:
 industries = tickers_data[SECTOR]
 
 
-def save_options_data(stock: yf.Ticker, ticker: str, exp_dates: list) -> None:
+def convert_keys_for_json(obj: Any) -> Any:
+    """
+    Recursively convert NumPy types into JSON-serializable Python types.
+    """
+    if isinstance(obj, dict):
+        return {str(k): convert_keys_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_keys_for_json(x) for x in obj]
+    elif isinstance(obj, np.integer):
+        return int(obj)
+    elif isinstance(obj, np.floating):
+        return round(float(obj), 2) if not math.isnan(obj) else None
+    elif isinstance(obj, np.bool_):
+        return bool(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    return obj
+
+
+def save_options_data(stock: yf.Ticker, ticker: str, exp_dates: List[str]) -> None:
     """
     Retrieve options chain data for each expiration date and save as CSV.
     """
@@ -66,61 +94,41 @@ def save_options_data(stock: yf.Ticker, ticker: str, exp_dates: list) -> None:
             logging.error(f"Error processing {ticker} for expiration {date}: {e}", exc_info=True)
 
 
-def process_ticker(ticker: str) -> None:
+async def async_process_ticker(ticker: str) -> None:
     """
-    Process a single ticker: download options data, generate JSON summary, and save files.
+    Asynchronously process a single ticker: download options data, generate JSON summary, and save files.
     """
+    loop = asyncio.get_running_loop()
     try:
-        stock = yf.Ticker(ticker)
-        exp_dates = stock.options
-
-        # Save raw CSVs for options data
-        save_options_data(stock, ticker, exp_dates)
-
-        # Gather additional insights and write JSON output
-        data_dict = gather_options_data(ticker, stock)
+        # Create the Ticker object in a separate thread
+        stock = await loop.run_in_executor(None, lambda: yf.Ticker(ticker))
+        # Fetch expiration dates (blocking call wrapped in executor)
+        exp_dates = await loop.run_in_executor(None, lambda: stock.options)
+        # Save options CSV data concurrently
+        await loop.run_in_executor(None, save_options_data, stock, ticker, exp_dates)
+        # Gather additional insights (blocking call)
+        data_dict = await loop.run_in_executor(None, gather_options_data, ticker, stock)
         clean_data = convert_keys_for_json(data_dict)
-
         output_path = Path("/shared_data") / ticker / f"{ticker}_raw.json"
-        with output_path.open("w") as f_out:
-            json.dump(clean_data, f_out, indent=2)
-
+        # Write the JSON file concurrently
+        await loop.run_in_executor(None, output_path.write_text, json.dumps(clean_data, indent=2))
         logging.info(f"Successfully processed {ticker}")
     except Exception as e:
         logging.error(f"Failed processing {ticker}: {e}", exc_info=True)
+    # Optional small delay; adjust as necessary
+    await asyncio.sleep(0.1)
 
-    time.sleep(0.35)
 
-
-def convert_keys_for_json(obj: Any) -> Any:
+async def main() -> None:
     """
-    Recursively convert NumPy types into JSON-serializable Python types.
-    """
-    if isinstance(obj, dict):
-        return {str(k): convert_keys_for_json(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [convert_keys_for_json(x) for x in obj]
-    elif isinstance(obj, np.integer):
-        return int(obj)
-    elif isinstance(obj, np.floating):
-        return round(float(obj), 2) if not math.isnan(obj) else None
-    elif isinstance(obj, np.bool_):
-        return bool(obj)
-    elif isinstance(obj, np.ndarray):
-        return obj.tolist()
-    return obj
-
-
-def main() -> None:
-    """
-    Main execution: process all tickers sequentially.
+    Asynchronous main execution: process all tickers concurrently.
     """
     all_tickers = [ticker for industry in industries.values() for ticker in industry]
-    logging.info(f"Processing {len(all_tickers)} tickers for sector '{SECTOR}' sequentially.")
-    for ticker in all_tickers:
-        process_ticker(ticker)
+    logging.info(f"Processing {len(all_tickers)} tickers for sector '{SECTOR}' concurrently.")
+    tasks = [asyncio.create_task(async_process_ticker(ticker)) for ticker in all_tickers]
+    await asyncio.gather(*tasks)
     logging.info(f"All tickers in sector '{SECTOR}' processed successfully.")
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
