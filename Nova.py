@@ -69,6 +69,7 @@ def convert_keys_for_json(obj: Any) -> Any:
 def save_options_data(stock: yf.Ticker, ticker: str, exp_dates: List[str]) -> None:
     """
     Retrieve options chain data for each expiration date and save as CSV.
+    A slight delay is added between processing each expiration date to help avoid API throttling.
     """
     base_folder = Path("/shared_data")
     ticker_folder = base_folder / ticker
@@ -90,8 +91,11 @@ def save_options_data(stock: yf.Ticker, ticker: str, exp_dates: List[str]) -> No
             puts_csv = puts_folder / f"{date.replace('-', '')}_PUTS.csv"
             opt.calls.to_csv(calls_csv)
             opt.puts.to_csv(puts_csv)
+            # Add a slight delay after each expiration date request
+            time.sleep(0.1)  # Adjust the delay (in seconds) as needed
         except Exception as e:
             logging.error(f"Error processing {ticker} for expiration {date}: {e}", exc_info=True)
+
 
 
 async def async_process_ticker(ticker: str) -> None:
@@ -116,7 +120,7 @@ async def async_process_ticker(ticker: str) -> None:
     except Exception as e:
         logging.error(f"Failed processing {ticker}: {e}", exc_info=True)
     # Optional small delay; adjust as necessary
-    await asyncio.sleep(0.1)
+    await asyncio.sleep(0.35)
 
 
 async def main() -> None:
