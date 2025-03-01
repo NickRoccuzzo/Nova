@@ -335,7 +335,7 @@ def compare_raw_data(old_data: dict, new_data: dict, ticker: str) -> List[Dict[s
     return changes
 
 
-# -- ANALYSIS LOGIC -- #
+### -- ANALYSIS LOGIC -- ###
 
 def format_money(amount: float) -> str:
     """
@@ -394,8 +394,8 @@ def analyze_ticker_json(file_path: Path) -> Optional[Dict[str, Any]]:
     # Extract key sections from the JSON data
     calls_oi = data.get("calls_oi", {})
     puts_oi = data.get("puts_oi", {})
-    calls_volume = data.get("calls_volume", {})       # New extraction
-    puts_volume = data.get("puts_volume", {})         # New extraction
+    calls_volume = data.get("calls_volume", {})
+    puts_volume = data.get("puts_volume", {})
     max_strike_calls = data.get("max_strike_calls", {})
     max_strike_puts = data.get("max_strike_puts", {})
     second_max_strike_calls = data.get("second_max_strike_calls", {})
@@ -570,9 +570,13 @@ def analyze_ticker_json(file_path: Path) -> Optional[Dict[str, Any]]:
         "cumulative_total_spent_puts": cumulative_total_spent_puts,
         "current_price": current_price,
         "company_name": company_name,
-        "calls_volume": calls_volume,   # Included in final result
-        "puts_volume": puts_volume      # Included in final result
+        "calls_oi": calls_oi,
+        "puts_oi": puts_oi,
+        "calls_volume": calls_volume,
+        "puts_volume": puts_volume
     }
+
+
 
 
 # -- THE 'MAIN' SECTION -- #
