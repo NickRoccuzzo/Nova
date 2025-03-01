@@ -2,9 +2,11 @@
 
 import json
 import dash
-from dash import dcc, html, dash_table
+from dash import dcc, html
 import plotly.express as px
 import pandas as pd
+
+from dash.dependencies import Input, Output, State
 
 from NovaSync import (
     build_play_dictionaries,
@@ -14,12 +16,11 @@ from NovaSync import (
 app = dash.Dash(__name__)
 server = app.server
 
-# --------------------------------------------------------------------
-# 1) LOAD DATA
-# --------------------------------------------------------------------
 summary_file = r"C:\Users\DEFAULT.DESKTOP-30IV20T\PycharmProjects\pythonProject\NOVASYNC\summary_results2.json"
 
-# A) From build_play_dictionaries
+# ----------------------------------------------------
+# 1) LOAD ALL DICTIONARIES
+# ----------------------------------------------------
 (
     bullish_plays_dict,
     bearish_plays_dict,
@@ -29,7 +30,6 @@ summary_file = r"C:\Users\DEFAULT.DESKTOP-30IV20T\PycharmProjects\pythonProject\
     put_flow_dict
 ) = build_play_dictionaries(summary_file)
 
-# B) From build_oi_volume_dictionaries
 (
     most_volume_puts_dict,
     most_volume_calls_dict,
@@ -41,285 +41,313 @@ summary_file = r"C:\Users\DEFAULT.DESKTOP-30IV20T\PycharmProjects\pythonProject\
     whale_put_oi_dict
 ) = build_oi_volume_dictionaries(summary_file)
 
-# Load the raw JSON to reference date-level data
-with open(summary_file, 'r') as f:
+# Also load the full raw JSON
+with open(summary_file, "r") as f:
     raw_data = json.load(f)
 all_tickers_data = raw_data.get("all_tickers", {})
 
 
-# --------------------------------------------------------------------
-# 2) HELPER FUNCTIONS
-# --------------------------------------------------------------------
-
-def flatten_bullish_or_bearish(plays_dict, y_col="score"):
-    """
-    For bullish_plays_dict or bearish_plays_dict (and similarly unusual_activity_dict, etc.)
-    we produce a DataFrame with Ticker on x-axis and the chosen measure on y-axis (like 'score').
-
-    We also include company_name, current_price, etc. in the DF columns for reference.
-    The 'score' might be replaced by 'unusual_contracts_count' or 'total_unusual_spent'
-    depending on the dictionary at hand.
-    """
+# ----------------------------------------------------
+# 2) FLATTEN + CHART HELPERS
+# ----------------------------------------------------
+def flatten_play_dict(dct, value_key="score"):
+    """Flatten single-bar dictionaries from build_play_dictionaries (like bullish_plays_dict)."""
     rows = []
-    for ticker, info in plays_dict.items():
+    for ticker, info in dct.items():
         rows.append({
             "Ticker": ticker,
+            "Value": info.get(value_key, 0),
             "CompanyName": info.get("company_name", "Unknown"),
-            "CurrentPrice": info.get("current_price", 0),
-            "Value": info.get(y_col, 0)  # e.g. 'score' or 'unusual_contracts_count' etc.
+            "CurrentPrice": info.get("current_price", 0)
         })
     return pd.DataFrame(rows)
 
 
-def make_simple_bar(df, title):
+def make_single_bar(df, title, color_hex):
     """
-    For the 'plays' dictionaries (bullish, bearish, etc.), we only have Ticker-level data
-    (no date-level breakdown). We'll do Ticker on X and 'Value' on Y.
-
-    color='Ticker' just to show variety, or you can omit color if you prefer 1 color.
-
-    This is where you'd add color_discrete_sequence if you have custom hex codes.
-    e.g. color_discrete_sequence=["#123456", "#abcdef", ...]
+    Make a single-bar chart, using the user-provided color scheme.
+    (One bar per Ticker)
     """
     if df.empty:
         return px.bar(title=f"{title} (No data)")
+
     fig = px.bar(
         df,
         x="Ticker",
         y="Value",
-        color="Ticker",
-        title=title
-        # color_discrete_sequence=[ ... ] if you want custom hex codes
+        title=title,
+        color_discrete_sequence=[color_hex],
+        height=600  # Increase height a bit
     )
     return fig
 
 
-# ------ VOLUME flattening (already shown in earlier examples) ------
-def flatten_volume_dict(ticker_dict, all_data, volume_key="calls_volume"):
-    """
-    Flatten date-level volume (calls_volume or puts_volume) for each Ticker.
-    ticker_dict is e.g. most_volume_calls_dict, whale_call_dict, etc.
-    """
+def flatten_volume_dict(dct, all_data, volume_key="calls_volume"):
+    """Flatten date-level calls_volume or puts_volume."""
     rows = []
-    for ticker, info in ticker_dict.items():
-        # For date-level data we go back to all_data[ticker][volume_key]
-        raw_ticker_info = all_data.get(ticker, {})
-        vol_dict = raw_ticker_info.get(volume_key, {})  # e.g. {"02/28/25": 82, ...}
-
-        company_name = info.get("company_name", "Unknown")
-        current_price = info.get("current_price", 0)
-
-        for expiration_date, val in vol_dict.items():
+    for ticker, info in dct.items():
+        vol_map = all_data.get(ticker, {}).get(volume_key, {})
+        for expiration_date, val in vol_map.items():
             rows.append({
                 "Ticker": ticker,
                 "Expiration": expiration_date,
                 "Value": val,
-                "CompanyName": company_name,
-                "CurrentPrice": current_price
+                "CompanyName": info.get("company_name", "Unknown"),
+                "CurrentPrice": info.get("current_price", 0)
             })
     return pd.DataFrame(rows)
 
 
-def flatten_oi_dict(ticker_dict, all_data, oi_key="calls_oi"):
-    """
-    Flatten date-level OI (calls_oi or puts_oi) for each Ticker.
-    """
+def flatten_oi_dict(dct, all_data, oi_key="calls_oi"):
+    """Flatten date-level calls_oi or puts_oi."""
     rows = []
-    for ticker, info in ticker_dict.items():
-        raw_ticker_info = all_data.get(ticker, {})
-        oi_dict = raw_ticker_info.get(oi_key, {})
-
-        company_name = info.get("company_name", "Unknown")
-        current_price = info.get("current_price", 0)
-
-        for expiration_date, val in oi_dict.items():
+    for ticker, info in dct.items():
+        oi_map = all_data.get(ticker, {}).get(oi_key, {})
+        for expiration_date, val in oi_map.items():
             rows.append({
                 "Ticker": ticker,
                 "Expiration": expiration_date,
                 "Value": val,
-                "CompanyName": company_name,
-                "CurrentPrice": current_price
+                "CompanyName": info.get("company_name", "Unknown"),
+                "CurrentPrice": info.get("current_price", 0)
             })
     return pd.DataFrame(rows)
 
 
 def make_grouped_bar(df, title):
     """
-    For the 'OI/Volume' dictionaries, we have date-level data.
-    We'll do Ticker on X, Value on Y, color by Expiration.
+    Grouped bar chart for multi-exp data: x=Ticker, color=Expiration, default colors.
     """
     if df.empty:
-        return px.bar(title=f"{title} (No data)")
+        return px.bar(title=f"{title} (No data)", height=600)
     fig = px.bar(
         df,
         x="Ticker",
         y="Value",
         color="Expiration",
         barmode="group",
-        title=title
-        # color_discrete_sequence=[ ... ] if custom colors
+        title=title,
+        height=600
     )
     return fig
 
 
-# --------------------------------------------------------------------
-# 3) BUILD FIGURES FOR "build_play_dictionaries" (6 dicts)
-# --------------------------------------------------------------------
+# ----------------------------------------------------
+# 3) COLOR SCHEME FOR "build_play_dictionaries"
+# ----------------------------------------------------
+COLOR_BULLISH = "#4bf046"  # green
+COLOR_BEARISH = "#eb3847"  # red
+COLOR_UNUSUAL = "#a88fe3"  # purple
+COLOR_MONEYFLOW = "#9ebcf7"  # blue
+COLOR_CALLFLOW = "#aae38f"  # green (lighter)
+COLOR_PUTFLOW = "#d18c8c"  # red (lighter)
 
-# a) Bullish plays -> flatten with y_col="score"
-df_bullish = flatten_bullish_or_bearish(bullish_plays_dict, y_col="score")
-fig_bullish = make_simple_bar(df_bullish, "Bullish Plays (Score)")
+# We'll keep default colors for the OI & Volume charts.
 
-# b) Bearish plays -> flatten with y_col="score"
-df_bearish = flatten_bullish_or_bearish(bearish_plays_dict, y_col="score")
-fig_bearish = make_simple_bar(df_bearish, "Bearish Plays (Score)")
+# ----------------------------------------------------
+# 4) DICTIONARY CONFIG (Dropdown Options)
+# ----------------------------------------------------
+dict_options = {
+    # build_play_dictionaries
+    "Bullish Plays": {
+        "dictionary": bullish_plays_dict,
+        "flatten_func": flatten_play_dict,
+        "flatten_kwargs": {"value_key": "score"},
+        "chart_func": make_single_bar,
+        "chart_kwargs": {"color_hex": COLOR_BULLISH},
+        "title": "Bullish Plays (Score)"
+    },
+    "Bearish Plays": {
+        "dictionary": bearish_plays_dict,
+        "flatten_func": flatten_play_dict,
+        "flatten_kwargs": {"value_key": "score"},
+        "chart_func": make_single_bar,
+        "chart_kwargs": {"color_hex": COLOR_BEARISH},
+        "title": "Bearish Plays (Score)"
+    },
+    "Most Unusual Activity": {
+        "dictionary": unusual_activity_dict,
+        "flatten_func": flatten_play_dict,
+        "flatten_kwargs": {"value_key": "unusual_contracts_count"},
+        "chart_func": make_single_bar,
+        "chart_kwargs": {"color_hex": COLOR_UNUSUAL},
+        "title": "Most Unusual Activity"
+    },
+    "Money Flow": {
+        "dictionary": money_flow_dict,
+        "flatten_func": flatten_play_dict,
+        "flatten_kwargs": {"value_key": "total_unusual_spent"},
+        "chart_func": make_single_bar,
+        "chart_kwargs": {"color_hex": COLOR_MONEYFLOW},
+        "title": "Money Flow (Total Unusual Spent)"
+    },
+    "Call Flow Ratio": {
+        "dictionary": call_flow_dict,
+        "flatten_func": flatten_play_dict,
+        "flatten_kwargs": {"value_key": "calls_to_puts_ratio"},
+        "chart_func": make_single_bar,
+        "chart_kwargs": {"color_hex": COLOR_CALLFLOW},
+        "title": "Call Flow Ratio (Calls/Puts)"
+    },
+    "Put Flow Ratio": {
+        "dictionary": put_flow_dict,
+        "flatten_func": flatten_play_dict,
+        "flatten_kwargs": {"value_key": "puts_to_calls_ratio"},
+        "chart_func": make_single_bar,
+        "chart_kwargs": {"color_hex": COLOR_PUTFLOW},
+        "title": "Put Flow Ratio (Puts/Calls)"
+    },
 
-# c) Unusual activity -> flatten with y_col="unusual_contracts_count"
-df_unusual = flatten_bullish_or_bearish(unusual_activity_dict, y_col="unusual_contracts_count")
-fig_unusual = make_simple_bar(df_unusual, "Most Unusual Activity (Contracts)")
+    # build_oi_volume_dictionaries
+    "Most Volume Calls": {
+        "dictionary": most_volume_calls_dict,
+        "flatten_func": flatten_volume_dict,
+        "flatten_kwargs": {"all_data": all_tickers_data, "volume_key": "calls_volume"},
+        "chart_func": make_grouped_bar,
+        "chart_kwargs": {},
+        "title": "Most Volume Calls"
+    },
+    "Most Volume Puts": {
+        "dictionary": most_volume_puts_dict,
+        "flatten_func": flatten_volume_dict,
+        "flatten_kwargs": {"all_data": all_tickers_data, "volume_key": "puts_volume"},
+        "chart_func": make_grouped_bar,
+        "chart_kwargs": {},
+        "title": "Most Volume Puts"
+    },
+    "Highest Ratio Calls OI": {
+        "dictionary": highest_ratio_calls_oi_dict,
+        "flatten_func": flatten_oi_dict,
+        "flatten_kwargs": {"all_data": all_tickers_data, "oi_key": "calls_oi"},
+        "chart_func": make_grouped_bar,
+        "chart_kwargs": {},
+        "title": "Highest Ratio Calls OI"
+    },
+    "Highest Ratio Puts OI": {
+        "dictionary": highest_ratio_puts_oi_dict,
+        "flatten_func": flatten_oi_dict,
+        "flatten_kwargs": {"all_data": all_tickers_data, "oi_key": "puts_oi"},
+        "chart_func": make_grouped_bar,
+        "chart_kwargs": {},
+        "title": "Highest Ratio Puts OI"
+    },
+    "Whale Call Volume": {
+        "dictionary": whale_call_dict,
+        "flatten_func": flatten_volume_dict,
+        "flatten_kwargs": {"all_data": all_tickers_data, "volume_key": "calls_volume"},
+        "chart_func": make_grouped_bar,
+        "chart_kwargs": {},
+        "title": "Whale Call Volume"
+    },
+    "Whale Put Volume": {
+        "dictionary": whale_put_dict,
+        "flatten_func": flatten_volume_dict,
+        "flatten_kwargs": {"all_data": all_tickers_data, "volume_key": "puts_volume"},
+        "chart_func": make_grouped_bar,
+        "chart_kwargs": {},
+        "title": "Whale Put Volume"
+    },
+    "Whale Call OI": {
+        "dictionary": whale_call_oi_dict,
+        "flatten_func": flatten_oi_dict,
+        "flatten_kwargs": {"all_data": all_tickers_data, "oi_key": "calls_oi"},
+        "chart_func": make_grouped_bar,
+        "chart_kwargs": {},
+        "title": "Whale Call OI"
+    },
+    "Whale Put OI": {
+        "dictionary": whale_put_oi_dict,
+        "flatten_func": flatten_oi_dict,
+        "flatten_kwargs": {"all_data": all_tickers_data, "oi_key": "puts_oi"},
+        "chart_func": make_grouped_bar,
+        "chart_kwargs": {},
+        "title": "Whale Put OI"
+    }
+}
 
-# d) Money flow -> flatten with y_col="total_unusual_spent"
-df_moneyflow = flatten_bullish_or_bearish(money_flow_dict, y_col="total_unusual_spent")
-fig_moneyflow = make_simple_bar(df_moneyflow, "Money Flow (Total Unusual Spent)")
+dropdown_opts = [{"label": k, "value": k} for k in dict_options.keys()]
 
-# e) Call flow -> flatten with y_col="calls_to_puts_ratio"
-df_callflow = flatten_bullish_or_bearish(call_flow_dict, y_col="calls_to_puts_ratio")
-fig_callflow = make_simple_bar(df_callflow, "Call Flow Ratio (Calls/Puts)")
-
-# f) Put flow -> flatten with y_col="puts_to_calls_ratio"
-df_putflow = flatten_bullish_or_bearish(put_flow_dict, y_col="puts_to_calls_ratio")
-fig_putflow = make_simple_bar(df_putflow, "Put Flow Ratio (Puts/Calls)")
-
-# --------------------------------------------------------------------
-# 4) BUILD FIGURES FOR "build_oi_volume_dictionaries" (8 dicts)
-# --------------------------------------------------------------------
-
-# 4.1) most_volume_calls_dict -> flatten with calls_volume
-df_mvcalls = flatten_volume_dict(most_volume_calls_dict, all_tickers_data, volume_key="calls_volume")
-fig_mvcalls = make_grouped_bar(df_mvcalls, "Most Volume Calls")
-
-# 4.2) most_volume_puts_dict -> flatten with puts_volume
-df_mvputs = flatten_volume_dict(most_volume_puts_dict, all_tickers_data, volume_key="puts_volume")
-fig_mvputs = make_grouped_bar(df_mvputs, "Most Volume Puts")
-
-# 4.3) highest_ratio_calls_oi_dict -> flatten with calls_oi
-df_hr_calls_oi = flatten_oi_dict(highest_ratio_calls_oi_dict, all_tickers_data, oi_key="calls_oi")
-fig_hr_calls_oi = make_grouped_bar(df_hr_calls_oi, "Highest Ratio Calls OI")
-
-# 4.4) highest_ratio_puts_oi_dict -> flatten with puts_oi
-df_hr_puts_oi = flatten_oi_dict(highest_ratio_puts_oi_dict, all_tickers_data, oi_key="puts_oi")
-fig_hr_puts_oi = make_grouped_bar(df_hr_puts_oi, "Highest Ratio Puts OI")
-
-# 4.5) whale_call_dict -> flatten calls_volume
-df_whale_calls = flatten_volume_dict(whale_call_dict, all_tickers_data, volume_key="calls_volume")
-fig_whale_calls = make_grouped_bar(df_whale_calls, "Whale Call Volume")
-
-# 4.6) whale_put_dict -> flatten puts_volume
-df_whale_puts = flatten_volume_dict(whale_put_dict, all_tickers_data, volume_key="puts_volume")
-fig_whale_puts = make_grouped_bar(df_whale_puts, "Whale Put Volume")
-
-# 4.7) whale_call_oi_dict -> flatten calls_oi
-df_whale_call_oi = flatten_oi_dict(whale_call_oi_dict, all_tickers_data, oi_key="calls_oi")
-fig_whale_call_oi = make_grouped_bar(df_whale_call_oi, "Whale Call OI")
-
-# 4.8) whale_put_oi_dict -> flatten puts_oi
-df_whale_put_oi = flatten_oi_dict(whale_put_oi_dict, all_tickers_data, oi_key="puts_oi")
-fig_whale_put_oi = make_grouped_bar(df_whale_put_oi, "Whale Put OI")
-
-# --------------------------------------------------------------------
-# 5) MASTER TABLE
-# --------------------------------------------------------------------
-# Flatten some top-level fields into a single DataFrame so we can display
-# them in a search/sort table.
-master_rows = []
-for ticker, info in all_tickers_data.items():
-    master_rows.append({
-        "Ticker": ticker,
-        "Company": info.get("company_name", ""),
-        "CurrentPrice": info.get("current_price", ""),
-        "Score": info.get("score", ""),
-        "UnusualCount": info.get("unusual_contracts_count", ""),
-        "TotalUnusualSpent": info.get("total_unusual_spent", ""),
-        "calls_volume": json.dumps(info.get("calls_volume", {})),
-        "puts_volume": json.dumps(info.get("puts_volume", {})),
-        "calls_oi": json.dumps(info.get("calls_oi", {})),
-        "puts_oi": json.dumps(info.get("puts_oi", {})),
-    })
-master_df = pd.DataFrame(master_rows)
-
-master_table = dash_table.DataTable(
-    columns=[{"name": c, "id": c} for c in master_df.columns],
-    data=master_df.to_dict('records'),
-    filter_action="native",
-    sort_action="native",
-    page_size=10,
-    style_table={'overflowX': 'auto'}
-)
-
-# --------------------------------------------------------------------
-# 6) APP LAYOUT
-# --------------------------------------------------------------------
-# We'll do two major sections:
-# A) A 3×2 grid for the 6 'play' dictionaries
-# B) A 4×2 grid for the 8 'OI/Volume' dictionaries
-# C) Master table
+# ----------------------------------------------------
+# 5) LAYOUT
+# ----------------------------------------------------
 app.layout = html.Div([
-    html.H1("Options Analysis Dashboard", style={'textAlign': 'center'}),
+    html.H1("Options Analysis Dashboard", style={"textAlign": "center"}),
 
-    html.H2("A) Score- & Flow-Based Dicts (from build_play_dictionaries)"),
-    # 3 rows x 2 columns
     html.Div([
-        # Row 1
-        html.Div([
-            html.Div([dcc.Graph(figure=fig_bullish)], style={'width': '50%'}),
-            html.Div([dcc.Graph(figure=fig_bearish)], style={'width': '50%'}),
-        ], style={'display': 'flex'}),
-
-        # Row 2
-        html.Div([
-            html.Div([dcc.Graph(figure=fig_unusual)], style={'width': '50%'}),
-            html.Div([dcc.Graph(figure=fig_moneyflow)], style={'width': '50%'}),
-        ], style={'display': 'flex'}),
-
-        # Row 3
-        html.Div([
-            html.Div([dcc.Graph(figure=fig_callflow)], style={'width': '50%'}),
-            html.Div([dcc.Graph(figure=fig_putflow)], style={'width': '50%'}),
-        ], style={'display': 'flex'}),
+        # Center the dropdown
+        html.Div(
+            dcc.Dropdown(
+                id="dict-dropdown",
+                options=dropdown_opts,
+                value="Bullish Plays",
+                clearable=False,
+                style={"width": "400px", "margin": "0 auto"}  # center + set width
+            ),
+            style={"textAlign": "center"}
+        )
     ]),
 
-    html.H2("B) OI & Volume Dicts (from build_oi_volume_dictionaries)"),
-    # 4 rows x 2 columns = 8 charts
-    html.Div([
-        # Row 1
-        html.Div([
-            html.Div([dcc.Graph(figure=fig_mvcalls)], style={'width': '50%'}),
-            html.Div([dcc.Graph(figure=fig_mvputs)], style={'width': '50%'}),
-        ], style={'display': 'flex'}),
-
-        # Row 2
-        html.Div([
-            html.Div([dcc.Graph(figure=fig_hr_calls_oi)], style={'width': '50%'}),
-            html.Div([dcc.Graph(figure=fig_hr_puts_oi)], style={'width': '50%'}),
-        ], style={'display': 'flex'}),
-
-        # Row 3
-        html.Div([
-            html.Div([dcc.Graph(figure=fig_whale_calls)], style={'width': '50%'}),
-            html.Div([dcc.Graph(figure=fig_whale_puts)], style={'width': '50%'}),
-        ], style={'display': 'flex'}),
-
-        # Row 4
-        html.Div([
-            html.Div([dcc.Graph(figure=fig_whale_call_oi)], style={'width': '50%'}),
-            html.Div([dcc.Graph(figure=fig_whale_put_oi)], style={'width': '50%'}),
-        ], style={'display': 'flex'}),
-    ]),
+    # The main chart
+    dcc.Graph(id="dict-graph", style={"height": "700px"}),  # or "600px", up to you
 
     html.Hr(),
-    html.H2("C) Master Searchable Table of All Tickers"),
-    master_table
+
+    # Ticker search bar
+    html.H2("Ticker Search"),
+    html.Div([
+        dcc.Input(
+            id="ticker-input",
+            type="text",
+            placeholder="Enter Ticker (e.g. EDR)",
+            style={"marginRight": "8px"}
+        ),
+        html.Button("Search", id="search-button", n_clicks=0),
+    ], style={"marginBottom": "12px"}),
+
+    html.Div(id="search-result")
 ])
+
+
+# ----------------------------------------------------
+# 6) CALLBACKS
+# ----------------------------------------------------
+
+# A) Dictionary selection callback
+@app.callback(
+    Output("dict-graph", "figure"),
+    Input("dict-dropdown", "value")
+)
+def update_graph(selected_key):
+    cfg = dict_options[selected_key]
+    # Flatten
+    df = cfg["flatten_func"](cfg["dictionary"], **cfg["flatten_kwargs"])
+    # Make figure
+    fig = cfg["chart_func"](df, cfg["title"], **cfg["chart_kwargs"])
+    return fig
+
+
+# B) Ticker search callback
+@app.callback(
+    Output("search-result", "children"),
+    Input("search-button", "n_clicks"),
+    State("ticker-input", "value")
+)
+def search_ticker(n_clicks, ticker_value):
+    if n_clicks < 1 or not ticker_value:
+        return ""
+
+    # 1) Convert ticker_value to uppercase (assuming your JSON keys are uppercase)
+    ticker_value = ticker_value.strip().upper()
+    # 2) Check if it is in all_tickers_data
+    if ticker_value in all_tickers_data:
+        # 3) Retrieve the raw JSON for that ticker
+        data_obj = all_tickers_data[ticker_value]
+        # 4) Return it as a string
+        pretty_str = json.dumps(data_obj, indent=4)
+        return html.Pre(pretty_str)
+    else:
+        return html.Div(f"No data found for ticker '{ticker_value}'", style={"color": "red"})
+
 
 if __name__ == "__main__":
     app.run_server(debug=True)
