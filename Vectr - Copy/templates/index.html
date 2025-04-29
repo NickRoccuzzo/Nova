@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Vectr – Home{% endblock %}
+
+{% block header_form %}
+  <form id="ticker-form" class="form-inline d-flex justify-content-center align-items-center">
+    <input
+      type="text"
+      name="tickers"
+      id="tickers-input"
+      class="form-control mb-2 mr-sm-2"
+      placeholder="Enter your ticker(s)"
+      style="width: 250px;">  <!-- narrowed from 300px -->
+    <button type="submit" class="btn btn-primary mb-2">Search</button>
+  </form>
+{% endblock %}
+
+{% block scripts %}
+
+{% if seeker_missing %}
+  <div aria-live="polite" aria-atomic="true"
+       style="position: fixed; top: 1rem; right: 1rem; z-index: 2000;">
+    <div id="seeker-toast" class="toast" data-delay="7000">
+      <div class="toast-header">
+        <strong class="mr-auto text-warning">Heads up!</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">
+          &times;
+        </button>
+      </div>
+      <div class="toast-body small">
+        seeker_database.json not found.<br>
+        Please AWS-Login and click Contact to download it.
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<script>
+  // Your existing JS logic remains unchanged
+  function showContent(section) {
+    const contentArea = document.getElementById('content-area');
+    const sections = {
+      about: 'About: This application generates graphs for stock options data.',
+      gettingStarted: "Getting Started: Here's how to use Vectr.",
+      contact: 'Contact: You can reach us at contact@example.com.'
+    };
+    contentArea.innerHTML = `<p>${sections[section]}</p>`;
+  }
+
+  NProgress.configure({ showSpinner: false });
+
+  document.getElementById('ticker-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const tickersInput = document.getElementById('tickers-input').value.trim();
+    const errorMessage = document.getElementById('error-message');
+    errorMessage.classList.add('d-none');
+    errorMessage.textContent = '';
+    document.getElementById('graphs-container').innerHTML = '';
+
+    if (!tickersInput) {
+      return;
+    }
+
+    const tickerPattern = /^[A-Za-z,\s]+$/;
+    if (!tickerPattern.test(tickersInput)) {
+      errorMessage.textContent = 'Invalid characters detected. Only letters, commas, and spaces are allowed (no numbers).';
+      errorMessage.classList.remove('d-none');
+      return;
+    }
+
+    const tickers = tickersInput
+      .split(/[\s,]+/)
+      .map(t => t.trim().toUpperCase())
+      .filter(Boolean);
+
+    const invalidTickers = tickers.filter(t => t.length > 5);
+    if (invalidTickers.length) {
+      errorMessage.textContent = `Invalid ticker(s): ${invalidTickers.join(', ')}. Tickers must be 5 characters or less.`;
+      errorMessage.classList.remove('d-none');
+      return;
+    }
+
+    NProgress.start();
+    const submitButton = document.querySelector('#ticker-form button[type="submit"]');
+    submitButton.disabled = true;
+
+    const graphsData = [], errorMessages = [];
+
+    function processNextTicker() {
+      if (!tickers.length) {
+        NProgress.done();
+        submitButton.disabled = false;
+        renderGraphs();
+        return;
+      }
+      const ticker = tickers.shift();
+      const formData = new FormData();
+      formData.append('ticker', ticker);
+
+      fetch('/process_ticker', { method: 'POST', body: formData })
+  .then(resp => {
+    if (!resp.ok) throw new Error('Failed to process ticker');
+    return resp.json();
+  })
+        .then(data => {
+          graphsData.push(data);
+          processNextTicker();
+        })
+        .catch(() => {
+          errorMessages.push(`Error with ticker: ${ticker}`);
+          processNextTicker();
+        });
+    }
+
+    function renderGraphs() {
+  const container = document.getElementById('graphs-container');
+  graphsData.forEach((g, i) => {
+    const div = document.createElement('div');
+    div.id = `graph${i+1}`;
+    div.className = 'mb-5';
+
+    // Set initial invisible style
+    div.style.opacity = 0;
+    div.style.transition = 'opacity 0.7s ease-in-out';  // smooth fade
+
+    container.appendChild(div);
+
+    const graph = JSON.parse(g.graph_json);
+    Plotly.newPlot(div.id, graph.data, graph.layout, {responsive: true});
+
+    // After a tiny delay, fade in
+    setTimeout(() => {
+      div.style.opacity = 1;
+    }, 100);
+  });
+
+  if (errorMessages.length) {
+    const err = document.getElementById('error-message');
+    err.textContent = `Errors occurred: ${errorMessages.join(', ')}`;
+    err.classList.remove('d-none');
+  }
+}
+
+    processNextTicker();
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    {% if seeker_missing %}
+      $('#seeker-toast').toast('show');
+    {% endif %}
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const t = params.get('ticker');
+    if (t) {
+      document.getElementById('tickers-input').value = t.trim().toUpperCase();
+      document.querySelector('#ticker-form').dispatchEvent(new Event('submit', {cancelable: true}));
+    }
+  });
+</script>
+
+{% if seeker_missing %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    $('#seeker-toast').toast('show');
+  });
+</script>
+{% endif %}
+{% endblock %}
