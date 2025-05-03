@@ -101,6 +101,76 @@ def archive_and_clear_seeker():
 
 
 # ---------------- Helper Functions ---------------- X
+
+def load_ticker_sector_industry(json_path="tickers.json") -> dict[str, dict[str,str]]:
+    """
+    Read tickers.json and return a dict:
+      ticker -> {"sector": SectorName, "industry": IndustryName}
+    """
+    mapping: dict[str, dict[str,str]] = {}
+    try:
+        with open(json_path, "r") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        logging.error(f"tickers.json not found at {json_path}")
+        return mapping
+
+    for sector, industries in data.items():
+        for industry, tickers in industries.items():
+            for t in tickers:
+                mapping[t] = {"sector": sector, "industry": industry}
+    return mapping
+
+
+def build_seeker_database(
+    search_root: str = None,
+    output_path: str = None,
+    tickers_json: str = "tickers.json"
+) -> dict[str, dict]:
+    """
+    Walk seeker/<TICKER>/top_volume_contracts.json for every ticker,
+    consolidate into seeker_database.json, and inject sector/industry.
+    """
+    base = os.getcwd()
+    root = search_root or os.path.join(base, "seeker")
+    out_file = output_path or os.path.join(base, "seeker_database.json")
+
+    # load our reverse‑lookup map
+    ticker_map = load_ticker_sector_industry(tickers_json)
+
+    db: dict[str, dict] = {}
+    if not os.path.isdir(root):
+        logging.warning(f"No seeker folder found at {root}, skipping DB build")
+    else:
+        for ticker in os.listdir(root):
+            jf = os.path.join(root, ticker, "top_volume_contracts.json")
+            if not os.path.isfile(jf):
+                continue
+
+            try:
+                with open(jf, "r") as f:
+                    entry = json.load(f)
+            except Exception as e:
+                logging.error(f"Failed loading JSON for {ticker}: {e}")
+                continue
+
+            # inject sector/industry if we have it
+            meta = ticker_map.get(ticker, {})
+            entry["sector"]   = meta.get("sector")
+            entry["industry"] = meta.get("industry")
+
+            db[ticker] = entry
+
+    # write consolidated DB
+    try:
+        with open(out_file, "w") as f:
+            json.dump(db, f, indent=4)
+        logging.info(f"Wrote seeker database with {len(db)} tickers to {out_file}")
+    except Exception as e:
+        logging.error(f"Failed writing seeker database: {e}")
+
+    return db
+
 def convert_np_types(data):
     """Recursively convert NumPy data types to native Python types."""
     if isinstance(data, dict):
@@ -335,44 +405,6 @@ def process_ticker(ticker: str) -> None:
         logging.error(f"Error processing ticker {ticker}: {e}")
 
 
-def build_seeker_database(search_root=None, output_path=None):
-    """
-    Walks through seeker/<TICKER>/top_volume_contracts.json for every ticker
-    and writes a single JSON mapping ticker -> its data.
-
-    :param search_root: folder where all ticker sub-folders live (default: ./seeker)
-    :param output_path:   path to write the DB JSON (default: ./seeker_database.json)
-    :return: dict of the consolidated data
-    """
-    base = os.getcwd()
-    root = search_root or os.path.join(base, "seeker")
-    out_file = output_path or os.path.join(base, "seeker_database.json")
-
-    db = {}
-    if not os.path.isdir(root):
-        logging.warning(f"No seeker folder found at {root}, skipping DB build")
-    else:
-        for ticker in os.listdir(root):
-            tdir = os.path.join(root, ticker)
-            jf = os.path.join(tdir, "top_volume_contracts.json")
-            if os.path.isfile(jf):
-                try:
-                    with open(jf, "r") as f:
-                        db[ticker] = json.load(f)
-                except Exception as e:
-                    logging.error(f"Failed loading JSON for {ticker}: {e}")
-
-    # write consolidated DB
-    try:
-        with open(out_file, "w") as f:
-            json.dump(db, f, indent=4)
-        logging.info(f"Wrote seeker database with {len(db)} tickers to {out_file}")
-    except Exception as e:
-        logging.error(f"Failed writing seeker database: {e}")
-
-    return db
-
-
 def get_tickers_by_sector(json_path="tickers.json"):
     """Load tickers from a JSON file and return a dict with sector names as keys and a flat list of tickers as values."""
     with open(json_path, "r") as f:
@@ -440,7 +472,7 @@ if __name__ == "__main__":
                 logging.info(f"Processing sector: {sector} with {len(tickers_list)} tickers...")
                 process_tickers(tickers_list)
                 build_seeker_database()
-                # Pause 5 minutes between sectors to respect API limits
+                # Pause 5 minutes between sectors to respect API limits (! Very important, this is the sweet spot for timing ! )
                 time.sleep(300)
             last_run_time = time.time()
             manual_update_event.clear()

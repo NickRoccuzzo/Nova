@@ -70,6 +70,21 @@ def _normalize_chain(data: dict | list) -> dict[str, dict[str, list[dict]]]:
 
     return chain
 
+@cache.memoize()
+def get_ticker_meta(ticker: str) -> dict:
+    """
+    Returns:
+      - timestamp: str of ISO timestamp when this ticker was last queried
+      - expirations: int number of different expiration dates
+    """
+    db = _get_full_db()
+    meta = db.get(ticker, {})
+    ts = meta.get("timestamp", "")
+    chain = _normalize_chain(meta.get("data", {}))
+    return {
+        "timestamp": ts,
+        "expirations": len(chain)
+    }
 
 def parse_dollar_amount(s):
     """Parse '$1.4M' or '$750K' into float."""
@@ -174,6 +189,33 @@ def compute_ticker_ranking_std_side(tickers_tuple: tuple[str, ...], side: str = 
 
 
 @cache.memoize()
+def compute_sector_ranking_std_side(side: str = "BOTH"):
+    """
+    For each sector, compute the average std‑dev of unusual‑volume trades
+    (calls, puts or both) across all its tickers, then sort descending.
+    """
+    db = _get_full_db()
+
+    # 1) Build sector → [tickers]
+    sector_map: dict[str, list[str]] = {}
+    for ticker, meta in db.items():
+        sector = meta.get("sector") or "Unknown"
+        sector_map.setdefault(sector, []).append(ticker)
+
+    # 2) Compute each sector’s aggregated score
+    sector_scores: dict[str, float] = {}
+    for sector, tickers in sector_map.items():
+        per_ticker = compute_ticker_ranking_std_side(tuple(tickers), side)
+        if per_ticker:
+            avg_std = sum(std for _, std in per_ticker) / len(per_ticker)
+        else:
+            avg_std = 0.0
+        sector_scores[sector] = avg_std
+
+    # 3) Sort descending
+    return sorted(sector_scores.items(), key=lambda x: x[1], reverse=True)
+
+@cache.memoize()
 def get_ticker_stats(ticker: str) -> dict:
     """
     Returns:
@@ -257,85 +299,78 @@ def _build_plot_dict(chain):
 
 # 10) Layout builders
 
+# ─── 6) LAYOUT BUILDERS ─────────────────────────────────────
 def create_dash_layout():
     return html.Div([
         dcc.Location(id="url", refresh=False),
         html.Div(id="page-content")
     ])
 
-def render_ranking_page():
-    # grab our knobs
-    cfg        = current_app.config
-    max_cards  = cfg["MAX_RANKING_CARDS"]
-    cols       = cfg["RANKING_COLUMNS"]
-    delay_ms   = cfg["CARD_ANIMATION_DELAY_MS"]
-    placeholder= cfg["SEARCH_PLACEHOLDER"]
-
-    # build the data
-    ranks = compute_ticker_ranking_std_side(
-        tuple(get_ticker_list()), side="BOTH"
-    )[:max_cards]
-
-    # compute column width for dash_bootstrap (12-grid)
-    col_width = max(1, 12 // cols)
+def render_home_page():
+    cfg         = current_app.config
+    placeholder = cfg["SEARCH_PLACEHOLDER"]
 
     return dbc.Container([
-        dbc.Row(dbc.Col(html.H2(
-            "Master Ticker Rankings", className="text-center my-4"
-        ))),
+        # Header & Controls
+        dbc.Row(dbc.Col(html.H2("Ticker Explorer", className="text-center my-4"))),
 
-        # search box
-        dbc.Row(dbc.Col(
-            dbc.Input(
+        dbc.Row([
+            # View switch
+            dbc.Col(dcc.RadioItems(
+                id="view-switch",
+                options=[
+                    {"label":"Master Ranking", "value":"master"},
+                    {"label":"Sector View",    "value":"sector"},
+                ],
+                value="master",
+                inline=True
+            ), width="auto"),
+
+            # Call/Put/Both
+            dbc.Col(dcc.RadioItems(
+                id="ranking-type-radio",
+                options=[
+                    {"label":"Both",       "value":"BOTH"},
+                    {"label":"Calls Only", "value":"CALL"},
+                    {"label":"Puts Only",  "value":"PUT"},
+                ],
+                value="BOTH",
+                inline=True
+            ), width="auto"),
+
+            # Search box
+            dbc.Col(dbc.Input(
                 id="ticker-search",
                 placeholder=placeholder,
                 type="text",
-                className="mb-4"
-            ),
-            width=cols, className="mx-auto"
-        )),
+                className="mb-0"
+            ), width=4),
+        ], className="mb-4 justify-content-center"),
 
-        # cards grid
-        dbc.Row([
-            dbc.Col(
-                dcc.Link(
-                    dbc.Card([
-                        dbc.CardBody([
-                            html.H5(ticker, className="card-title"),
-                            html.P(f"Std Dev: {value:.2f}",
-                                   className="card-text small")
-                        ])
-                    ],
-                    className="simple-card m-2",
-                    style={"animationDelay": f"{i * delay_ms}ms"}
-                    ),
-                    href=f"/seeker-gui/ticker/{ticker}",
-                    style={"textDecoration": "none"}
-                ),
-                width=col_width,
-                className="d-flex justify-content-center"
-            )
-            for i, (ticker, value) in enumerate(ranks)
-        ], className="card-stack")
+        # Interval (for auto‑refresh)
+        dcc.Interval(id="interval-component", interval=30*1000, n_intervals=0),
+
+        # Cards container
+        html.Div(id="cards-container", className="card-stack")
     ], fluid=True)
 
 def ticker_detail_page(ticker):
     return html.Div([
-        html.H2(f"Options for {ticker}", style={"textAlign": "center", "marginTop": "2rem"}),
+        html.H2(f"Options for {ticker}", style={"textAlign":"center","marginTop":"2rem"}),
         dcc.RadioItems(
             id="price-timeframe-radio",
             options=[
-                {"label": "1d", "value": "1d"},
-                {"label": "5d", "value": "5d"},
-                {"label": "1mo", "value": "1mo"},
-                {"label": "3mo", "value": "3mo"},
-                {"label": "6mo", "value": "6mo"},
-                {"label": "1y", "value": "1y"},
-                {"label": "5y", "value": "5y"}
+                {"label":"1d","value":"1d"},
+                {"label":"5d","value":"5d"},
+                {"label":"1mo","value":"1mo"},
+                {"label":"3mo","value":"3mo"},
+                {"label":"6mo","value":"6mo"},
+                {"label":"1y","value":"1y"},
+                {"label":"5y","value":"5y"},
             ],
             value="3mo",
             inline=True,
-            style={"textAlign": "center", "marginBottom": "1rem"}
+            style={"textAlign":"center","marginBottom":"1rem"}
         ),
         dcc.Graph(id="ticker-detail-graph"),
         dcc.Interval(id="interval-component-detail", interval=30*1000, n_intervals=0)
@@ -345,64 +380,142 @@ def ticker_detail_page(ticker):
 # 11) Callbacks
 def register_dash_callbacks(dash_app):
     @dash_app.callback(
-        dash.dependencies.Output("page-content", "children"),
-        dash.dependencies.Input("url", "pathname")
+        Output("page-content", "children"),
+        Input("url", "pathname")
     )
     def display_page(path):
         if path in ("/", "/seeker-gui/"):
-            return render_ranking_page()
+            return render_home_page()
         if path.startswith("/seeker-gui/ticker/"):
             ticker = path.split("/seeker-gui/ticker/")[1]
             return ticker_detail_page(ticker)
-        return html.H3("404 Page Not Found", style={"textAlign": "center", "marginTop": "2rem"})
+        return html.H3("404 Page Not Found", style={"textAlign":"center","marginTop":"2rem"})
 
     @dash_app.callback(
-        Output("ranking-list", "children"),
+        Output("cards-container", "children"),
+        Input("view-switch", "value"),
         Input("ranking-type-radio", "value"),
         Input("ticker-search", "value"),
-        Input("interval-component", "n_intervals")
+        Input("interval-component", "n_intervals"),
     )
-    def update_ranking(rtype, search, _):
-        ranks = compute_ticker_ranking_std_side(get_ticker_list(), side=rtype)
-        if search:
-            ranks = [r for r in ranks if search.upper() in r[0]]
-        ranks = ranks[:20]
+    def update_cards(view, side, search, _):
+        cfg        = current_app.config
+        max_cards  = cfg["MAX_RANKING_CARDS"]
+        cols       = cfg["RANKING_COLUMNS"]
+        delay_ms   = cfg["CARD_ANIMATION_DELAY_MS"]
+        col_width  = max(1, 12 // cols)
 
-        cards = []
-        for i, (ticker, score) in enumerate(ranks):
-            cards.append(
-                html.Div([
-                    html.Div([
-                        html.Div([
-                            html.H5(f"#{i + 1}: {ticker}", className="card-title"),
-                            html.P(f"Std Dev: {score:.2f}", className="card-text"),
-                        ], className="card-front"),
-                        html.Div([
-                            html.H6("Top Whale Trade", className="card-title"),
-                            html.P("Coming Soon!", className="card-text"),
-                            dbc.Button("View", href=f"/seeker-gui/ticker/{ticker}", color="primary", size="sm")
-                        ], className="card-back"),
-                    ], className="flip-inner"),
-                ], className="flip-card m-2", style={"animationDelay": f"{i * 0.1}s"})
+        # ─── Master Ranking ─────────────────────
+        if view == "master":
+            # 1) compute per‑ticker std dev
+            ranks = compute_ticker_ranking_std_side(
+                tuple(get_ticker_list()), side=side
             )
-        return html.Div(
-            cards,
-            style={
-                "display": "flex",
-                "flexDirection": "column",
-                "alignItems": "center",
-                "marginTop": "2rem"
-            }
-        )
+            # 2) apply search filter + truncate
+            if search:
+                s = search.strip().upper()
+                ranks = [r for r in ranks if s in r[0]]
+            ranks = ranks[:max_cards]
 
+            # 3) build a rolodex‑style vertical list
+            cards = []
+            for i, (ticker, score) in enumerate(ranks):
+                cards.append(
+                    dcc.Link(
+                        dbc.Card([
+                            # big, left‑aligned rank header
+                            dbc.CardHeader(
+                                f"#{i + 1}",
+                                className="rolodex-rank"
+                            ),
+                            dbc.CardBody([
+                                html.H5(ticker, className="card-title"),
+                                html.P(f"Std Dev: {score:.2f}", className="card-text small"),
+                            ])
+                        ],
+                            className="rolodex-card mb-3 p-3",
+                        ),
+                        href=f"/seeker-gui/ticker/{ticker}",
+                        style={"textDecoration": "none", "width": "100%"}
+                    )
+                )
+
+            return html.Div(
+                cards,
+                className="rolodex-container"
+            )
+
+        # ─── Sector View with drill‑in ───────────────────
+        else:
+            from dash_bootstrap_components import Accordion, AccordionItem
+
+            # 1) pull full DB
+            db = _get_full_db()
+
+            # 2) group tickers by sector
+            sector_groups = {}
+            for tk, meta in db.items():
+                sec = meta.get("sector", "Unknown")
+                sector_groups.setdefault(sec, []).append(tk)
+
+            # 3) compute aggregate score per sector
+            sector_scores = []
+            for sec, tickers in sector_groups.items():
+                stds = [
+                    compute_ticker_ranking_std_side((tk,), side=side)[0][1]
+                    for tk in tickers
+                ]
+                agg = float(np.sum(stds)) if stds else 0.0
+                sector_scores.append((sec, agg, tickers))
+
+            # 4) sort & limit
+            sector_scores.sort(key=lambda x: x[1], reverse=True)
+            sector_scores = sector_scores[:max_cards]
+
+            # 5) build an accordion: one panel per sector
+            items = []
+            for sec, agg, members in sector_scores:
+                # group this sector’s tickers by industry
+                industry_groups = {}
+                for tk in members:
+                    ind = db[tk].get("industry", "Unknown")
+                    industry_groups.setdefault(ind, []).append(tk)
+
+                # build the inside of the accordion for this sector
+                children = []
+                for ind, tks in industry_groups.items():
+                    children.append(html.H6(ind, style={"marginTop": "1rem"}))
+                    children.append(
+                        html.Ul(
+                            [html.Li(t) for t in sorted(tks)],
+                            style={"marginLeft": "1rem"}
+                        )
+                    )
+
+                items.append(
+                    AccordionItem(
+                        title=f"{sec} — Aggregate Std: {agg:.2f}",
+                        children=children
+                    )
+                )
+
+            return html.Div(
+                Accordion(
+                    items,
+                    start_collapsed=True,
+                    always_open=True,
+                    flush=True
+                ),
+                style={"marginTop": "1rem"}
+            )
 
     @dash_app.callback(
-        dash.dependencies.Output("ticker-detail-graph", "figure"),
-        dash.dependencies.Input("url", "pathname"),
-        dash.dependencies.Input("price-timeframe-radio", "value"),
-        dash.dependencies.Input("interval-component-detail", "n_intervals")
+        Output("ticker-detail-graph", "figure"),
+        Input("url", "pathname"),
+        Input("price-timeframe-radio", "value"),
+        Input("interval-component-detail", "n_intervals")
     )
-    def update_ticker_detail_combined(path, tf, _):
+    def update_ticker_detail(path, tf, _):
         if path.startswith("/seeker-gui/ticker/"):
             ticker = path.split("/seeker-gui/ticker/")[1]
             return build_combined_graph(ticker, tf)
@@ -733,6 +846,5 @@ def get_top_strike_for_side(pdata, side):
         strikes.append(tmp_s[idx])
         vols.append(tmp_v[idx])
     return strikes, vols
-
 
 
