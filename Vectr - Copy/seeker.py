@@ -1,7 +1,6 @@
 # seeker.py
 
 # ---------------- MODULES ---------------- X
-
 import os
 import shutil
 import time
@@ -10,21 +9,27 @@ import json
 import zipfile
 import numpy as np
 import pandas as pd
+import yfinance as yf
 from datetime import datetime, timedelta
 import threading
 from zoneinfo import ZoneInfo
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from logging.handlers import RotatingFileHandler
-
-from VectrPyLogic import save_options_data
+from VectrPyLogic import save_options_data, preprocess_dates, find_top_volume_contracts, local_tz
 
 
 # ---------------- CONFIG & DEFAULTS ----------------
+
+SEEKER_DIR   = os.path.join(os.getcwd(), "seeker")
+ARCHIVE_DIR  = os.path.join(os.getcwd(), "seeker_archive")
+DB_PATH = os.path.join(os.getcwd(), "seeker_database.json")
+
 DEFAULT_CONFIG = {
-    "max_workers": 2,
+    "max_workers": 8,
     "max_retries": 3,
     "backoff_factor": 2,
-    "retention_days": 1  # prune archives older than this many days
+    "retention_days": 1,
+    "sector_pause": 300,          # <– new: seconds between sectors
 }
 
 if os.path.exists("config.json"):
@@ -156,8 +161,17 @@ def build_seeker_database(
 
             # inject sector/industry if we have it
             meta = ticker_map.get(ticker, {})
-            entry["sector"]   = meta.get("sector")
+            entry["sector"] = meta.get("sector")
             entry["industry"] = meta.get("industry")
+
+            # Inject last_price (only once while connected)
+            try:
+                yf_ticker = yf.Ticker(ticker)
+                price = yf_ticker.info.get("regularMarketPrice", 0.0)
+                entry["last_price"] = float(price) if price else 0.0
+            except Exception as e:
+                logging.warning(f"Failed to fetch price for {ticker}: {e}")
+                entry["last_price"] = 0.0
 
             db[ticker] = entry
 
@@ -231,85 +245,94 @@ def format_trade_date(dt):
 
 def get_top_three_contracts(ticker: str) -> dict:
     """
-    Reads CSV files from the ticker's CALLS and PUTS folders, extracts the top three contracts (by volume)
-    for each expiration date, and returns a dictionary mapping expiration dates to their corresponding
-    CALLS and PUTS data.
-    [Documentation omitted for brevity]
+    Return, for each expiry, up to three highest‑volume CALLS and PUTS.
     """
+    base  = os.getcwd()
+    calls = preprocess_dates(os.path.join(base, ticker, "CALLS"), "CALLS")
+    puts  = preprocess_dates(os.path.join(base, ticker, "PUTS"),  "PUTS")
+
     result = {}
-    base_dir = os.getcwd()
-    ticker_folder = os.path.join(base_dir, ticker)
-    today_date = datetime.now(ZoneInfo("America/New_York")).date()
-
-    for option_type in ["CALLS", "PUTS"]:
-        option_folder = os.path.join(ticker_folder, option_type)
-        if not os.path.exists(option_folder):
-            continue
-        csv_files = [f for f in os.listdir(option_folder) if f.endswith(".csv")]
-        for csv_file in csv_files:
-            try:
-                exp_date_raw = csv_file[:8]
-                year = exp_date_raw[0:4]
-                month = exp_date_raw[4:6]
-                day = exp_date_raw[6:8]
-                exp_date = f"{month}/{day}/{year}"
-            except Exception as e:
-                logging.error(f"Error parsing expiration date from filename {csv_file}: {e}")
+    for side, data in (("CALLS", calls), ("PUTS", puts)):
+        for exp, df in data.items():
+            if df.empty:
                 continue
 
-            file_path = os.path.join(option_folder, csv_file)
-            try:
-                df = pd.read_csv(file_path)
-            except Exception as e:
-                logging.error(f"Error reading CSV file {file_path}: {e}")
+            # numeric coercion (in case preprocess didn't already)
+            df["volume"]       = pd.to_numeric(df["volume"],       errors="coerce")
+            df["openInterest"] = pd.to_numeric(df["openInterest"], errors="coerce")
+
+            # drop rows with no volume or OI
+            df = df.dropna(subset=["volume", "openInterest"])
+            if df.empty:
                 continue
 
-            if 'volume' not in df.columns or 'lastTradeDate' not in df.columns:
-                logging.error(f"Required columns not found in {file_path}")
-                continue
-
-            try:
-                df['lastTradeDate'] = pd.to_datetime(df['lastTradeDate'], errors='coerce')
-                if df['lastTradeDate'].dt.tz is None:
-                    df['lastTradeDate'] = df['lastTradeDate'].dt.tz_localize('UTC')
-                df['lastTradeDate_EST'] = df['lastTradeDate'].dt.tz_convert(ZoneInfo("America/New_York"))
-                df['is_current'] = df['lastTradeDate_EST'].dt.date.apply(lambda d: 1 if d == today_date else 0)
-            except Exception as e:
-                logging.error(f"Error processing 'lastTradeDate' in {file_path}: {e}")
-                continue
-
-            df = df.sort_values(by=['is_current', 'volume'], ascending=[False, False])
-            top_three = df.head(3)
+            top3 = df.nlargest(3, "volume")
 
             contracts = []
-            for _, row in top_three.iterrows():
-                try:
-                    strike = row['strike']
-                    volume = row['volume']
-                    openInterest = row['openInterest']
-                    lastPrice = row['lastPrice']
-                    total_spent = volume * lastPrice * 100
-                    formatted_total_spent = format_dollar_amount(total_spent)
-                    unusual = volume > openInterest
-                    freshness = "current" if row['is_current'] == 1 else "old"
-                    # Format the lastTradeDate_EST into a human-readable string.
-                    last_trade_est = row['lastTradeDate_EST']
-                    formatted_trade_date = format_trade_date(last_trade_est)
-                    contract_data = {
-                        "strike": strike,
-                        "volume": volume,
-                        "openInterest": openInterest,
-                        "total_spent": formatted_total_spent,
-                        "unusual": unusual,
-                        "freshness": freshness,
-                        "lastTradeDate": formatted_trade_date
-                    }
-                    contracts.append(contract_data)
-                except Exception as e:
-                    logging.error(f"Error processing row in {file_path}: {e}")
-            if exp_date not in result:
-                result[exp_date] = {"CALLS": [], "PUTS": []}
-            result[exp_date][option_type] = contracts
+            for _, row in top3.iterrows():
+                spent = row["volume"] * row["lastPrice"] * 100
+                contracts.append({
+                    "strike":        row["strike"],
+                    "volume":        int(row["volume"]),
+                    "openInterest":  int(row["openInterest"]),
+                    "total_spent":   format_dollar_amount(spent),
+                    "unusual":       row["volume"] > row["openInterest"],
+                    "freshness": (
+                        "current" if row["lastTradeDate_Local"].date() ==
+                        datetime.now(local_tz).date() else "old"
+                    ),
+                    "lastTradeDate": format_trade_date(row["lastTradeDate_Local"]),
+                })
+
+            result.setdefault(exp, {"CALLS": [], "PUTS": []})[side] = contracts
+
+    return result
+
+
+def get_top_three_oi_contracts(ticker: str) -> dict:
+    """
+    For each expiry, return up to three contracts *per side*
+    having the largest openInterest.  Structure mirrors
+    get_top_three_contracts so down‑stream code can treat them alike.
+
+        {
+          "05/16/25": {
+              "CALLS": [
+                  {"strike": 150, "openInterest": 65432},
+                  ...
+              ],
+              "PUTS": [ ... ]
+          },
+          ...
+        }
+    """
+    base  = os.getcwd()
+    calls = preprocess_dates(os.path.join(base, ticker, "CALLS"), "CALLS")
+    puts  = preprocess_dates(os.path.join(base, ticker, "PUTS"),  "PUTS")
+
+    result: dict[str, dict[str, list[dict]]] = {}
+
+    for side, data in (("CALLS", calls), ("PUTS", puts)):
+        for exp, df in data.items():
+            if df.empty:
+                continue
+
+            df["openInterest"] = pd.to_numeric(df["openInterest"], errors="coerce")
+            df = df.dropna(subset=["openInterest"])
+            if df.empty:
+                continue
+
+            top3 = df.nlargest(3, "openInterest")
+
+            simplified = [
+                {
+                    "strike":       row["strike"],
+                    "openInterest": int(row["openInterest"]),
+                }
+                for _, row in top3.iterrows()
+            ]
+
+            result.setdefault(exp, {"CALLS": [], "PUTS": []})[side] = simplified
 
     return result
 
@@ -353,6 +376,7 @@ def process_ticker(ticker: str) -> None:
 
         # Step 2: Extract top three contracts data.
         top_volume_contracts = get_top_three_contracts(ticker)
+        top_oi_contracts = get_top_three_oi_contracts(ticker)
         if not top_volume_contracts or top_volume_contracts == {}:
             logging.error(f"No option chain found for ticker {ticker}, may not exist. Retrying in 10 seconds...")
             time.sleep(10)
@@ -370,7 +394,8 @@ def process_ticker(ticker: str) -> None:
         # Prepare output data with a timestamp.
         output_data = {
             "timestamp": datetime.now(ZoneInfo("America/New_York")).isoformat(),
-            "data": top_volume_contracts_converted
+            "by_volume": convert_np_types(top_volume_contracts),
+            "by_oi": top_oi_contracts  # already plain ints
         }
 
         # Step 3: Create the target folder and save output_data.
@@ -445,6 +470,66 @@ def input_listener():
             manual_update_event.set()
 
 
+
+def _compute_setups(db: dict[str, dict], direction: str, top_n: int = 10) -> list[dict]:
+    from concurrent.futures import ThreadPoolExecutor
+    def score_one(t):
+        ent   = db[t]
+        price = ent.get("last_price", 0.0)
+        best  = 0.0
+        for exp, sides in ent.get("by_oi", {}).items():
+            calls = sides.get("CALLS", [])
+            puts  = sides.get("PUTS", [])
+            if not (calls and puts):
+                continue
+            call, put = calls[0], puts[0]
+            ok = (
+                (direction == "ABOVE" and price < call["strike"] and price < put["strike"])
+                or
+                (direction == "BELOW" and price > call["strike"] and price > put["strike"])
+            )
+            if not ok:
+                continue
+            dist = ((price - call["strike"]) + (price - put["strike"])) / price
+            score = (call["openInterest"] + put["openInterest"]) * (1 + dist)
+            best = max(best, score)
+        return {"ticker": t, "score": best}
+
+    with ThreadPoolExecutor(max_workers=16) as ex:
+        scored = list(ex.map(score_one, db.keys()))
+    return sorted(scored, key=lambda x: x["score"], reverse=True)[:top_n]
+
+
+def _compute_sectors(db: dict[str, dict]) -> list[dict]:
+    from math import isnan
+    from statistics import pstdev
+
+    # build sector → [tickers]
+    sector_map: dict[str, list[str]] = {}
+    for t, meta in db.items():
+        sec = meta.get("sector") or "Unknown"
+        sector_map.setdefault(sec, []).append(t)
+
+    sector_scores: dict[str, float] = {}
+    for sec, tickers in sector_map.items():
+        stds = []
+        for t in tickers:
+            day_map = db[t].get("by_volume", {})
+            vols = []
+            for day in day_map.values():
+                for side_key in ("CALLS", "PUTS"):
+                    for c in day.get(side_key, []):
+                        if c.get("unusual"):
+                            v = c.get("volume", 0.0)
+                            if v is not None and not isnan(v):
+                                vols.append(v)
+            if vols:
+                stds.append(pstdev(vols))
+        sector_scores[sec] = (sum(stds) / len(stds)) if stds else 0.0
+
+    sorted_sectors = sorted(sector_scores.items(), key=lambda x: x[1], reverse=True)
+    return [{"sector": sec, "score": score} for sec, score in sorted_sectors]
+
 if __name__ == "__main__":
     # Archive old data and prune old archives before starting
     archive_and_clear_seeker()
@@ -455,9 +540,9 @@ if __name__ == "__main__":
     for sector, tickers in sectors_dict.items():
         logging.info(f"Sector '{sector}' has {len(tickers)} tickers.")
 
-    # Hard-coded 15-minute interval
-    interval_seconds = 15 * 60
-    logging.info("Scheduled query interval set to 15 minutes.")
+    # Hard-coded 10-minute interval
+    interval_seconds = 10 * 60
+    logging.info("Scheduled query interval set to 10 minutes.")
 
     # Start listener for manual updates ("u" + Enter)
     listener_thread = threading.Thread(target=input_listener, daemon=True)
@@ -467,14 +552,36 @@ if __name__ == "__main__":
     while True:
         now = time.time()
         if (now - last_run_time) >= interval_seconds or manual_update_event.is_set():
-            logging.info("Starting update of tickers concurrently, sector by sector...")
+            logging.info("Starting update...")
             for sector, tickers_list in sectors_dict.items():
                 logging.info(f"Processing sector: {sector} with {len(tickers_list)} tickers...")
                 process_tickers(tickers_list)
-                build_seeker_database()
+                build_seeker_database()  # ← writes top‑level tickers
+
+                # ─── inject precomputed setups & sectors ───
+                DB_PATH = os.path.join(os.getcwd(), "seeker_database.json")
+                with open(DB_PATH, "r") as f:
+                    full = json.load(f)
+
+                db = full  # flat JSON: each key is a ticker
+                full["setups"] = {
+                    "bullish": _compute_setups(db, "ABOVE", top_n=10),
+                    "bearish": _compute_setups(db, "BELOW", top_n=10)
+                }
+                full["sectors"] = _compute_sectors(db)
+
+                with open(DB_PATH, "w") as f:
+                    json.dump(full, f, indent=2)
+                # ────────────────────────────────────────────
+
                 # Pause 5 minutes between sectors to respect API limits (! Very important, this is the sweet spot for timing ! )
-                time.sleep(300)
+                time.sleep(CONFIG["sector_pause"])
             last_run_time = time.time()
             manual_update_event.clear()
             logging.info("Concurrent update completed for all sectors. Waiting for next scheduled update...")
         time.sleep(5)
+
+
+
+
+

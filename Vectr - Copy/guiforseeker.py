@@ -1,20 +1,27 @@
 # guiforseeker.py
-from utils import load_seeker_db, load_seeker_db_s3
+
 from plotly.subplots import make_subplots
-from dash import dcc, html, Input, Output
+from dash import dcc, html
 from datetime import datetime, timedelta
-from flask import current_app
 from extensions import cache
+import yfinance as yf
 import re
 import logging
+import time
 import dash
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
-import numpy as np
-import yfinance as yf
+import plotly.express as px
+import pandas as pd
+from utils import load_seeker_db
+from flask import current_app
 import math
+from dash.dependencies import Input, Output, State
 
-# 1) --- Global constants
+SETUPS: dict[str, list[tuple[str, float]]] = {"bullish": [], "bearish": []}
+SECTORS: list[tuple[str, float]] = []
+
+# ) Global constants
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 EMOJI_MAP = {
     "Small Whale":  "🐟",
@@ -24,13 +31,50 @@ EMOJI_MAP = {
 }
 dash_theme = dbc.themes.BOOTSTRAP
 
-# 2) --- Cache & DB loader
+
+# ) --- Cache & DB loader
 @cache.memoize()
 def _get_full_db():
     """
-    Load & parse the entire seeker_database.json once per TTL.
+    Load the full JSON, then strip out only the ticker entries.
+    If you've wrapped tickers under "tickers", pull that; otherwise,
+    filter out the precomputed keys.
     """
+    full = load_seeker_db(current_app.config["LOCAL_DB_FILE"])
+    # Case A: you wrapped everything under "tickers"
+    if isinstance(full, dict) and "tickers" in full:
+        return full["tickers"]
+    # Case B: flat JSON with extra keys "setups" & "sectors"
+    return {
+        key: val
+        for key, val in full.items()
+        if key not in ("setups", "sectors")
+    }
+
+# ) At top of guiforseeker.py
+@cache.memoize()
+def _get_full_db_raw() -> dict:
+    # loads the entire seeker_database.json — cached in memory
     return load_seeker_db(current_app.config["LOCAL_DB_FILE"])
+
+# ) Rewrite your two getters to use _get_full_db_raw()
+@cache.memoize()
+def get_precomputed_setups(direction: str) -> list[tuple[str, float]]:
+    block = _get_full_db_raw().get("setups", {}).get(direction, [])
+    return [(it["ticker"], it["score"]) for it in block]
+
+@cache.memoize()
+def get_precomputed_sectors() -> list[tuple[str, float]]:
+    return [(it["sector"], it["score"]) for it in _get_full_db_raw().get("sectors", [])]
+
+
+@cache.memoize()
+def get_ticker_list() -> list[str]:
+    """
+    Return the list of all tickers (keys) from the filtered DB,
+    so it excludes the precomputed 'setups' and 'sectors' blocks.
+    """
+    return list(_get_full_db().keys())
 
 
 @cache.memoize()
@@ -50,23 +94,29 @@ def get_db_last_updated() -> datetime | None:
     return max(times) if times else None
 
 
-# 3) --- Normalization & parsing helpers
-def _normalize_chain(data: dict | list) -> dict[str, dict[str, list[dict]]]:
+# ) --- Normalization & parsing helpers
+def _normalize_chain(entry: dict) -> dict:
     """
-    Turn either {"data": {...}} or a list-of-entries into
-    a dict mapping exp_date → {"CALLS":[…], "PUTS":[…]}.
-    """
-    if isinstance(data, dict) and "data" in data:
-        return data["data"]
+    Return the CALL/PUT chain in a stable shape:
 
-    chain = {}
-    for c in data if isinstance(data, list) else []:
-        ed = c.get("date")
-        if not ed:
-            continue
-        key = ed
-        side = c.get("type", "").upper() + "S"
-        chain.setdefault(key, {"CALLS": [], "PUTS": []})[side].append(c)
+        {
+          "05/16/25": {
+              "CALLS": [...],   # always present, maybe empty list
+              "PUTS":  [...]
+          },
+          ...
+        }
+
+    Works with both legacy  {"data": {...}}
+    and the new            {"by_volume": {...}}  layout.
+    """
+    # 1) pick whichever root key exists
+    chain = entry.get("data") or entry.get("by_volume") or {}
+
+    # 2) ensure each expiry has both side keys so later code never KeyErrors
+    for exp, sides in chain.items():
+        sides.setdefault("CALLS", [])
+        sides.setdefault("PUTS",  [])
 
     return chain
 
@@ -135,7 +185,7 @@ def extract_strike_from_hover(text):
     return np.nan
 
 
-# 4) --- Unusual‑volumes extractor
+# ) --- Unusual‑volumes extractor
 def _extract_unusual_vols(chain, side="BOTH"):
     """
     Walk the normalized chain and pull out all volumes
@@ -162,58 +212,6 @@ def _extract_unusual_vols(chain, side="BOTH"):
                     except:
                         pass
     return vols
-
-
-# 5) --- Stats & ranking (all memoized!)
-@cache.memoize()
-def compute_ticker_ranking_std_side(tickers_tuple: tuple[str, ...], side: str = "BOTH"):
-    """
-    tickers_tuple: tuple of tickers so it's hashable for cache keys
-    side: "CALL", "PUT", or "BOTH"
-    """
-    db      = _get_full_db()
-    ranking = {}
-
-    for t in tickers_tuple:
-        data = db.get(t)
-        if not data:
-            ranking[t] = 0.0
-            continue
-
-        chain      = _normalize_chain(data)
-        vols       = _extract_unusual_vols(chain, side)
-        ranking[t] = float(np.std(vols)) if vols else 0.0
-
-    # Return a sorted list by descending volatility
-    return sorted(ranking.items(), key=lambda x: x[1], reverse=True)
-
-
-@cache.memoize()
-def compute_sector_ranking_std_side(side: str = "BOTH"):
-    """
-    For each sector, compute the average std‑dev of unusual‑volume trades
-    (calls, puts or both) across all its tickers, then sort descending.
-    """
-    db = _get_full_db()
-
-    # 1) Build sector → [tickers]
-    sector_map: dict[str, list[str]] = {}
-    for ticker, meta in db.items():
-        sector = meta.get("sector") or "Unknown"
-        sector_map.setdefault(sector, []).append(ticker)
-
-    # 2) Compute each sector’s aggregated score
-    sector_scores: dict[str, float] = {}
-    for sector, tickers in sector_map.items():
-        per_ticker = compute_ticker_ranking_std_side(tuple(tickers), side)
-        if per_ticker:
-            avg_std = sum(std for _, std in per_ticker) / len(per_ticker)
-        else:
-            avg_std = 0.0
-        sector_scores[sector] = avg_std
-
-    # 3) Sort descending
-    return sorted(sector_scores.items(), key=lambda x: x[1], reverse=True)
 
 @cache.memoize()
 def get_ticker_stats(ticker: str) -> dict:
@@ -269,8 +267,10 @@ def _build_plot_dict(chain):
     from datetime import datetime
 
     # 1) sort expiration dates
-    exp_dates = sorted(chain.keys(),
-                       key=lambda d: datetime.strptime(d, "%m/%d/%Y"))
+    exp_dates = sorted(
+        chain.keys(),
+        key=lambda d: datetime.strptime(d, "%m/%d/%y")
+    )
 
     pdict = {"exp_dates": exp_dates}
 
@@ -307,52 +307,82 @@ def create_dash_layout():
     ])
 
 def render_home_page():
+    """
+    Home page layout:
+        • Primary‑mode radio (Daily Flow / Setups / Sectors)
+        • Context panel (changes depending on primary mode)
+        • Search box
+        • Cards (rolodex) container
+    """
     cfg         = current_app.config
     placeholder = cfg["SEARCH_PLACEHOLDER"]
 
-    return dbc.Container([
-        # Header & Controls
-        dbc.Row(dbc.Col(html.H2("Ticker Explorer", className="text-center my-4"))),
+    # ----- header row with all interactive controls -----------
+    header_row = dbc.Row(
+        [
+            # PRIMARY MODE  (always visible)
+            dbc.Col(
+                dcc.RadioItems(
+                    id="primary-mode",
+                    options=[
+                        {"label": "Daily Flow", "value": "daily"},
+                        {"label": "Setups",     "value": "setups"},
+                        {"label": "Sectors",    "value": "sectors"},
+                    ],
+                    value="daily",
+                    inline=True,
+                ),
+                width="auto",
+            ),
 
-        dbc.Row([
-            # View switch
-            dbc.Col(dcc.RadioItems(
-                id="view-switch",
-                options=[
-                    {"label":"Master Ranking", "value":"master"},
-                    {"label":"Sector View",    "value":"sector"},
-                ],
-                value="master",
-                inline=True
-            ), width="auto"),
+            # CONTEXT PANEL (contents supplied by a callback)
+            dbc.Col(id="context-panel", width="auto"),
 
-            # Call/Put/Both
-            dbc.Col(dcc.RadioItems(
-                id="ranking-type-radio",
-                options=[
-                    {"label":"Both",       "value":"BOTH"},
-                    {"label":"Calls Only", "value":"CALL"},
-                    {"label":"Puts Only",  "value":"PUT"},
-                ],
-                value="BOTH",
-                inline=True
-            ), width="auto"),
+            # SEARCH BOX
+            dbc.Col(
+                dbc.Input(
+                    id="ticker-search",
+                    placeholder=placeholder,
+                    type="text",
+                    className="mb-0",
+                ),
+                width=4,
+            ),
+        ],
+        className="mb-4 justify-content-center",
+    )
 
-            # Search box
-            dbc.Col(dbc.Input(
-                id="ticker-search",
-                placeholder=placeholder,
-                type="text",
-                className="mb-0"
-            ), width=4),
-        ], className="mb-4 justify-content-center"),
+    placeholders = html.Div(
+        [
+            dcc.Store(id="side-filter", data=None),
+            dcc.Store(id="oi-direction", data=None),
+        ],
+        style={"display": "none"},
+    )
 
-        # Interval (for auto‑refresh)
-        dcc.Interval(id="interval-component", interval=30*1000, n_intervals=0),
+    # ----- full page container --------------------------------
+    return dbc.Container(
+        [
+            dbc.Row(dbc.Col(html.H2("Ticker Explorer",
+                                    className="text-center my-4"))),
+            header_row,
+            placeholders,  # ← add this line
+            dcc.Interval(
+                id="interval-component",
+                interval=30 * 1000,
+                n_intervals=0,
+            ),
+            html.Div(id="cards-or-map"),
 
-        # Cards container
-        html.Div(id="cards-container", className="card-stack")
-    ], fluid=True)
+            dbc.Collapse(
+                id="industry-panel",
+                is_open=False,
+                children=[],
+                style={"marginTop": "2rem"},
+            ),
+        ],
+        fluid=True,
+    )
 
 def ticker_detail_page(ticker):
     return html.Div([
@@ -376,8 +406,58 @@ def ticker_detail_page(ticker):
         dcc.Interval(id="interval-component-detail", interval=30*1000, n_intervals=0)
     ])
 
+# ─── Daily Flow ranking ─────────────────────────────────
+from datetime import datetime
+import numpy as np
+from zoneinfo import ZoneInfo
 
-# 11) Callbacks
+BOOST_ALPHA = 1.0
+TZ_ET       = ZoneInfo("America/New_York")
+
+@cache.memoize()
+def compute_ticker_ranking_std_side(
+    tickers_tuple: tuple[str, ...],
+    side: str = "BOTH",
+) -> list[tuple[str, float]]:
+    db = _get_full_db()
+
+    def _days_out(exp_str: str) -> int:
+        exp_dt = datetime.strptime(exp_str, "%m/%d/%y").replace(tzinfo=TZ_ET)
+        return max((exp_dt - datetime.now(TZ_ET)).days, 0)
+
+    # find farthest expiry
+    all_days = [
+        _days_out(exp)
+        for entry in db.values()
+        for exp in _normalize_chain(entry).keys()
+    ]
+    max_days_out = max([d for d in all_days if d > 0], default=1)
+
+    ranking: dict[str, float] = {}
+    for t in tickers_tuple:
+        entry = db.get(t)
+        if not entry:
+            ranking[t] = 0.0
+            continue
+
+        weighted = []
+        chain = _normalize_chain(entry)
+        for exp, sides in chain.items():
+            boost = 1 + BOOST_ALPHA * (_days_out(exp) / max_days_out)
+            if side in ("CALL","BOTH"):
+                for c in sides["CALLS"]:
+                    if c.get("unusual") and is_recent_trade(c.get("lastTradeDate","")):
+                        weighted.append(float(c.get("volume",0)) * boost)
+            if side in ("PUT","BOTH"):
+                for p in sides["PUTS"]:
+                    if p.get("unusual") and is_recent_trade(p.get("lastTradeDate","")):
+                        weighted.append(float(p.get("volume",0)) * boost)
+
+        ranking[t] = float(np.std(weighted)) if weighted else 0.0
+
+    return sorted(ranking.items(), key=lambda x: x[1], reverse=True)
+
+# ─── ) Callbacks ────────────────────────────────────────────────────
 def register_dash_callbacks(dash_app):
     @dash_app.callback(
         Output("page-content", "children"),
@@ -392,122 +472,126 @@ def register_dash_callbacks(dash_app):
         return html.H3("404 Page Not Found", style={"textAlign":"center","marginTop":"2rem"})
 
     @dash_app.callback(
-        Output("cards-container", "children"),
-        Input("view-switch", "value"),
-        Input("ranking-type-radio", "value"),
-        Input("ticker-search", "value"),
-        Input("interval-component", "n_intervals"),
+        Output("context-panel", "children"),
+        Input("primary-mode", "value"),
     )
-    def update_cards(view, side, search, _):
-        cfg        = current_app.config
-        max_cards  = cfg["MAX_RANKING_CARDS"]
-        cols       = cfg["RANKING_COLUMNS"]
-        delay_ms   = cfg["CARD_ANIMATION_DELAY_MS"]
-        col_width  = max(1, 12 // cols)
+    def render_subcontrols(mode):
+        if mode == "daily":
+            return dcc.RadioItems(
+                id="side-filter-radio",
+                options=[
+                    {"label":"Both","value":"BOTH"},
+                    {"label":"Calls","value":"CALL"},
+                    {"label":"Puts","value":"PUT"},
+                ],
+                value="BOTH",
+                inline=True,
+            )
+        elif mode == "setups":
+            return dcc.RadioItems(
+                id="oi-direction-radio",
+                options=[
+                    {"label":"Bullish","value":"oi_above"},
+                    {"label":"Bearish","value":"oi_below"},
+                ],
+                value="oi_above",
+                inline=True,
+            )
+        # no extra controls for sectors now
+        return None
 
-        # ─── Master Ranking ─────────────────────
-        if view == "master":
-            # 1) compute per‑ticker std dev
+    @dash_app.callback(
+        Output("side-filter", "data"),
+        Input("side-filter-radio", "value"),
+        prevent_initial_call=True,
+    )
+    def save_side_filter(value):
+        return value
+
+    @dash_app.callback(
+        Output("oi-direction", "data"),
+        Input("oi-direction-radio", "value"),
+        prevent_initial_call=True,
+    )
+    def save_oi_direction(value):
+        return value
+
+    @dash_app.callback(
+        Output("cards-or-map", "children"),
+
+        Input("primary-mode", "value"),
+        Input("side-filter", "data"),  # ← store, always present
+        Input("oi-direction", "data"),  # ← store, always present
+        Input("ticker-search", "value"),
+    )
+    def update_main_view(mode, side_filter, oi_direction, search):
+        """
+        mode:            'daily' | 'setups' | 'sectors'
+        side_filter:     'BOTH'|'CALL'|'PUT' for daily
+        oi_direction:    'oi_above'|'oi_below' for setups
+        search:          ticker search string
+        """
+        cfg = current_app.config
+        max_cards = cfg["MAX_RANKING_CARDS"]
+
+        # ─── DAILY ───────────────────────────────────────────────────────
+        if mode == "daily":
             ranks = compute_ticker_ranking_std_side(
-                tuple(get_ticker_list()), side=side
+                tuple(get_ticker_list()),
+                side_filter or "BOTH"
             )
-            # 2) apply search filter + truncate
-            if search:
-                s = search.strip().upper()
-                ranks = [r for r in ranks if s in r[0]]
-            ranks = ranks[:max_cards]
+            label = "Std Dev"
 
-            # 3) build a rolodex‑style vertical list
-            cards = []
-            for i, (ticker, score) in enumerate(ranks):
-                cards.append(
-                    dcc.Link(
-                        dbc.Card([
-                            # big, left‑aligned rank header
-                            dbc.CardHeader(
-                                f"#{i + 1}",
-                                className="rolodex-rank"
-                            ),
-                            dbc.CardBody([
-                                html.H5(ticker, className="card-title"),
-                                html.P(f"Std Dev: {score:.2f}", className="card-text small"),
-                            ])
-                        ],
-                            className="rolodex-card mb-3 p-3",
-                        ),
-                        href=f"/seeker-gui/ticker/{ticker}",
-                        style={"textDecoration": "none", "width": "100%"}
-                    )
-                )
+        # ─── SETUPS ─────────────────────────────────────────────────────
+        elif mode == "setups":
+            direction = "bullish" if (oi_direction or "oi_above") == "oi_above" else "bearish"
+            ranks = get_precomputed_setups(direction)
+            label = "OI ↑" if direction == "bullish" else "OI ↓"
 
-            return html.Div(
-                cards,
-                className="rolodex-container"
-            )
-
-        # ─── Sector View with drill‑in ───────────────────
+        # ─── SECTORS ────────────────────────────────────────────────────
         else:
-            from dash_bootstrap_components import Accordion, AccordionItem
+            scores = get_precomputed_sectors()
+            scores = [(s, c) for s, c in scores if c > 0]
+            if not scores:
+                return html.Em("No sector data.")
 
-            # 1) pull full DB
-            db = _get_full_db()
+            df = pd.DataFrame({
+                "sector": [s for s, _ in scores],
+                "score": [c for _, c in scores]
+            })
+            fig = px.treemap(
+                df,
+                path=["sector"],
+                values="score",
+                color="score",
+                color_continuous_scale="Blues"
+            ).update_layout(margin={"t": 40, "l": 10, "r": 10, "b": 10})
 
-            # 2) group tickers by sector
-            sector_groups = {}
-            for tk, meta in db.items():
-                sec = meta.get("sector", "Unknown")
-                sector_groups.setdefault(sec, []).append(tk)
+            return dcc.Graph(id="sector-treemap", figure=fig, style={"height": "70vh"})
 
-            # 3) compute aggregate score per sector
-            sector_scores = []
-            for sec, tickers in sector_groups.items():
-                stds = [
-                    compute_ticker_ranking_std_side((tk,), side=side)[0][1]
-                    for tk in tickers
-                ]
-                agg = float(np.sum(stds)) if stds else 0.0
-                sector_scores.append((sec, agg, tickers))
+        # ─── SHARED SEARCH FILTER & CARD BUILD ─────────────────────────
+        if search:
+            s = search.strip().upper()
+            ranks = [r for r in ranks if s in r[0]]
+        ranks = ranks[:max_cards]
 
-            # 4) sort & limit
-            sector_scores.sort(key=lambda x: x[1], reverse=True)
-            sector_scores = sector_scores[:max_cards]
-
-            # 5) build an accordion: one panel per sector
-            items = []
-            for sec, agg, members in sector_scores:
-                # group this sector’s tickers by industry
-                industry_groups = {}
-                for tk in members:
-                    ind = db[tk].get("industry", "Unknown")
-                    industry_groups.setdefault(ind, []).append(tk)
-
-                # build the inside of the accordion for this sector
-                children = []
-                for ind, tks in industry_groups.items():
-                    children.append(html.H6(ind, style={"marginTop": "1rem"}))
-                    children.append(
-                        html.Ul(
-                            [html.Li(t) for t in sorted(tks)],
-                            style={"marginLeft": "1rem"}
-                        )
-                    )
-
-                items.append(
-                    AccordionItem(
-                        title=f"{sec} — Aggregate Std: {agg:.2f}",
-                        children=children
-                    )
+        cards = []
+        for idx, (tk, score) in enumerate(ranks):
+            cards.append(
+                dcc.Link(
+                    dbc.Card([
+                        dbc.CardHeader(f"#{idx + 1}", className="rolodex-rank"),
+                        dbc.CardBody([
+                            html.H5(tk, className="card-title"),
+                            html.P(f"{label}: {score:,.2f}", className="card-text small"),
+                        ]),
+                    ], className="rolodex-card mb-3 p-3"),
+                    href=f"/seeker-gui/ticker/{tk}",
+                    style={"textDecoration": "none", "width": "100%"}
                 )
-
-            return html.Div(
-                Accordion(
-                    items,
-                    start_collapsed=True,
-                    always_open=True,
-                    flush=True
-                ),
-                style={"marginTop": "1rem"}
             )
+
+        return html.Div(cards, className="rolodex-container")
 
     @dash_app.callback(
         Output("ticker-detail-graph", "figure"),
@@ -520,6 +604,7 @@ def register_dash_callbacks(dash_app):
             ticker = path.split("/seeker-gui/ticker/")[1]
             return build_combined_graph(ticker, tf)
         return dash.no_update
+
 
 def build_combined_graph(ticker: str, tf: str) -> go.Figure:
     """Build the combined price + option chain figure for a ticker and timeframe."""
@@ -762,6 +847,7 @@ def get_whale_category(amount):
         return "Small Whale"
     return None
 
+
 def get_whale_color(category):
     """Map a whale‐category to its display color."""
     return {
@@ -810,7 +896,6 @@ def get_annotation_contracts(pdata):
     return cands
 
 
-
 def scale_marker_size(vol, scale=0.02, min_size=5, max_size=60):
     """Scale marker by volume."""
     try:
@@ -819,13 +904,6 @@ def scale_marker_size(vol, scale=0.02, min_size=5, max_size=60):
         s = min_size
     return max(min_size, min(s, max_size))
 
-def get_ticker_list():
-    seeker_db = load_seeker_db()
-    return list(seeker_db.keys())
-
-def load_json_for_ticker(ticker):
-    seeker_db = load_seeker_db()
-    return seeker_db.get(ticker)
 
 def get_top_strike_for_side(pdata, side):
     """

@@ -1,4 +1,4 @@
-# Python Imports #
+# --- Python Imports:
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from botocore.exceptions import ClientError
 from plotly.utils import PlotlyJSONEncoder
@@ -15,9 +15,9 @@ import dash
 import re
 import os
 
-# --- Imports from Local Python Files: 'guiforseeker.py', 'VectrPyLogic.py', and 'utils.py'
+# --- Imports from Local Python Files:
 from VectrPyLogic import save_options_data, calculate_and_visualize_data
-from utils import download_seeker_db_if_missing, load_seeker_db_s3
+from utils import download_seeker_db_if_missing
 
 ### CONFIGURATION DASHBOARD ###
 class Config:
@@ -73,7 +73,8 @@ cache.init_app(app, config={
     "CACHE_DEFAULT_TIMEOUT": app.config["CACHE_DEFAULT_TIMEOUT"],
 })
 
-from guiforseeker import create_dash_layout, register_dash_callbacks, dash_theme, load_seeker_db_s3
+from guiforseeker import create_dash_layout, register_dash_callbacks, dash_theme
+from utils import load_seeker_db_s3
 
 @app.before_request
 def preflight():
@@ -244,9 +245,12 @@ def process_ticker():
 dash_app = dash.Dash(
     __name__,
     server=app,
-    url_base_pathname='/seeker-gui/',
-    external_stylesheets=[dash_theme]
+    url_base_pathname="/seeker-gui/",
+    external_stylesheets=[dash_theme],
 )
+
+dash_app.config.suppress_callback_exceptions = True   # ← move here
+
 dash_app.layout = create_dash_layout()
 register_dash_callbacks(dash_app)
 

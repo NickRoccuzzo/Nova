@@ -1,11 +1,175 @@
-# -- MODULES -- #
+# ─── MODULES ──────────────────────────────────────────────────────────────────
 import os
 import pandas as pd
 import time
 import numpy as np
 import plotly.graph_objects as go
-from datetime import datetime
+from datetime import datetime, date
 import yfinance as yf
+
+
+# ─── Helpers ──────────────────────────────────────────────────────────────────
+from dataclasses import dataclass
+from typing import Optional, Dict, Tuple
+import zoneinfo
+
+
+# ────────────────────────────────────────────────────────────────
+# 🎨 PERSONAL DESIGN CONTROL PANEL
+#    Change a hex once → every figure updates automatically
+# ────────────────────────────────────────────────────────────────
+BAR_CALL_COLOR    = "#5a916d"     # forest‑green
+BAR_PUT_COLOR     = "#875656"     # wine‑red
+LINE_CALL_COLOR   = "#75f542"
+LINE_PUT_COLOR    = "#f54242"
+AVG_STRIKE_COLOR  = "#565887"
+BACKGROUND_COLOR  = "#0d0b0c"     # swap to "#a8a8a8" for light theme
+TEXT_PRIMARY      = "#e8ebe8"     # tick‑labels / titles on dark bg
+TEXT_SECONDARY    = "#01234a"     # tick‑labels / titles on light bg
+
+# ——————————————————————————————————————————————
+# Re‑usable Plotly layout template
+# ——————————————————————————————————————————————
+BASE_LAYOUT = {
+    "plot_bgcolor":  BACKGROUND_COLOR,
+    "paper_bgcolor": BACKGROUND_COLOR,
+    "showlegend":    True,                    # turn legend back on if you want
+    "legend": {                               # optional – keep or remove
+        "x":0.5, "y":1.10, "xanchor":"center", "yanchor":"top",
+        "orientation":"h",
+        "font":{"family":"Arial, sans-serif","size":10,"color":TEXT_PRIMARY},
+    },
+
+    # x‑axis
+    "xaxis": {
+        "title": "",
+        "showgrid": False,
+        "showline": True,
+        "linecolor": "#444444",
+        "linewidth": 1,
+        "tickangle": 38,
+        "tickfont": {"family":"Arial, sans-serif","size":16,"color":TEXT_PRIMARY},
+    },
+
+    # y‑axis (bars)
+    "yaxis": {
+        "title": "", "showticklabels": False, "showgrid": False,
+        "side":"right", "autorange":True,
+    },
+
+    # secondary y‑axis (strike prices)
+    "yaxis2": {
+        "title": "Strike",
+        "title_font": {"family":"Arial, sans-serif","size":32,"color":TEXT_PRIMARY},
+        "tickfont":  {"family":"Arial, sans-serif","size":19,"color":TEXT_PRIMARY},
+        "side":         "left",
+        "overlaying":   "y",
+        "showline":     False,
+        "linecolor":    "#444444",
+        "linewidth":    0.5,
+        "showgrid":     True,
+        "gridcolor":    "rgba(136,136,136,0.10)",
+        "zeroline":     True,
+        "zerolinecolor":"rgba(136,136,136,0.25)",
+        "zerolinewidth":0.5,
+        "gridwidth":    0.5,
+    },
+
+    "barmode": "group",
+}
+
+
+local_tz = zoneinfo.ZoneInfo("America/New_York")
+
+@dataclass
+class SideSummary:
+    oi: int
+    strikes: Tuple[float, float, float]      # top‑3 by OI, padded with 0s
+    vol_row: Optional[pd.Series]             # None if no volume data
+
+@dataclass
+class MostActiveAnn:
+    kind: str
+    strike: float
+    volume: int
+    oi: int
+    exp: str
+    total: str
+    unusual: bool
+
+    def annotation(self, idx: int) -> dict:
+        color = "#ff5e00" if self.kind == "PUT" else "#32a852"
+        bg    = "#2a1c63" if self.unusual else "#3b3b3b"
+        ax    = 35 if self.kind == "PUT" else -35
+        ay    = -35 - idx*2
+        return {
+            "text": (
+                f"<b><span style='font-size:10px;'>${int(self.strike):,} "
+                f"<span style='color:{color}'>{self.kind}</span></span></b><br>"
+                f"<span style='font-size:10px;'><span style='color:#cfcfcf'><b>Qty:</span> "
+                f"{int(self.volume):,}<br></b></span>"
+                f"<span style='font-size:10.5px;'><b>{self.total}</b></span>"
+            ),
+            "x": self.exp,
+            "y": self.strike,
+            "yref": "y2",
+            "bgcolor": bg,
+            "showarrow": True,
+            "arrowhead": 0,
+            "ax": ax,
+            "ay": ay,
+            "arrowwidth": 1.5,
+            "bordercolor": "#636363",
+            "borderwidth": 1,
+            "borderpad": 4,
+            "font": {"family":"Arial, sans-serif","size":8,"color":"#ffffff"},
+        }
+
+    def marker(self) -> dict:
+        return {
+            "x": [self.exp],
+            "y": [self.strike],
+            "mode":"markers",
+            "marker":{
+                "size":8,
+                "color":"#ff5e00" if self.kind=="PUT" else "#32a852",
+                "symbol":"diamond",
+                "line":{"width":1,"color":"#636363"}
+            },
+            "yaxis":"y2",
+            "hoverinfo":"skip",
+            "showlegend":False,
+        }
+
+
+def summarise_side(df: pd.DataFrame) -> SideSummary:
+    """
+    Given a CALL or PUT dataframe for *one* expiry, return:
+      • total open‑interest
+      • top‑3 strikes by open‑interest
+      • the row with the highest volume (or None)
+    """
+    df = df.copy()
+
+    # Sum OI
+    oi_sum = int(df['openInterest'].sum())
+
+    # Top‑3 strikes by OI (pad with zeros so length is always 3)
+    top3 = (
+        df.sort_values('openInterest', ascending=False)
+          .get('strike')
+          .head(3)
+          .tolist() + [0, 0, 0]
+    )[:3]
+
+    # Row with the highest volume (ignore NaNs)
+    vol_row = (
+        df.loc[df['volume'].idxmax()]          # type: ignore[arg-type]
+        if df['volume'].notna().any()
+        else None
+    )
+
+    return SideSummary(oi=oi_sum, strikes=tuple(top3), vol_row=vol_row)
 
 def save_options_data(ticker):
     """
@@ -69,6 +233,53 @@ def save_options_data(ticker):
                 else:
                     print(f"An error occurred while processing options for {date}: {error_message}")
     pass
+
+
+def find_top_volume_contracts(
+    data_dicts: dict[str, pd.DataFrame],
+    today: date | None = None,
+) -> list[dict]:
+    """
+    Inspect every expiry dataframe (CALLS or PUTS) in `data_dicts`
+    and return a list with at most one dict per side, containing the
+    highest‑volume row *for today only*.
+
+    Each dict has keys:
+        type, strike, volume, openInterest, date, total_spent, unusual
+    """
+    if today is None:
+        today = datetime.now(local_tz).date()
+
+    results: list[dict] = []
+
+    for side, dfs in data_dicts.items():           # e.g. {"CALL": calls_data, ...}
+        # Flatten all rows into one big DF so we can idxmax once
+        big_df = (
+            pd.concat([df.assign(_exp=exp) for exp, df in dfs.items()], ignore_index=True)
+            if dfs else pd.DataFrame()
+        )
+        if big_df.empty or big_df["volume"].isna().all():
+            continue
+
+        row = big_df.loc[big_df["volume"].idxmax()]
+
+        last_trade = row.get("lastTradeDate_Local")
+        if pd.isna(last_trade) or last_trade.date() != today:
+            continue
+
+        spent = row["volume"] * row["lastPrice"] * 100
+
+        results.append({
+            "type":         side,
+            "strike":       row["strike"],
+            "volume":       int(row["volume"]),
+            "openInterest": int(row["openInterest"]),
+            "date":         row["_exp"],
+            "total_spent":  format_dollar_amount(spent),
+            "unusual":      row["volume"] > row["openInterest"],
+        })
+
+    return results
 
 
 def preprocess_dates(data_dir, file_suffix):
@@ -140,168 +351,102 @@ def format_dollar_amount(amount):
     pass
 
 
-def gather_options_data(ticker):
+def gather_options_data(ticker: str) -> dict:
     """
-    Gathers and returns all the raw data used by the Plotly logic,
-    but without creating a figure. Useful for saving to JSON/CSV.
-
-    Returns a dictionary with keys:
-      - calls_oi
-      - puts_oi
-      - max_strike_calls, second_max_strike_calls, third_max_strike_calls
-      - max_strike_puts, second_max_strike_puts, third_max_strike_puts
-      - avg_strike
-      - top_volume_contracts (list of dicts)
-      - current_price
-      - company_name
+    Return the raw aggregates used by the Plotly logic—no figure creation.
+    Keys returned:
+      calls_oi, puts_oi,
+      max_strike_calls / second_max_strike_calls / third_max_strike_calls,
+      max_strike_puts  / second_max_strike_puts  / third_max_strike_puts,
+      avg_strike,
+      current_price, company_name
     """
 
-    # 1) Locate the CALLS/PUTS directories for this ticker
-    base_dir = os.getcwd()
+    # ── Locate CALLS / PUTS directories ───────────────────────────────────────
+    base_dir  = os.getcwd()
     calls_dir = os.path.join(base_dir, ticker, "CALLS")
-    puts_dir = os.path.join(base_dir, ticker, "PUTS")
+    puts_dir  = os.path.join(base_dir, ticker, "PUTS")
 
-    # 2) Optionally preprocess the CSVs (assuming you already have a 'preprocess_dates' function)
-    #    If your script is in the same file, call it directly. Otherwise import it.
     calls_data = preprocess_dates(calls_dir, "CALLS")
-    puts_data = preprocess_dates(puts_dir, "PUTS")
+    puts_data  = preprocess_dates(puts_dir,  "PUTS")
 
-    # 3) Initialize dictionaries for analyzing OI and strikes
-    calls_oi = {date: df['openInterest'].sum() for date, df in calls_data.items()}
-    puts_oi = {date: df['openInterest'].sum() for date, df in puts_data.items()}
+    # ── Dicts for OI & strikes ───────────────────────────────────────────────
+    calls_oi, puts_oi = {}, {}
 
     max_strike_calls, second_max_strike_calls, third_max_strike_calls = {}, {}, {}
-    max_strike_puts, second_max_strike_puts, third_max_strike_puts = {}, {}, {}
+    max_strike_puts,  second_max_strike_puts,  third_max_strike_puts  = {}, {}, {}
 
-    avg_strike = {}
-    top_volume_contracts = []
+    # ── Iterate once over CALLS and PUTS ─────────────────────────────────────
+    for side, data_dict in (("CALL", calls_data), ("PUT", puts_data)):
+        for date, df in data_dict.items():
+            if df.empty:
+                continue
 
-    # 4) Fetch current stock data from yfinance
-    stock = yf.Ticker(ticker)
-    current_data = stock.history(period="1d")
-    if not current_data.empty:
-        current_price = current_data['Close'].iloc[-1]
-    else:
-        current_price = 0.0
+            summary = summarise_side(df)  # ← new helper
 
-    company_name = stock.info.get('longName', 'N/A')
-
-    # 5) Process sorted calls data (find top strikes, highest volume calls, etc.)
-    for date, df in calls_data.items():
-        if not df.empty:
-            # Sort by openInterest descending
-            sorted_calls = df.sort_values(by='openInterest', ascending=False)
-
-            # Safely get up to 3 top calls by OI
-            if len(sorted_calls) > 0:
-                max_strike_calls[date] = sorted_calls.iloc[0]['strike']
+            if side == "CALL":
+                calls_oi[date] = summary.oi
             else:
-                max_strike_calls[date] = 0
+                puts_oi[date]  = summary.oi
 
-            if len(sorted_calls) > 1:
-                second_max_strike_calls[date] = sorted_calls.iloc[1]['strike']
+            d_max, d_second, d_third = summary.strikes
+            if side == "CALL":
+                max_strike_calls[date]        = d_max
+                second_max_strike_calls[date] = d_second
+                third_max_strike_calls[date]  = d_third
             else:
-                second_max_strike_calls[date] = 0
+                max_strike_puts[date]         = d_max
+                second_max_strike_puts[date]  = d_second
+                third_max_strike_puts[date]   = d_third
 
-            if len(sorted_calls) > 2:
-                third_max_strike_calls[date] = sorted_calls.iloc[2]['strike']
-            else:
-                third_max_strike_calls[date] = 0
+    # ── Vectorised average‑strike calculation (runs **once**) ────────────────
+    df_avg = (
+        pd.DataFrame({
+            "calls_oi": pd.Series(calls_oi),
+            "puts_oi":  pd.Series(puts_oi),
+            "c1": pd.Series(max_strike_calls),
+            "c2": pd.Series(second_max_strike_calls),
+            "c3": pd.Series(third_max_strike_calls),
+            "p1": pd.Series(max_strike_puts),
+            "p2": pd.Series(second_max_strike_puts),
+            "p3": pd.Series(third_max_strike_puts),
+        })
+        .fillna(0)
+    )
 
-            # Identify the call option with the highest volume
-            if df['volume'].notna().any():
-                highest_volume_call = df.loc[df['volume'].idxmax()]
-                total_spent = highest_volume_call['volume'] * highest_volume_call['lastPrice'] * 100
-                formatted_spent = format_dollar_amount(total_spent)
+    tot_oi   = df_avg["calls_oi"] + df_avg["puts_oi"]
+    w_calls  = np.where(tot_oi > 0, df_avg["calls_oi"] / tot_oi, 0)
+    w_puts   = np.where(tot_oi > 0, df_avg["puts_oi"]  / tot_oi, 0)
 
-                # Mark if volume > OI for 'unusual'
-                unusual = highest_volume_call['volume'] > highest_volume_call['openInterest']
+    sum_calls = df_avg[["c1", "c2", "c3"]].sum(axis=1)
+    sum_puts  = df_avg[["p1", "p2", "p3"]].sum(axis=1)
 
-                top_volume_contracts.append({
-                    'type': 'CALL',
-                    'strike': highest_volume_call['strike'],
-                    'volume': highest_volume_call['volume'],
-                    'openInterest': highest_volume_call['openInterest'],
-                    'date': date,
-                    'total_spent': formatted_spent,
-                    'unusual': unusual
-                })
+    avg_strike = dict(zip(
+        df_avg.index,
+        np.where(tot_oi > 0, (w_calls * sum_calls + w_puts * sum_puts) / 3, np.nan)
+    ))
 
-    # 6) Process sorted puts data (find top strikes, highest volume puts, etc.)
-    for date, df in puts_data.items():
-        if not df.empty:
-            # Sort by openInterest descending
-            sorted_puts = df.sort_values(by='openInterest', ascending=False)
+    # ── Current price & company name ─────────────────────────────────────────
+    stock          = yf.Ticker(ticker)
+    hist           = stock.history(period="1d")
+    current_price  = float(hist["Close"].iloc[-1]) if not hist.empty else 0.0
+    company_name   = stock.info.get("longName", "N/A")
 
-            # Safely get up to 3 top puts by OI
-            if len(sorted_puts) > 0:
-                max_strike_puts[date] = sorted_puts.iloc[0]['strike']
-            else:
-                max_strike_puts[date] = 0
-
-            if len(sorted_puts) > 1:
-                second_max_strike_puts[date] = sorted_puts.iloc[1]['strike']
-            else:
-                second_max_strike_puts[date] = 0
-
-            if len(sorted_puts) > 2:
-                third_max_strike_puts[date] = sorted_puts.iloc[2]['strike']
-            else:
-                third_max_strike_puts[date] = 0
-
-            # Identify the put option with the highest volume
-            if df['volume'].notna().any():
-                highest_volume_put = df.loc[df['volume'].idxmax()]
-                total_spent = highest_volume_put['volume'] * highest_volume_put['lastPrice'] * 100
-                formatted_spent = format_dollar_amount(total_spent)
-
-                unusual = highest_volume_put['volume'] > highest_volume_put['openInterest']
-
-                top_volume_contracts.append({
-                    'type': 'PUT',
-                    'strike': highest_volume_put['strike'],
-                    'volume': highest_volume_put['volume'],
-                    'openInterest': highest_volume_put['openInterest'],
-                    'date': date,
-                    'total_spent': formatted_spent,
-                    'unusual': unusual
-                })
-
-    # 7) Optionally compute an average strike for each date, if that's part of your logic
-    #    (We show an example from your original code, but feel free to omit if not needed.)
-    for date in max_strike_calls.keys():
-        if date in max_strike_puts and (calls_oi[date] + puts_oi[date] > 0):
-            total_oi = calls_oi[date] + puts_oi[date]
-            weight_calls = calls_oi[date] / total_oi if total_oi else 0
-            weight_puts = puts_oi[date] / total_oi if total_oi else 0
-            # A simplistic version:
-            avg_strike[date] = (
-                    (
-                            max_strike_calls[date] * weight_calls +
-                            second_max_strike_calls[date] * weight_calls +
-                            third_max_strike_calls[date] * weight_calls +
-                            max_strike_puts[date] * weight_puts +
-                            second_max_strike_puts[date] * weight_puts +
-                            third_max_strike_puts[date] * weight_puts
-                    ) / (3 * (weight_calls + weight_puts))
-            )
-        else:
-            avg_strike[date] = np.nan
-
-    # 8) Return everything as a dictionary
+    # ── Return all aggregates ────────────────────────────────────────────────
     return {
         "calls_oi": calls_oi,
         "puts_oi": puts_oi,
-        "max_strike_calls": max_strike_calls,
+        "max_strike_calls":   max_strike_calls,
         "second_max_strike_calls": second_max_strike_calls,
-        "third_max_strike_calls": third_max_strike_calls,
-        "max_strike_puts": max_strike_puts,
-        "second_max_strike_puts": second_max_strike_puts,
-        "third_max_strike_puts": third_max_strike_puts,
+        "third_max_strike_calls":  third_max_strike_calls,
+        "max_strike_puts":    max_strike_puts,
+        "second_max_strike_puts":  second_max_strike_puts,
+        "third_max_strike_puts":   third_max_strike_puts,
         "avg_strike": avg_strike,
-        "top_volume_contracts": top_volume_contracts,
         "current_price": current_price,
-        "company_name": company_name
+        "company_name":  company_name,
+        "calls_data": calls_data,
+        "puts_data": puts_data,
     }
 
 def calculate_and_visualize_data(ticker, width=600, height=400):
@@ -316,6 +461,17 @@ def calculate_and_visualize_data(ticker, width=600, height=400):
     price_data = stock.history(period="2d")
     company_name = stock.info.get('longName', 'N/A')  # Retrieve company name
 
+    data = gather_options_data(ticker)
+    calls_oi = data["calls_oi"]
+    puts_oi = data["puts_oi"]
+    max_strike_calls = data["max_strike_calls"]
+    second_max_strike_calls = data["second_max_strike_calls"]
+    third_max_strike_calls = data["third_max_strike_calls"]
+    max_strike_puts = data["max_strike_puts"]
+    second_max_strike_puts = data["second_max_strike_puts"]
+    third_max_strike_puts = data["third_max_strike_puts"]
+    avg_strike = data["avg_strike"]
+
     # Safely compute the daily change percentage if there's at least 2 rows
     if len(price_data) > 1:
         prev_close = price_data['Close'].iloc[-2]
@@ -325,112 +481,15 @@ def calculate_and_visualize_data(ticker, width=600, height=400):
         daily_change_dollar = 0
         daily_change_pct = 0
 
-    # Get the current working directory and construct paths for call and put data
-    base_dir = os.getcwd()
-    calls_dir = os.path.join(base_dir, ticker, "CALLS")
-    puts_dir = os.path.join(base_dir, ticker, "PUTS")
-
     # Preprocess and sort calls and puts data
-    calls_data = preprocess_dates(calls_dir, "CALLS")
-    puts_data = preprocess_dates(puts_dir, "PUTS")
+    calls_data = data["calls_data"]  # new keys you add
+    puts_data = data["puts_data"]
 
-    # Initialize dictionaries for visualization
-    calls_oi = {date: df['openInterest'].sum() for date, df in calls_data.items()}
-    puts_oi = {date: df['openInterest'].sum() for date, df in puts_data.items()}
-    max_strike_calls, max_strike_puts = {}, {}
-    second_max_strike_calls, second_max_strike_puts = {}, {}
-    third_max_strike_calls, third_max_strike_puts = {}, {}
-    avg_strike = {}
-    top_volume_contracts = []
-
-    local_time = datetime.now().astimezone()
-    today_local_date = local_time.date()
-
-    # Process sorted calls data
-    for date, df in calls_data.items():
-        if not df.empty:
-            # Calculate strikes with highest open interest
-            sorted_calls = df.sort_values(by='openInterest', ascending=False)
-            max_strike_calls[date] = sorted_calls.iloc[0]['strike'] if not sorted_calls.empty else 0
-            second_max_strike_calls[date] = sorted_calls.iloc[1]['strike'] if len(sorted_calls) > 1 else 0
-            third_max_strike_calls[date] = sorted_calls.iloc[2]['strike'] if len(sorted_calls) > 2 else 0
-
-            # Identify the call option with the highest volume
-            if df['volume'].notna().any():
-                highest_volume_call = df.loc[df['volume'].idxmax()]
-
-                # Check lastTradeDate_EST
-                last_trade_local = highest_volume_call["lastTradeDate_Local"]
-                if pd.notnull(last_trade_local):
-                    if last_trade_local.date() == today_local_date:
-                        # It's traded "today" in EST, so we consider it "top volume"
-                        total_spent = highest_volume_call['volume'] * highest_volume_call['lastPrice'] * 100
-                        formatted_total_spent = format_dollar_amount(total_spent)
-                        unusual = highest_volume_call['volume'] > highest_volume_call['openInterest']
-
-                        top_volume_contracts.append({
-                            'type': 'CALL',
-                            'strike': highest_volume_call['strike'],
-                            'volume': highest_volume_call['volume'],
-                            'openInterest': highest_volume_call['openInterest'],
-                            'date': date,
-                            'total_spent': formatted_total_spent,
-                            'unusual': unusual
-                        })
-
-    # Process sorted puts data
-    for date, df in puts_data.items():
-        if not df.empty:
-            # Calculate strikes with the highest open interest
-            sorted_puts = df.sort_values(by='openInterest', ascending=False)
-            max_strike_puts[date] = sorted_puts.iloc[0]['strike'] if not sorted_puts.empty else 0
-            second_max_strike_puts[date] = sorted_puts.iloc[1]['strike'] if len(sorted_puts) > 1 else 0
-            third_max_strike_puts[date] = sorted_puts.iloc[2]['strike'] if len(sorted_puts) > 2 else 0
-
-            # Identify the put option with the highest volume
-            if df['volume'].notna().any():
-                highest_volume_put = df.loc[df['volume'].idxmax()]
-
-                last_trade_local = highest_volume_put["lastTradeDate_Local"]
-                if pd.notnull(last_trade_local):
-                    if last_trade_local.date() == today_local_date:
-                        total_spent = highest_volume_put['volume'] * highest_volume_put['lastPrice'] * 100
-                        formatted_total_spent = format_dollar_amount(total_spent)
-                        unusual = highest_volume_put['volume'] > highest_volume_put['openInterest']
-
-                        top_volume_contracts.append({
-                            'type': 'PUT',
-                            'strike': highest_volume_put['strike'],
-                            'volume': highest_volume_put['volume'],
-                            'openInterest': highest_volume_put['openInterest'],
-                            'date': date,
-                            'total_spent': formatted_total_spent,
-                            'unusual': unusual
-                        })
-
-    # Calculate average strike for visualization
-    for date in max_strike_calls.keys():
-        if date in max_strike_puts and calls_oi[date] + puts_oi[date] > 0:
-            total_oi = calls_oi[date] + puts_oi[date]
-            weight_calls = calls_oi[date] / total_oi if total_oi else 0
-            weight_puts = puts_oi[date] / total_oi if total_oi else 0
-
-            avg_strike[date] = (
-                    (max_strike_calls[date] * weight_calls +
-                     second_max_strike_calls[date] * weight_calls +
-                     third_max_strike_calls[date] * weight_calls +  #
-                     max_strike_puts[date] * weight_puts +
-                     second_max_strike_puts[date] * weight_puts +
-                     third_max_strike_puts[date] * weight_puts) /  #
-                    (3 * (weight_calls + weight_puts))
-            )
-        else:
-            avg_strike[date] = np.nan
-
-    # Sort contracts by volume and configure how many you'd like to display on the plotly graph as annotations
-    top_volume_contracts.sort(key=lambda x: x['volume'], reverse=True)
-    # Most active options:
-    top_volume_contracts = top_volume_contracts[:8]  # <-- toggle this value to change the # of 'Most Active' Options
+    top_volume_contracts = find_top_volume_contracts(
+        {"CALL": calls_data, "PUT": puts_data}
+    )
+    top_volume_contracts.sort(key=lambda x: x["volume"], reverse=True)
+    top_volume_contracts = top_volume_contracts[:8]
 
     # Assuming calls_oi and puts_oi are dictionaries with expiration date keys and OI values.
     expirations = list(calls_oi.keys())
@@ -499,7 +558,7 @@ def calculate_and_visualize_data(ticker, width=600, height=400):
         y=[calls_oi.get(exp, 0) for exp in expirations],
         name='Call OI',
         marker=dict(
-            color='#708d8b',
+            color=BAR_CALL_COLOR,
             opacity=0.60,
             line=dict(
                 color=calls_line_colors,
@@ -516,7 +575,7 @@ def calculate_and_visualize_data(ticker, width=600, height=400):
         y=[puts_oi.get(exp, 0) for exp in expirations],
         name='Put OI',
         marker=dict(
-            color='#b87d6e',
+            color=BAR_PUT_COLOR,
             opacity=0.60,
             line=dict(
                 color=puts_line_colors,
@@ -535,7 +594,7 @@ def calculate_and_visualize_data(ticker, width=600, height=400):
         mode='lines+markers',
         connectgaps=True,
         marker=dict(
-            color='#565887',
+            color=AVG_STRIKE_COLOR,
             size=4,
             symbol='square',  # Change marker shape to square
             line=dict(
@@ -580,7 +639,7 @@ def calculate_and_visualize_data(ticker, width=600, height=400):
         opacity=0.60,
         yaxis='y2',
         showlegend=True,
-        line=dict(color='#75f542', width=2.50),
+        line=dict(color=LINE_CALL_COLOR, width=2.50),
         marker=dict(
             size=[
                 (df['openInterest'].fillna(
@@ -597,11 +656,11 @@ def calculate_and_visualize_data(ticker, width=600, height=400):
             '<b>OI:</b> %{customdata[1]:,}</span><extra></extra>'
         ),
         customdata=[
-            (sorted_calls.iloc[0]['volume'], sorted_calls.iloc[0]['openInterest']) if not sorted_calls.empty else (0, 0)
-            for sorted_calls in [
-                pd.read_csv(os.path.join(calls_dir, filename)).sort_values(by='openInterest', ascending=False).fillna(0)
-                for filename in os.listdir(calls_dir)
-            ]
+            (
+                df.sort_values("openInterest", ascending=False).iloc[0]["volume"],
+                df.sort_values("openInterest", ascending=False).iloc[0]["openInterest"]
+            ) if not df.empty else (0, 0)
+            for df in calls_data.values()
         ]
     ))
 
@@ -641,7 +700,7 @@ def calculate_and_visualize_data(ticker, width=600, height=400):
         opacity=0.60,
         yaxis='y2',
         showlegend=True,
-        line=dict(color='#f54242', width=2.50),
+        line=dict(color=LINE_PUT_COLOR, width=2.50),
         marker=dict(
             size=[
                 (df['openInterest'].fillna(
@@ -658,11 +717,11 @@ def calculate_and_visualize_data(ticker, width=600, height=400):
             '<b>OI:</b> %{customdata[1]:,}</span><extra></extra>'
         ),
         customdata=[
-            (sorted_puts.iloc[0]['volume'], sorted_puts.iloc[0]['openInterest']) if not sorted_puts.empty else (0, 0)
-            for sorted_puts in [
-                pd.read_csv(os.path.join(puts_dir, filename)).sort_values(by='openInterest', ascending=False).fillna(0)
-                for filename in os.listdir(puts_dir)
-            ]
+            (
+                df.sort_values("openInterest", ascending=False).iloc[0]["volume"],
+                df.sort_values("openInterest", ascending=False).iloc[0]["openInterest"]
+            ) if not df.empty else (0, 0)
+            for df in puts_data.values()
         ]
     ))
 
@@ -770,76 +829,21 @@ def calculate_and_visualize_data(ticker, width=600, height=400):
         borderpad=8  # Increased padding (was 5)
     )
 
-    # Add annotations for the highest volume contracts
-    offset_step = 2  # Incremental offset for each subsequent annotation
-    for idx, ann in enumerate(top_volume_contracts):
-        # Determine color based on option type
-        color = '#ff5e00' if ann['type'] == 'PUT' else '#32a852'
-
-        # Change the marker symbol to a diamond
-        symbol = 'diamond'
-
-        # Format volume, strike, openInterest, and total_spent with commas
-        formatted_volume = f"{int(ann['volume']):,}"
-        formatted_strike = f"{int(ann['strike']):,}"
-        formatted_total_spent = ann['total_spent']
-
-        # Decide the background color if 'volume' > 'openInterest'
-        # Purple hex color example => #8B00FF or #800080
-        if ann['unusual']:
-            annotation_bg_color = '#2a1c63'  # Purple
-        else:
-            annotation_bg_color = '#3b3b3b'  # Default
-
-        # Use HTML to format the annotation text
-        annotation_text = (
-            f"<b><span style='font-size:10px;'>${formatted_strike} <span style='color:{color}'>{ann['type']}</span></span></b><br>"
-            f"<span style='font-size:10px;'><span style='color:#cfcfcf'><b>Qty:</span> {formatted_volume}<br></b></span>"
-            f"<span style='font-size:10.5px;'><b>{formatted_total_spent}</b></span>"
+    # ------------------------------------------------------------------
+    # “Most active” contract annotations + diamond markers
+    # ------------------------------------------------------------------
+    for i, raw in enumerate(top_volume_contracts):
+        ma = MostActiveAnn(
+            kind=raw["type"],
+            strike=raw["strike"],
+            volume=raw["volume"],
+            oi=raw["openInterest"],
+            exp=raw["date"],
+            total=raw["total_spent"],
+            unusual=raw["unusual"],
         )
-
-        # Calculate offset to prevent overlap
-        ax_offset = 35 if ann['type'] == 'PUT' else -35  # Right for PUT, Left for CALL
-        ay_offset = -35 - (idx * offset_step)  # Vertical offset based on order
-
-        # Point annotations to the strike price on yaxis2
-        fig.add_annotation(
-            text=annotation_text,
-            x=ann['date'],  # Ensure this matches the formatted_date used in preprocessing
-            y=ann['strike'],  # Point to the strike price
-            yref='y2',  # Reference the y2 axis
-            font=dict(
-                family='Arial, sans-serif',
-                size=8,
-                color='#ffffff'
-            ),
-            bgcolor=annotation_bg_color,  # <-- Use the variable
-            showarrow=True,
-            arrowhead=0,  # Set to 0 to remove arrowhead shape
-            ax=ax_offset,
-            ay=ay_offset,
-            arrowwidth=1.5,
-            bordercolor='#636363',  # Set border color
-            borderwidth=1,  # Set border width for thin outline
-            borderpad=4  # Padding between the text and the border
-        )
-
-        # Add a triangle marker where the annotation is pointing
-        fig.add_trace(go.Scatter(
-            x=[ann['date']],  # Matches the x-axis dates in the graph
-            y=[ann['strike']],  # Ensure this is set to strike price for correct placement
-            mode='markers',
-            marker=dict(
-                size=8,  # Adjust size of the diamond marker
-                color=color,  # Use the same color as the annotation for consistency
-                symbol=symbol,  # Diamond shape for the marker
-                line=dict(width=1, color='#636363')  # Optional: border color for contrast
-            ),
-            showlegend=False,  # Hide this trace from the legend
-            xaxis='x',  # Ensure correct x-axis reference
-            yaxis='y2',  # Ensure correct y-axis reference for positioning
-            hoverinfo='skip'  # Disable hover text for this marker
-        ))
+        fig.add_annotation(**ma.annotation(i))
+        fig.add_trace(go.Scatter(**ma.marker()))
 
     # Add a horizontal line for the current price
     fig.add_shape(
@@ -901,84 +905,24 @@ def calculate_and_visualize_data(ticker, width=600, height=400):
         f"</span>"
     )
 
-    # Update layout with consistent settings
+    # ------------------------------------------------------------------
+    # Apply shared layout + per‑figure overrides
+    # ------------------------------------------------------------------
     fig.update_layout(
-        title=dict(
-            text=title_text,
-            x=0.1,  # Move all the way to the left edge of the plot
-            xanchor='left',  # Anchor it on the left side
-            y=0.94,
-            yanchor='top',
-            font=dict(
-                size=30,
-                family='Times New Roman, serif',
-                color='#e8ebe8', # color represents the ticker/company name and the parenthesis () for each plotly graph
-                style='italic'
-            )
-        ),
-        # EXPIRATION DATE SECTION/COLORING (x-axis + y-axis configs)
-        xaxis=dict(
-            title='',
-            title_font=dict(size=20, family='Arial, sans-serif', color='#2c3442', style='italic'),
-            showgrid=False,
-            showline=True,  # Turn on the axis line
-            linecolor='#444444',  # Color of the x-axis line which the expiration dates are underneath
-            linewidth=1,  # Set line width
-            autorange=True,
-            tickangle=38,  # Force the x-axis tick labels to display at a 45-degree angle
-            tickfont=dict(
-                family="Arial, sans-serif",
-                size=16,
-                color='#e8ebe8' # Color of the Expiration Dates
-            )
-        ),
-        # below is necessary for accurate plotting of the BAR GRAPHS
-        yaxis=dict(
-            title='',  # Hide the Open Interest title
-            showticklabels=False,  # Hide the tick labels
-            showgrid=False,  # Hide grid lines
-            side='right',
-            autorange=True
-        ),
-        # STRIKE $ SECTION/COLORING (y-axis focused)
-        yaxis2=dict(
-            title='Strike',
-            title_font=dict(
-                size=32,
-                family="Arial, sans-serif",
-                color='#e8ebe8',  # Strike title color
-                style='italic'
-            ),
-            tickfont=dict(
-                family="Arial, sans-serif",
-                size=19,
-                color='#e8ebe8',  # Strike tick numbers color
-                style='italic'
-            ),
-            side='left',
-            overlaying='y',
-            range=[0, max(max(max_strike_calls.values(), default=0),
-                          max(max_strike_puts.values(), default=0),
-                          max(avg_strike.values(), default=0),
-                          current_price) + 50],
-            autorange=True,
-            showline=False,
-            linecolor='#444444',
-            linewidth=0.5,
-            showgrid=True,
-            gridcolor='rgba(136,136,136,0.10)',  # Grid lines with 50% opacity
-            zeroline=True,
-            zerolinecolor='rgba(136,136,136,0.25)',
-            zerolinewidth=0.5,
-            gridwidth=0.5
-        ),
-        barmode='group',
-        plot_bgcolor='#0d0b0c', # Background of the Plotly Graph itself, behind the bar/line graphs
-        paper_bgcolor='#0d0b0c', # Border of the Plotly Graph surrounding the outside of the generated graph data
-        showlegend=False, # turns the legend on and off ( shows Call OI / Put OI / Average / Call / Put squares etc )
-        width=width,
-        height=height
+        BASE_LAYOUT | {
+            "width": width,
+            "height": height,
+
+            # dynamic title
+            "title": {
+                "text": title_text,
+                "x": 0.10,
+                "xanchor": "left",
+                "y": 0.94,
+                "yanchor": "top",
+                "font": {"family": "Times New Roman, serif", "size": 30, "color": "#e8ebe8"},
+            },
+        }
     )
 
     return fig
-    pass
