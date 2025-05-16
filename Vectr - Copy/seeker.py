@@ -5,13 +5,15 @@ import os
 import shutil
 import time
 import logging
+import math
 import json
 import zipfile
+import threading
 import numpy as np
 import pandas as pd
 import yfinance as yf
+from collections import defaultdict
 from datetime import datetime, timedelta
-import threading
 from zoneinfo import ZoneInfo
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from logging.handlers import RotatingFileHandler
@@ -29,7 +31,7 @@ DEFAULT_CONFIG = {
     "max_retries": 3,
     "backoff_factor": 2,
     "retention_days": 1,
-    "sector_pause": 300,          # <– new: seconds between sectors
+    "sector_pause": 20,          # <– new: seconds between sectors
 }
 
 if os.path.exists("config.json"):
@@ -471,33 +473,85 @@ def input_listener():
 
 
 
-def _compute_setups(db: dict[str, dict], direction: str, top_n: int = 10) -> list[dict]:
-    from concurrent.futures import ThreadPoolExecutor
-    def score_one(t):
-        ent   = db[t]
+def _compute_setups(
+    db: dict[str, dict],
+    direction: str,      # "ABOVE" for bullish, "BELOW" for bearish
+    top_n: int = 10
+) -> list[dict]:
+    """
+    1) Compute raw, outlier‑boosted OI scores per ticker (Part 3 logic).
+    2) Group tickers by sector and convert raw scores → 0–1 percentile within each sector.
+    3) Return the top_n tickers sorted by descending percentile (then raw score).
+    """
+    # --- 1) Raw, boosted scores ---
+    temp: list[dict] = []
+    for ticker, ent in db.items():
         price = ent.get("last_price", 0.0)
-        best  = 0.0
-        for exp, sides in ent.get("by_oi", {}).items():
-            calls = sides.get("CALLS", [])
-            puts  = sides.get("PUTS", [])
-            if not (calls and puts):
-                continue
-            call, put = calls[0], puts[0]
-            ok = (
-                (direction == "ABOVE" and price < call["strike"] and price < put["strike"])
-                or
-                (direction == "BELOW" and price > call["strike"] and price > put["strike"])
-            )
-            if not ok:
-                continue
-            dist = ((price - call["strike"]) + (price - put["strike"])) / price
-            score = (call["openInterest"] + put["openInterest"]) * (1 + dist)
-            best = max(best, score)
-        return {"ticker": t, "score": best}
 
-    with ThreadPoolExecutor(max_workers=16) as ex:
-        scored = list(ex.map(score_one, db.keys()))
-    return sorted(scored, key=lambda x: x["score"], reverse=True)[:top_n]
+        # collect per‑expiry OI sums
+        oi_sums = []
+        for sides in ent.get("by_oi", {}).values():
+            calls, puts = sides.get("CALLS", []), sides.get("PUTS", [])
+            if calls and puts:
+                oi_sums.append(calls[0]["openInterest"] + puts[0]["openInterest"])
+
+        if not oi_sums:
+            raw_score = 0.0
+        else:
+            mean_oi = sum(oi_sums) / len(oi_sums)
+            var     = sum((x - mean_oi) ** 2 for x in oi_sums) / len(oi_sums)
+            std_oi  = math.sqrt(var) if var > 0 else 1.0
+
+            raw_score = 0.0
+            for sides in ent.get("by_oi", {}).values():
+                calls, puts = sides.get("CALLS", []), sides.get("PUTS", [])
+                if not (calls and puts):
+                    continue
+                call, put = calls[0], puts[0]
+                oi_sum     = call["openInterest"] + put["openInterest"]
+                max_call   = call["strike"]
+                max_put    = put["strike"]
+
+                hit = (
+                    (direction == "ABOVE" and max_call > price and max_put < price)
+                    or
+                    (direction == "BELOW" and max_call < price and max_put > price)
+                )
+                if not hit:
+                    continue
+
+                z     = (oi_sum - mean_oi) / std_oi
+                boost = 1 + z
+                raw_score += oi_sum * boost
+
+        temp.append({
+            "ticker":    ticker,
+            "sector":    ent.get("sector", "Unknown"),
+            "raw_score": raw_score,
+        })
+
+    # --- 2) Percentile‑normalize within each sector ---
+    sectors = defaultdict(list)
+    for rec in temp:
+        sectors[rec["sector"]].append(rec)
+
+    for recs in sectors.values():
+        recs.sort(key=lambda r: r["raw_score"])
+        n = len(recs)
+        for idx, r in enumerate(recs):
+            # if only one ticker in sector, give it 1.0
+            r["percentile"] = 1.0 if n == 1 else idx / (n - 1)
+
+    # --- 3) Flatten & sort globally by percentile → raw_score ---
+    all_recs = [r for recs in sectors.values() for r in recs]
+    all_recs.sort(
+        key=lambda r: (r["percentile"], r["raw_score"]),
+        reverse=True
+    )
+
+    # Return top_n as [{"ticker":…, "score":percentile}, …]
+    top = all_recs[:top_n]
+    return [{"ticker": r["ticker"], "score": r["percentile"]} for r in top]
 
 
 def _compute_sectors(db: dict[str, dict]) -> list[dict]:
@@ -564,9 +618,11 @@ if __name__ == "__main__":
                     full = json.load(f)
 
                 db = full  # flat JSON: each key is a ticker
+                setups_bullish = _compute_setups(db, "ABOVE", top_n=20)
+                setups_bearish = _compute_setups(db, "BELOW", top_n=20)
                 full["setups"] = {
-                    "bullish": _compute_setups(db, "ABOVE", top_n=10),
-                    "bearish": _compute_setups(db, "BELOW", top_n=10)
+                    "bullish": setups_bullish,
+                    "bearish": setups_bearish
                 }
                 full["sectors"] = _compute_sectors(db)
 

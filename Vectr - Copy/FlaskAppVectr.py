@@ -215,7 +215,7 @@ def process_ticker():
     # 3) Run your logic
     try:
         save_options_data(ticker)
-        fig = calculate_and_visualize_data(ticker, width=1600, height=590)
+        fig = calculate_and_visualize_data(ticker, width=1550, height=600)
         graph_json = json.dumps(fig, cls=PlotlyJSONEncoder)
     except Exception as e:
         logging.exception("Error processing %s", ticker)
