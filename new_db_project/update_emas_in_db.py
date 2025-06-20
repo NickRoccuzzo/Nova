@@ -11,75 +11,148 @@ EMA_PERIODS = [3, 5, 7, 9, 12, 15, 18, 21, 25, 29, 33, 37, 42, 47, 50,
 # Create a single Engine; SQLAlchemy pools safely across threads
 engine = create_engine(DB_URL, future=True)
 
-# ─── Single‐ticker EMA computation & update ────────────────────────────────
+
+def ensure_ema_columns():
+    """Auto-add any missing ema_<period> DOUBLE PRECISION columns."""
+    with engine.begin() as conn:
+        existing = {
+            row[0]
+            for row in conn.execute(text("""
+                SELECT column_name
+                  FROM information_schema.columns
+                 WHERE table_name = 'price_history'
+            """))
+        }
+        for p in EMA_PERIODS:
+            col = f"ema_{p}"
+            if col not in existing:
+                conn.execute(text(f"""
+                    ALTER TABLE price_history
+                      ADD COLUMN IF NOT EXISTS {col}
+                        DOUBLE PRECISION
+                """))
+
+
 def compute_and_update_emas(symbol: str):
-    df = pd.read_sql(
-        text("""
-        SELECT date, close
-          FROM price_history
-         WHERE symbol = :sym
-         ORDER BY date ASC
-        """),
-        engine,
-        params={"sym": symbol},
-        parse_dates=["date"]
-    )
+    # 1) Find last EMA date (any period) we processed for this symbol
+    with engine.connect() as conn:
+        last_date = conn.execute(
+            text(f"""
+                SELECT MAX(date)
+                  FROM price_history
+                 WHERE symbol = :sym
+                   AND ema_{EMA_PERIODS[0]} IS NOT NULL
+            """),
+            {"sym": symbol}
+        ).scalar_one()
+
+    # 2) Fetch seed EMA values and any new price rows
+    if last_date is None:
+        # no EMA at all — do full-history compute
+        df = pd.read_sql(
+            text("""
+                SELECT date, close
+                  FROM price_history
+                 WHERE symbol = :sym
+                 ORDER BY date ASC
+            """),
+            engine,
+            params={"sym": symbol},
+            parse_dates=["date"]
+        )
+        seed = {}
+    else:
+        # grab the existing EMA values at last_date
+        cols = ", ".join(f"ema_{p}" for p in EMA_PERIODS)
+        with engine.connect() as conn:
+            seed_row = conn.execute(
+                text(f"""
+                    SELECT {cols}
+                      FROM price_history
+                     WHERE symbol = :sym AND date = :dt
+                """),
+                {"sym": symbol, "dt": last_date}
+            ).one()
+        seed = {EMA_PERIODS[i]: seed_row[i] for i in range(len(EMA_PERIODS))}
+
+        # fetch only new prices
+        df = pd.read_sql(
+            text("""
+                SELECT date, close
+                  FROM price_history
+                 WHERE symbol = :sym
+                   AND date > :dt
+                 ORDER BY date ASC
+            """),
+            engine,
+            params={"sym": symbol, "dt": last_date},
+            parse_dates=["date"]
+        )
+
     if df.empty:
-        print(f"⚠️ No data for {symbol}")
+        print(f"⚠️ No new price data for {symbol}")
         return
 
     df.set_index("date", inplace=True)
 
-    # compute each EMA
-    for period in EMA_PERIODS:
-        df[f"ema_{period}"] = df["close"].ewm(span=period, adjust=False).mean()
+    # 3) Compute incremental EMAs
+    alpha = {p: 2.0 / (p + 1) for p in EMA_PERIODS}
+    # Seed with first close if no prior EMA
+    ema_values = {
+        p: seed.get(p, float(df["close"].iloc[0]))
+        for p in EMA_PERIODS
+    }
+    updates = []  # list of dict(params) to executemany
 
+    for dt, row in df.iterrows():
+        price = float(row["close"])
+        params = {"sym": symbol, "dt": dt}
+        for p in EMA_PERIODS:
+            prev = ema_values[p]
+            today = alpha[p] * price + (1 - alpha[p]) * prev
+            ema_values[p] = today
+            params[f"ema_{p}"] = today
+        updates.append(params)
+
+    # 4) Bulk UPDATE in one transaction
+    set_clause = ", ".join(f"ema_{p} = :ema_{p}" for p in EMA_PERIODS)
     update_sql = text(f"""
         UPDATE price_history
-           SET {', '.join(f"ema_{p} = :ema_{p}" for p in EMA_PERIODS)}
+           SET {set_clause}
          WHERE symbol = :sym
            AND date   = :dt
     """)
-
-    # batch‐up updates in one transaction
     with engine.begin() as conn:
-        for idx, row in df.iterrows():
-            # cast to native Python types
-            params = {
-                **{
-                    f"ema_{p}": float(row[f"ema_{p}"])
-                    if pd.notna(row[f"ema_{p}"]) else None
-                    for p in EMA_PERIODS
-                },
-                "sym": symbol,
-                "dt": idx
-            }
-            conn.execute(update_sql, params)
+        conn.execute(update_sql, updates)
 
-    print(f"✅ {symbol}: EMAs updated ({len(df)} rows)")
+    print(f"✅ {symbol}: EMAs incremental-updated ({len(updates)} rows)")
 
-# ─── Parallel runner ────────────────────────────────────────────────────────
+
 def run_ema_update_all(max_workers: int = 8):
-    # grab all distinct symbols
-    symbols = pd.read_sql(
-        text("SELECT DISTINCT symbol FROM price_history ORDER BY symbol"),
-        engine
-    )["symbol"].tolist()
+    # 0) Auto-migrate columns
+    ensure_ema_columns()
 
-    print(f"▶️  Computing EMAs for {len(symbols)} symbols with {max_workers} workers")
+    # 1) Grab symbols to process
+    with engine.connect() as conn:
+        result = conn.execute(text(
+            "SELECT DISTINCT symbol FROM price_history ORDER BY symbol"
+        ))
+        symbols = [row[0] for row in result]
 
-    # thread‐based pool (I/O + light CPU)
+    print(f"▶️  Incremental EMAs for {len(symbols)} symbols with {max_workers} workers")
+
+    # 2) Parallel runner
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
-        future_to_sym = {pool.submit(compute_and_update_emas, sym): sym for sym in symbols}
-        for fut in tqdm(as_completed(future_to_sym), total=len(future_to_sym), desc="EMAs"):
-            sym = future_to_sym[fut]
+        futures = {pool.submit(compute_and_update_emas, sym): sym for sym in symbols}
+        for fut in tqdm(as_completed(futures), total=len(futures), desc="EMAs"):
+            sym = futures[fut]
             try:
                 fut.result()
             except Exception as e:
                 print(f"❌ {sym} failed: {e}")
 
-    print("🎉 All EMAs updated in parallel.")
+    print("🎉 All EMAs updated incrementally.")
 
-# ─── Script entrypoint ──────────────────────────────────────────────────────
+
 if __name__ == "__main__":
     run_ema_update_all(max_workers=8)

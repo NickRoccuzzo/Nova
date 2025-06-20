@@ -1,4 +1,6 @@
 import time
+import random
+from itertools import islice
 
 import pandas as pd
 import yfinance as yf
@@ -9,8 +11,14 @@ import sqlalchemy.types
 DB_URL        = "postgresql://option_user:option_pass@localhost:5432/tickers"
 TICKERS_TABLE = "tickers"
 PRICE_TABLE   = "price_history"
+BATCH_SIZE    = 5  # how many tickers to fetch in one yf.download call
 
 # ─── Helper Functions ─────────────────────────────────────────────────────
+
+def chunked(iterable, size):
+    """Yield successive chunks of length size."""
+    for i in range(0, len(iterable), size):
+        yield iterable[i : i + size]
 
 def fetch_history(ticker: str) -> pd.DataFrame:
     """Download full history, with up to 3 retries."""
@@ -71,43 +79,95 @@ def get_last_date(engine, symbol):
 def price_check():
     engine = create_engine(DB_URL)
     ensure_price_table(engine)
-    tickers = get_all_tickers(engine)
+    all_tickers = get_all_tickers(engine)
 
-    for symbol in tickers:
-        last_date = get_last_date(engine, symbol)
-
-        # fetch only new data if we have a last date
-        if last_date:
-            df = yf.download(
-                symbol,
-                start=last_date + pd.Timedelta(days=1),
-                group_by="column",    # flatten multi-index
-                auto_adjust=False     # avoid future‐warning
-            )
+    # Partition into existing vs. brand-new symbols
+    existing = {}
+    new      = []
+    for sym in all_tickers:
+        ld = get_last_date(engine, sym)
+        if ld:
+            existing[sym] = ld
         else:
-            df = fetch_history(symbol)
+            new.append(sym)
 
+    # 1) Process existing tickers in batches
+    for batch in chunked(list(existing.keys()), BATCH_SIZE):
+        # compute the earliest start date among the batch
+        next_starts = [existing[sym] + pd.Timedelta(days=1) for sym in batch]
+        start_date  = min(next_starts)
+
+        # batch download
+        df_all = yf.download(
+            batch,
+            start=start_date,
+            group_by="ticker",
+            auto_adjust=False
+        )
+
+        batch_dfs = []
+        updates   = []
+
+        for sym in batch:
+            # extract per-symbol DataFrame (fallback if group_by didn’t nest)
+            try:
+                df = df_all[sym]
+            except Exception:
+                df = df_all.copy()
+
+            # flatten MultiIndex if needed
+            if isinstance(df.columns, pd.MultiIndex):
+                df.columns = df.columns.droplevel(0)
+
+            df = clean_dataframe(df)
+            df["symbol"] = sym
+            # filter out anything ≤ last_date
+            df = df[df["date"] > pd.to_datetime(existing[sym])]
+
+            if df.empty:
+                print(f"⚠️ {sym} already up to date through {existing[sym]}")
+                continue
+
+            batch_dfs.append(df)
+            updates.append((sym, df["date"].max().date()))
+
+        # one bulk insert per batch
+        if batch_dfs:
+            to_insert = pd.concat(batch_dfs, ignore_index=True)
+            to_insert.to_sql(
+                PRICE_TABLE,
+                engine,
+                if_exists="append",
+                index=False,
+                dtype={
+                    "symbol": sqlalchemy.types.Text(),
+                    "date":   sqlalchemy.types.Date(),
+                    "open":   sqlalchemy.types.Numeric(),
+                    "high":   sqlalchemy.types.Numeric(),
+                    "low":    sqlalchemy.types.Numeric(),
+                    "close":  sqlalchemy.types.Numeric(),
+                    "volume": sqlalchemy.types.BigInteger(),
+                }
+            )
+            for sym, up_to in updates:
+                print(f"✔️ {sym} updated through {up_to}")
+
+        # avoid hammering the API
+        time.sleep(random.uniform(1, 3))
+
+    # 2) Process brand-new tickers (full history)
+    for sym in new:
+        df = fetch_history(sym)
         if df is None or df.empty:
-            print(f"⚠️ No data for {symbol}")
+            print(f"⚠️ No data for {sym}")
             continue
 
-        # flatten any remaining MultiIndex
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = df.columns.droplevel(0)
 
         df = clean_dataframe(df)
-        df["symbol"] = symbol
+        df["symbol"] = sym
 
-        # drop rows that are already in the DB
-        if last_date is not None:
-            # convert last_date (a Python date) to a pandas Timestamp
-            last_ts = pd.to_datetime(last_date)
-            df = df[df["date"] > last_ts]
-            if df.empty:
-                print(f"⚠️ {symbol} already up to date through {last_date}")
-                continue
-
-        # append new rows
         df.to_sql(
             PRICE_TABLE,
             engine,
@@ -123,8 +183,7 @@ def price_check():
                 "volume": sqlalchemy.types.BigInteger(),
             }
         )
-        print(f"✔️ {symbol} updated through {df['date'].max().date()}")
-        time.sleep(1)
+        print(f"✔️ {sym} full history inserted")
 
 if __name__ == "__main__":
     price_check()
