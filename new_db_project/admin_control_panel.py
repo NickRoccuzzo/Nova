@@ -1,209 +1,177 @@
-# graph_builder.py
-import os
-
-import pandas as pd
-from sqlalchemy import create_engine, text
+import json
+import threading
+from pathlib import Path
 
 import dash
-from dash import dcc, html
-from dash.dependencies import Input, Output
-import plotly.graph_objects as go
+from dash import html, dcc
+from dash.dependencies import Input, Output, State
+from dash.exceptions import PreventUpdate
+import dash_bootstrap_components as dbc
+import update_option_chains_in_db
 
-# ─── DATABASE SETUP ─────────────────────────────────────────────────────────────
-DB_URI = os.getenv("GRAPH_DB_URI",
-                   "postgresql://option_user:option_pass@localhost:5432/tickers")
-engine = create_engine(DB_URI, future=True)
+# ── Paths & Globals ─────────────────────────────────────────────────────────────
+HERE          = Path(__file__).parent
+TICKERS_FILE  = HERE / "tickers.json"
+PROGRESS_FILE = HERE / "progress.json"
+LOG_LINES     = 100
 
-# ─── METRIC OPTIONS ────────────────────────────────────────────────────────────
-X_OPTIONS = [
-    {"label": "Call OI Total",     "value": "call_oi_sum"},
-    {"label": "Put OI Total",      "value": "put_oi_sum"},
-    {"label": "Call Volume Total", "value": "call_vol_sum"},
-    {"label": "Put Volume Total",  "value": "put_vol_sum"},
-    {"label": "Call IV Total",     "value": "call_iv_sum"},
-    {"label": "Put IV Total",      "value": "put_iv_sum"},
-]
+ingest_thread = None
 
-Y_OPTIONS = [
-    {"label": "Max OI Call",     "value": "max_oi_call"},
-    {"label": "Max OI Put",      "value": "max_oi_put"},
-    {"label": "2nd Max OI Call", "value": "second_oi_call"},
-    {"label": "2nd Max OI Put",  "value": "second_oi_put"},
-    {"label": "3rd Max OI Call", "value": "third_oi_call"},
-    {"label": "3rd Max OI Put",  "value": "third_oi_put"},
-    {"label": "Max Vol Call",     "value": "max_vol_call"},
-    {"label": "Max Vol Put",      "value": "max_vol_put"},
-    {"label": "2nd Max Vol Call", "value": "second_vol_call"},
-    {"label": "2nd Max Vol Put",  "value": "second_vol_put"},
-    {"label": "3rd Max Vol Call", "value": "third_vol_call"},
-    {"label": "3rd Max Vol Put",  "value": "third_vol_put"},
-]
+# ── Load tickers structure ─────────────────────────────────────────────────────
+with open(TICKERS_FILE) as f:
+    tickers_tree = json.load(f)
 
-# ─── DASH SETUP ────────────────────────────────────────────────────────────────
-app = dash.Dash(__name__)
-app.title = "Option‐Chain Metrics Explorer"
+# ── Build the expandable tree with optional search expansion ───────────────────
+def build_tree(search_symbol=None):
+    try:
+        nested = json.loads(TICKERS_FILE.read_text())
+        prog   = json.loads(PROGRESS_FILE.read_text())
+    except Exception:
+        nested, prog = {}, {}
 
-# ─── HELPERS ─────────────────────────────────────────────────────────────────
-def load_tickers():
-    """Fetch all symbols for dropdown."""
-    with engine.connect() as conn:
-        rows = conn.execute(text("SELECT symbol FROM tickers ORDER BY symbol")).all()
-    return [r[0] for r in rows]
+    search_symbol = search_symbol.strip().upper() if search_symbol else None
+    nodes = []
 
-# New helper: fetch scenario stats
+    for sector, industries in nested.items():
+        # Determine if this sector should be expanded
+        sector_open = False
+        if search_symbol:
+            for entries in industries.values():
+                for ent in entries:
+                    sym = ent["symbol"] if isinstance(ent, dict) else ent
+                    if sym.upper() == search_symbol:
+                        sector_open = True
+                        break
+                if sector_open:
+                    break
 
-def get_scenario_stats(symbol: str) -> pd.DataFrame:
-    """Grab the latest EMA scenario and return metrics for a given symbol."""
-    sql = """
-    SELECT *
-      FROM latest_ticker_stats
-     WHERE symbol = :symbol
-    """
-    df = pd.read_sql(text(sql), engine, params={"symbol": symbol})
-    return df
+        sector_ts = prog.get("sectors", {}).get(sector, {}).get("last_timestamp", "—")
+        ind_nodes = []
 
-# ─── LAYOUT ───────────────────────────────────────────────────────────────────
-app.layout = html.Div([
-    html.H1("Option‐Chain Metrics Explorer"),
+        for ind, entries in industries.items():
+            # Determine if this industry should be expanded
+            ind_open = False
+            if search_symbol:
+                for ent in entries:
+                    sym = ent["symbol"] if isinstance(ent, dict) else ent
+                    if sym.upper() == search_symbol:
+                        ind_open = True
+                        break
 
-    html.Div([
-        html.Label("Ticker"),
-        dcc.Dropdown(
-            id="ticker-dropdown",
-            options=[{"label": sym, "value": sym}
-                     for sym in load_tickers()],
-            placeholder="Select a ticker…",
-            clearable=False
-        ),
-    ], style={"width": "20%", "display": "inline-block", "verticalAlign": "top"}),
+            ind_ts = prog.get("industries", {}).get(ind, {}).get("last_timestamp", "—")
+            ticker_items = []
 
-    html.Div([
-        html.Label("X-axis (Totals: bars)"),
-        dcc.Checklist(
-            id="x-metrics",
-            options=X_OPTIONS,
-            value=["call_oi_sum", "put_oi_sum"],  # defaults
-            inline=True
-        ),
-        html.Br(),
-        html.Label("Y-axis (Strikes/Vol: lines)"),
-        dcc.Checklist(
-            id="y-metrics",
-            options=Y_OPTIONS,
-            value=["max_oi_call", "max_oi_put"],  # defaults
-            inline=True
-        ),
-    ], style={"width": "75%", "display": "inline-block", "paddingLeft": "2%"}),
+            for ent in entries:
+                sym = ent["symbol"] if isinstance(ent, dict) else ent
+                tick_ts = prog.get("tickers", {}).get(sym, {}).get("last_timestamp", "—")
+                if search_symbol and sym.upper() == search_symbol:
+                    # Highlight the searched ticker
+                    ticker_items.append(html.Li(f"{sym} (last: {tick_ts})",
+                                                style={"fontWeight": "bold", "color": "red"}))
+                else:
+                    ticker_items.append(html.Li(f"{sym} (last: {tick_ts})"))
 
-    dcc.Graph(id="metrics-graph", style={"height": "70vh"}),
-    html.Div(id="scenario-info", style={"padding": "1em", "fontFamily": "monospace"}),
-])
+            ind_nodes.append(
+                html.Details(
+                    [
+                        html.Summary(f"{ind} (last: {ind_ts})"),
+                        html.Ul(ticker_items, style={"margin-left": "1em"})
+                    ],
+                    open=ind_open,
+                    className="mb-2"
+                )
+            )
 
+        nodes.append(
+            html.Details(
+                [
+                    html.Summary(f"{sector} (last: {sector_ts})"),
+                    html.Div(ind_nodes, style={"margin-left": "1em"})
+                ],
+                open=sector_open,
+                className="mb-3"
+            )
+        )
 
-def query_option_metrics(symbol: str) -> pd.DataFrame:
-    """Grab option_metrics for all expirations of a given symbol."""
-    sql = """
-    SELECT
-      e.expiration_date::date,
-      om.*
-    FROM option_metrics om
-    JOIN tickers t      ON om.ticker_id = t.ticker_id
-    JOIN expirations e  ON om.expiration_id = e.expiration_id
-    WHERE t.symbol = :symbol
-    ORDER BY e.expiration_date
-    """
-    df = pd.read_sql(text(sql), engine, params={"symbol": symbol})
-    return df
+    return nodes
 
+# ── Dash App Layout ────────────────────────────────────────────────────────────
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app.layout = dbc.Container([
+    dbc.Row([
+        dbc.Col([
+            html.Button("Play",    id="play-btn",    className="btn btn-primary"),
+            html.Button("Pause",   id="pause-btn",   className="btn btn-warning ms-2", disabled=True),
+            html.Button("Refresh", id="refresh-btn", className="btn btn-success ms-2"),
+            html.Hr(),
+            dcc.Input(id="ticker-search", type="text", placeholder="Search ticker...", debounce=True),
+            html.Hr(),
+            dcc.Interval(id="poller", interval=1000, n_intervals=0)
+        ], width=3),
+        dbc.Col(html.Div(id="tree-container"), width=6),
+        dbc.Col(dcc.Textarea(id="log-area", style={"width":"100%","height":"80vh"}), width=3),
+    ]),
+], fluid=True)
 
-# ─── CALLBACK ────────────────────────────────────────────────────────────────
+# ── Poller & Search: Update tree & log pane ────────────────────────────────────
 @app.callback(
-    Output("metrics-graph", "figure"),
-    Input("ticker-dropdown", "value"),
-    Input("x-metrics", "value"),
-    Input("y-metrics", "value"),
+    Output("tree-container", "children"),
+    Output("log-area", "value"),
+    Input("poller", "n_intervals"),
+    Input("ticker-search", "value"),
 )
-def update_graph(symbol, x_metrics, y_metrics):
-    if not symbol:
-        return go.Figure()
+def refresh(n_intervals, search_value):
+    tree = build_tree(search_value)
+    try:
+        lines = PROGRESS_FILE.read_text().splitlines()[-LOG_LINES:]
+        log   = "\n".join(lines)
+    except Exception:
+        log = ""
+    return tree, log
 
-    df = query_option_metrics(symbol)
-    if df.empty:
-        return go.Figure().add_annotation(text="No data for that ticker")
-
-    df["exp_str"] = pd.to_datetime(df["expiration_date"]).dt.strftime("%Y-%m-%d")
-
-    fig = go.Figure()
-    # bars on primary y-axis
-    for col in x_metrics:
-        fig.add_trace(go.Bar(
-            x=df["exp_str"],
-            y=df[col],
-            name=col.replace("_", " ").title(),
-            opacity=0.6,
-        ))
-
-    # lines on secondary y-axis
-    for col in y_metrics:
-        fig.add_trace(go.Scatter(
-            x=df["exp_str"],
-            y=df[col],
-            name=col.replace("_", " ").title(),
-            mode="lines+markers",
-            yaxis="y2",
-        ))
-
-    # layout with two y-axes
-    fig.update_layout(
-        title=f"{symbol} Option Metrics by Expiration",
-        xaxis_title="Expiration Date",
-        yaxis=dict(title="Totals (bars)"),
-        yaxis2=dict(
-            title="Strikes/Vol (lines)",
-            overlaying="y",
-            side="right"
-        ),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-    )
-    # force the axis to be categorical
-    fig.update_layout(
-        xaxis=dict(
-            type="category",
-            categoryorder="array",
-            categoryarray=list(df["exp_str"]),
-            tickangle=45,
-            tickfont=dict(size=10),
-            tickmode="array",
-            tickvals=list(df["exp_str"]),
-            ticktext=list(df["exp_str"])
-        ),
-        margin=dict(t=40, b=100),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-    )
-
-    return fig
-
-
+# ── Play / Pause / Refresh Controls ────────────────────────────────────────────
 @app.callback(
-    Output("scenario-info", "children"),
-    Input("ticker-dropdown", "value")
+    Output("play-btn",    "disabled"),
+    Output("pause-btn",   "disabled"),
+    Output("refresh-btn", "disabled"),
+    Input("play-btn",    "n_clicks"),
+    Input("pause-btn",   "n_clicks"),
+    Input("refresh-btn", "n_clicks"),
 )
-def update_scenario_info(symbol):
-    if not symbol:
-        return ""
+def control_ingest(play_ct, pause_ct, refresh_ct):
+    global ingest_thread
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        raise PreventUpdate
+    btn = ctx.triggered[0]["prop_id"].split(".")[0]
 
-    df = get_scenario_stats(symbol)
-    if df.empty:
-        return html.Div("No scenario data available", style={"color": "gray"})
+    if btn == "play-btn":
+        update_option_chains_in_db.STOP_EVENT.clear()
+        if ingest_thread is None or not ingest_thread.is_alive():
+            ingest_thread = threading.Thread(
+                target=lambda: update_option_chains_in_db.main(full_run=False),
+                daemon=True
+            )
+            ingest_thread.start()
+        return True, False, False
 
-    row = df.iloc[0]
-    return html.Div([
-        html.P(f"Current scenario: {row['current_scenario']}{''}"),
-        html.P(f"Avg return: {row['avg_return_for_scenario']:.2f}%"),
-        html.P(f"Bull%: {row['bull_percent_for_scenario']:.1f}%  Bear%: {row['bear_percent_for_scenario']:.1f}%"),
-        html.P(f"Occurrences: {row['num_occurrences_for_scenario']}{''}")
-    ])
+    if btn == "pause-btn":
+        update_option_chains_in_db.STOP_EVENT.set()
+        return False, True, False
 
-# ─── BOOTSTRAP ───────────────────────────────────────────────────────────────
+    if btn == "refresh-btn":
+        update_option_chains_in_db.clear_progress()  # clear immediately
+        update_option_chains_in_db.STOP_EVENT.clear()
+        if ingest_thread is None or not ingest_thread.is_alive():
+            ingest_thread = threading.Thread(
+                target=lambda: update_option_chains_in_db.main(full_run=True),
+                daemon=True
+            )
+            ingest_thread.start()
+        return True, False, True
+
+    raise PreventUpdate
+
+# ── Run Server ────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=8050)

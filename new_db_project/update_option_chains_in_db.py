@@ -224,6 +224,223 @@ def upsert_on_conflict(table, conn, keys, data_iter):
         conn.execute(text(sql), row)
 
 
+
+# ── Helper (place this after upsert_on_conflict, before your main()) ──────────
+# ── Helper (place this after upsert_on_conflict, before your main()) ──────────
+def upsert_option_metrics(conn, ticker_id: int):
+    """
+    Compute per-expiry CALL/PUT sums + top-3 volumes, open_interest & strikes,
+    then upsert into option_metrics for this single ticker.
+    """
+    conn.execute(text("""
+    INSERT INTO option_metrics (
+      ticker_id, expiration_id,
+      call_vol_sum, put_vol_sum,
+      max_vol_call,  max_call_oi,
+      second_vol_call,  second_call_oi,
+      third_vol_call,   third_call_oi,
+      max_vol_put,   max_put_oi,
+      second_vol_put,  second_put_oi,
+      third_vol_put,   third_put_oi,
+      max_call_strike,    second_call_strike,   third_call_strike,
+      max_put_strike,     second_put_strike,    third_put_strike
+    )
+    SELECT
+      pe.ticker_id,
+      pe.expiration_id,
+      pe.call_vol_sum,
+      pe.put_vol_sum,
+
+      -- top-3 CALL volumes & OI
+      (SELECT oc.volume
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'call'
+        ORDER BY oc.volume DESC NULLS LAST
+        LIMIT 1
+      ) AS max_vol_call,
+      (SELECT oc.open_interest
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'call'
+        ORDER BY oc.volume DESC NULLS LAST
+        LIMIT 1
+      ) AS max_call_oi,
+
+      (SELECT oc.volume
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'call'
+        ORDER BY oc.volume DESC NULLS LAST
+        OFFSET 1 LIMIT 1
+      ) AS second_vol_call,
+      (SELECT oc.open_interest
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'call'
+        ORDER BY oc.volume DESC NULLS LAST
+        OFFSET 1 LIMIT 1
+      ) AS second_call_oi,
+
+      (SELECT oc.volume
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'call'
+        ORDER BY oc.volume DESC NULLS LAST
+        OFFSET 2 LIMIT 1
+      ) AS third_vol_call,
+      (SELECT oc.open_interest
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'call'
+        ORDER BY oc.volume DESC NULLS LAST
+        OFFSET 2 LIMIT 1
+      ) AS third_call_oi,
+
+      -- top-3 PUT volumes & OI
+      (SELECT oc.volume
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'put'
+        ORDER BY oc.volume DESC NULLS LAST
+        LIMIT 1
+      ) AS max_vol_put,
+      (SELECT oc.open_interest
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'put'
+        ORDER BY oc.volume DESC NULLS LAST
+        LIMIT 1
+      ) AS max_put_oi,
+
+      (SELECT oc.volume
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'put'
+        ORDER BY oc.volume DESC NULLS LAST
+        OFFSET 1 LIMIT 1
+      ) AS second_vol_put,
+      (SELECT oc.open_interest
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'put'
+        ORDER BY oc.volume DESC NULLS LAST
+        OFFSET 1 LIMIT 1
+      ) AS second_put_oi,
+
+      (SELECT oc.volume
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'put'
+        ORDER BY oc.volume DESC NULLS LAST
+        OFFSET 2 LIMIT 1
+      ) AS third_vol_put,
+      (SELECT oc.open_interest
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'put'
+        ORDER BY oc.volume DESC NULLS LAST
+        OFFSET 2 LIMIT 1
+      ) AS third_put_oi,
+
+      -- matching top-3 CALL strikes
+      (SELECT oc.strike
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'call'
+        ORDER BY oc.volume DESC NULLS LAST
+        LIMIT 1
+      ) AS max_call_strike,
+      (SELECT oc.strike
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'call'
+        ORDER BY oc.volume DESC NULLS LAST
+        OFFSET 1 LIMIT 1
+      ) AS second_call_strike,
+      (SELECT oc.strike
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'call'
+        ORDER BY oc.volume DESC NULLS LAST
+        OFFSET 2 LIMIT 1
+      ) AS third_call_strike,
+
+      -- matching top-3 PUT strikes
+      (SELECT oc.strike
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'put'
+        ORDER BY oc.volume DESC NULLS LAST
+        LIMIT 1
+      ) AS max_put_strike,
+      (SELECT oc.strike
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'put'
+        ORDER BY oc.volume DESC NULLS LAST
+        OFFSET 1 LIMIT 1
+      ) AS second_put_strike,
+      (SELECT oc.strike
+         FROM option_contracts oc
+        WHERE oc.ticker_id     = pe.ticker_id
+          AND oc.expiration_id = pe.expiration_id
+          AND LOWER(oc.type)   = 'put'
+        ORDER BY oc.volume DESC NULLS LAST
+        OFFSET 2 LIMIT 1
+      ) AS third_put_strike
+
+    FROM (
+      SELECT
+        ticker_id,
+        expiration_id,
+        SUM(volume) FILTER (WHERE LOWER(type)='call') AS call_vol_sum,
+        SUM(volume) FILTER (WHERE LOWER(type)='put')  AS put_vol_sum
+      FROM option_contracts
+      WHERE ticker_id = :tid
+      GROUP BY ticker_id, expiration_id
+    ) AS pe
+
+    ON CONFLICT (ticker_id, expiration_id)
+      DO UPDATE SET
+        call_vol_sum        = EXCLUDED.call_vol_sum,
+        put_vol_sum         = EXCLUDED.put_vol_sum,
+        max_vol_call        = EXCLUDED.max_vol_call,
+        max_call_oi         = EXCLUDED.max_call_oi,
+        second_vol_call     = EXCLUDED.second_vol_call,
+        second_call_oi      = EXCLUDED.second_call_oi,
+        third_vol_call      = EXCLUDED.third_vol_call,
+        third_call_oi       = EXCLUDED.third_call_oi,
+        max_vol_put         = EXCLUDED.max_vol_put,
+        max_put_oi          = EXCLUDED.max_put_oi,
+        second_vol_put      = EXCLUDED.second_vol_put,
+        second_put_oi       = EXCLUDED.second_put_oi,
+        third_vol_put       = EXCLUDED.third_vol_put,
+        third_put_oi        = EXCLUDED.third_put_oi,
+        max_call_strike     = EXCLUDED.max_call_strike,
+        second_call_strike  = EXCLUDED.second_call_strike,
+        third_call_strike   = EXCLUDED.third_call_strike,
+        max_put_strike      = EXCLUDED.max_put_strike,
+        second_put_strike   = EXCLUDED.second_put_strike,
+        third_put_strike    = EXCLUDED.third_put_strike;
+    """), {"tid": ticker_id})
 # ── Main Logic ──────────────────────────────────────────────────────────────────
 def main(full_run: bool = True):
     """
@@ -335,8 +552,12 @@ def main(full_run: bool = True):
                             text("UPDATE tickers SET last_queried_time = NOW() WHERE ticker_id = :tid"),
                             {"tid": ticker_id}
                         )
-
                         logging.info(f"      → Inserted {len(df_to_insert)} rows for {symbol}")
+
+                        # now compute & upsert both volumes AND strikes
+                        upsert_option_metrics(conn, ticker_id)
+                        logging.info(f"      → option_metrics refreshed for {symbol}")
+
                 except Exception as db_err:
                     logging.error(f"    → DB error for {symbol}: {db_err}")
                     failed_tickers.append(symbol)
@@ -395,6 +616,10 @@ def main(full_run: bool = True):
                     )
 
                     logging.info(f"      → Retry inserted {len(df_to_insert)} rows for {symbol}")
+
+                    # now also refresh option_metrics on retry
+                    upsert_option_metrics(conn, ticker_id)
+                    logging.info(f"      → (Retry) option_metrics refreshed for {symbol}")
                 time.sleep(random.uniform(MIN_WAIT, MAX_WAIT))
             except Exception as retry_err:
                 logging.error(f"    → Final failure for {symbol}: {retry_err}")

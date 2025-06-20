@@ -41,8 +41,7 @@ Y_OPTIONS = [
 
 # ─── DASH SETUP ────────────────────────────────────────────────────────────────
 app = dash.Dash(__name__)
-app.title = "Option Metrics Grapher"
-
+app.title = "Option‐Chain Metrics Explorer"
 
 # ─── HELPERS ─────────────────────────────────────────────────────────────────
 def load_tickers():
@@ -50,6 +49,18 @@ def load_tickers():
     with engine.connect() as conn:
         rows = conn.execute(text("SELECT symbol FROM tickers ORDER BY symbol")).all()
     return [r[0] for r in rows]
+
+# New helper: fetch scenario stats
+
+def get_scenario_stats(symbol: str) -> pd.DataFrame:
+    """Grab the latest EMA scenario and return metrics for a given symbol."""
+    sql = """
+    SELECT *
+      FROM latest_ticker_stats
+     WHERE symbol = :symbol
+    """
+    df = pd.read_sql(text(sql), engine, params={"symbol": symbol})
+    return df
 
 # ─── LAYOUT ───────────────────────────────────────────────────────────────────
 app.layout = html.Div([
@@ -85,6 +96,7 @@ app.layout = html.Div([
     ], style={"width": "75%", "display": "inline-block", "paddingLeft": "2%"}),
 
     dcc.Graph(id="metrics-graph", style={"height": "70vh"}),
+    html.Div(id="scenario-info", style={"padding": "1em", "fontFamily": "monospace"}),
 ])
 
 
@@ -153,11 +165,10 @@ def update_graph(symbol, x_metrics, y_metrics):
         ),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
-    # **New block to force every date tick**
-    # now force the axis to be categorical
+    # force the axis to be categorical
     fig.update_layout(
         xaxis=dict(
-            type="category",  # <- this makes each exp_str evenly spaced
+            type="category",
             categoryorder="array",
             categoryarray=list(df["exp_str"]),
             tickangle=45,
@@ -173,7 +184,26 @@ def update_graph(symbol, x_metrics, y_metrics):
     return fig
 
 
+@app.callback(
+    Output("scenario-info", "children"),
+    Input("ticker-dropdown", "value")
+)
+def update_scenario_info(symbol):
+    if not symbol:
+        return ""
+
+    df = get_scenario_stats(symbol)
+    if df.empty:
+        return html.Div("No scenario data available", style={"color": "gray"})
+
+    row = df.iloc[0]
+    return html.Div([
+        html.P(f"Current scenario: {row['current_scenario']}{''}"),
+        html.P(f"Avg return: {row['avg_return_for_scenario']:.2f}%"),
+        html.P(f"Bull%: {row['bull_percent_for_scenario']:.1f}%  Bear%: {row['bear_percent_for_scenario']:.1f}%"),
+        html.P(f"Occurrences: {row['num_occurrences_for_scenario']}{''}")
+    ])
+
 # ─── BOOTSTRAP ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    # pre‐load the ticker list
     app.run(debug=True)
