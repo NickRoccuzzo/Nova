@@ -174,4 +174,4 @@ def control_ingest(play_ct, pause_ct, refresh_ct):
 
 # ── Run Server ────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    app.run(debug=True, port=8050)
+    app.run(debug=True, port=8051)
