@@ -1,5339 +1,5327 @@
 {
-  "run_started": "6/20 02:54 PM",
+  "run_started": "6/27 01:43 PM",
   "tickers": {
     "CF": {
       "status": "done",
-      "last_timestamp": "6/20 02:54 PM"
+      "last_timestamp": "6/27 01:43 PM"
     },
     "CTVA": {
       "status": "done",
-      "last_timestamp": "6/20 02:54 PM"
+      "last_timestamp": "6/27 01:43 PM"
     },
     "MOS": {
       "status": "done",
-      "last_timestamp": "6/20 02:54 PM"
+      "last_timestamp": "6/27 01:43 PM"
     },
     "FMC": {
       "status": "done",
-      "last_timestamp": "6/20 02:54 PM"
+      "last_timestamp": "6/27 01:43 PM"
     },
     "AA": {
       "status": "done",
-      "last_timestamp": "6/20 02:54 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "CENX": {
       "status": "done",
-      "last_timestamp": "6/20 02:54 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "CRH": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "SUM": {
       "status": "in-progress",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "ASPI": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "CE": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "DOW": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "HUN": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "OLN": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "ORGN": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "TROX": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "FCX": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "CDE": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "GORO": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "NEM": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "NG": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:45 PM"
     },
     "SSRM": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:45 PM"
     },
     "GLD": {
       "status": "done",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:45 PM"
     },
     "GOLD": {
       "status": "in-progress",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:45 PM"
     },
     "GDX": {
       "status": "done",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:45 PM"
     },
     "SLV": {
       "status": "done",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:45 PM"
     },
     "AG": {
       "status": "done",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:45 PM"
     },
     "ABAT": {
       "status": "done",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:45 PM"
     },
     "MP": {
       "status": "done",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:45 PM"
     },
     "UAMY": {
       "status": "done",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:45 PM"
     },
     "RIO": {
       "status": "done",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:45 PM"
     },
     "OMEX": {
       "status": "done",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:45 PM"
     },
     "HL": {
       "status": "done",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "LODE": {
       "status": "done",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "ALB": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "APD": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "AXTA": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "CC": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "DD": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "ECL": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "EMN": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "ESI": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "GEVO": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "IFF": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "PPG": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "PRM": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "SHW": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "CLF": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "NUE": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "STLD": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "X": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "CCO": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "CDLX": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "IPG": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "MGNI": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "OMC": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "FUBO": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "GTN": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "TGNA": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "EA": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "RBLX": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "TTWO": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "AMC": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:48 PM"
     },
     "CNK": {
       "status": "done",
-      "last_timestamp": "6/20 02:59 PM"
+      "last_timestamp": "6/27 01:48 PM"
     },
     "DIS": {
       "status": "done",
-      "last_timestamp": "6/20 02:59 PM"
+      "last_timestamp": "6/27 01:48 PM"
     },
     "EDR": {
       "status": "in-progress",
-      "last_timestamp": "6/20 02:59 PM"
+      "last_timestamp": "6/27 01:48 PM"
     },
     "FOX": {
       "status": "done",
-      "last_timestamp": "6/20 02:59 PM"
+      "last_timestamp": "6/27 01:48 PM"
     },
     "FOXA": {
       "status": "done",
-      "last_timestamp": "6/20 02:59 PM"
+      "last_timestamp": "6/27 01:48 PM"
     },
     "FWONK": {
       "status": "done",
-      "last_timestamp": "6/20 02:59 PM"
+      "last_timestamp": "6/27 01:48 PM"
     },
     "LYV": {
       "status": "done",
-      "last_timestamp": "6/20 02:59 PM"
+      "last_timestamp": "6/27 01:48 PM"
     },
     "NFLX": {
       "status": "done",
-      "last_timestamp": "6/20 02:59 PM"
+      "last_timestamp": "6/27 01:48 PM"
     },
     "NWSA": {
       "status": "done",
-      "last_timestamp": "6/20 02:59 PM"
+      "last_timestamp": "6/27 01:48 PM"
     },
     "PARA": {
       "status": "done",
-      "last_timestamp": "6/20 02:59 PM"
+      "last_timestamp": "6/27 01:48 PM"
     },
     "PLAY": {
       "status": "done",
-      "last_timestamp": "6/20 02:59 PM"
+      "last_timestamp": "6/27 01:48 PM"
     },
     "ROKU": {
       "status": "done",
-      "last_timestamp": "6/20 02:59 PM"
+      "last_timestamp": "6/27 01:48 PM"
     },
     "SIRI": {
       "status": "done",
-      "last_timestamp": "6/20 02:59 PM"
+      "last_timestamp": "6/27 01:48 PM"
     },
     "WBD": {
       "status": "done",
-      "last_timestamp": "6/20 02:59 PM"
+      "last_timestamp": "6/27 01:48 PM"
     },
     "WMG": {
       "status": "done",
-      "last_timestamp": "6/20 03:00 PM"
+      "last_timestamp": "6/27 01:49 PM"
     },
     "ANGI": {
       "status": "done",
-      "last_timestamp": "6/20 03:00 PM"
+      "last_timestamp": "6/27 01:49 PM"
     },
     "BMBL": {
       "status": "done",
-      "last_timestamp": "6/20 03:00 PM"
+      "last_timestamp": "6/27 01:49 PM"
     },
     "DASH": {
       "status": "done",
-      "last_timestamp": "6/20 03:00 PM"
+      "last_timestamp": "6/27 01:49 PM"
     },
     "DJT": {
       "status": "done",
-      "last_timestamp": "6/20 03:00 PM"
+      "last_timestamp": "6/27 01:49 PM"
     },
     "GETY": {
       "status": "done",
-      "last_timestamp": "6/20 03:00 PM"
+      "last_timestamp": "6/27 01:49 PM"
     },
     "GOOG": {
       "status": "done",
-      "last_timestamp": "6/20 03:00 PM"
+      "last_timestamp": "6/27 01:49 PM"
     },
     "GOOGL": {
       "status": "done",
-      "last_timestamp": "6/20 03:00 PM"
+      "last_timestamp": "6/27 01:49 PM"
     },
     "GRPN": {
       "status": "done",
-      "last_timestamp": "6/20 03:00 PM"
+      "last_timestamp": "6/27 01:49 PM"
     },
     "KIND": {
       "status": "done",
-      "last_timestamp": "6/20 03:00 PM"
+      "last_timestamp": "6/27 01:49 PM"
     },
     "META": {
       "status": "done",
-      "last_timestamp": "6/20 03:00 PM"
+      "last_timestamp": "6/27 01:49 PM"
     },
     "MTCH": {
       "status": "done",
-      "last_timestamp": "6/20 03:00 PM"
+      "last_timestamp": "6/27 01:49 PM"
     },
     "PINS": {
       "status": "done",
-      "last_timestamp": "6/20 03:01 PM"
+      "last_timestamp": "6/27 01:50 PM"
     },
     "RDDT": {
       "status": "done",
-      "last_timestamp": "6/20 03:01 PM"
+      "last_timestamp": "6/27 01:50 PM"
     },
     "SNAP": {
       "status": "done",
-      "last_timestamp": "6/20 03:01 PM"
+      "last_timestamp": "6/27 01:50 PM"
     },
     "UPWK": {
       "status": "done",
-      "last_timestamp": "6/20 03:01 PM"
+      "last_timestamp": "6/27 01:50 PM"
     },
     "Z": {
       "status": "done",
-      "last_timestamp": "6/20 03:01 PM"
+      "last_timestamp": "6/27 01:50 PM"
     },
     "NYT": {
       "status": "done",
-      "last_timestamp": "6/20 03:01 PM"
+      "last_timestamp": "6/27 01:50 PM"
     },
     "SPY": {
       "status": "done",
-      "last_timestamp": "6/20 03:01 PM"
+      "last_timestamp": "6/27 01:50 PM"
     },
     "QQQ": {
       "status": "done",
-      "last_timestamp": "6/20 03:01 PM"
+      "last_timestamp": "6/27 01:51 PM"
     },
     "IWM": {
       "status": "done",
-      "last_timestamp": "6/20 03:02 PM"
+      "last_timestamp": "6/27 01:51 PM"
     },
     "ATUS": {
       "status": "done",
-      "last_timestamp": "6/20 03:02 PM"
+      "last_timestamp": "6/27 01:51 PM"
     },
     "CHTR": {
       "status": "done",
-      "last_timestamp": "6/20 03:02 PM"
+      "last_timestamp": "6/27 01:51 PM"
     },
     "CMCSA": {
       "status": "done",
-      "last_timestamp": "6/20 03:02 PM"
+      "last_timestamp": "6/27 01:51 PM"
     },
     "FYBR": {
       "status": "done",
-      "last_timestamp": "6/20 03:02 PM"
+      "last_timestamp": "6/27 01:51 PM"
     },
     "GOGO": {
       "status": "done",
-      "last_timestamp": "6/20 03:02 PM"
+      "last_timestamp": "6/27 01:51 PM"
     },
     "GSAT": {
       "status": "done",
-      "last_timestamp": "6/20 03:02 PM"
+      "last_timestamp": "6/27 01:51 PM"
     },
     "IRDM": {
       "status": "done",
-      "last_timestamp": "6/20 03:02 PM"
+      "last_timestamp": "6/27 01:51 PM"
     },
     "LUMN": {
       "status": "done",
-      "last_timestamp": "6/20 03:02 PM"
+      "last_timestamp": "6/27 01:51 PM"
     },
     "T": {
       "status": "done",
-      "last_timestamp": "6/20 03:02 PM"
+      "last_timestamp": "6/27 01:51 PM"
     },
     "TMUS": {
       "status": "done",
-      "last_timestamp": "6/20 03:02 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "VZ": {
       "status": "done",
-      "last_timestamp": "6/20 03:02 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "FIGS": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "HBI": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "LEVI": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "UA": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "UAA": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "VFC": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "AEO": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "ANF": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "FL": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "GAP": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "ROST": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "SFIX": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "TJX": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "URBN": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "VSCO": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "F": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "FFIE": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "GM": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "LCID": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "RIVN": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "TSLA": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "WKHS": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "ADNT": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "AXL": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "BWA": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "DAN": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "GNTX": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "GPC": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "GT": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "LAZR": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "LKQ": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "QS": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "SES": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "SLDP": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "WKSP": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "ACVA": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "CVNA": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "KMX": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "MCW": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "VVV": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "JWN": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "KSS": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "M": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "CROX": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "DBI": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "DECK": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "NKE": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "SKX": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "IRBT": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "LEG": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "TPX": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "DKNG": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "FLUT": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "RSI": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "ARHS": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "FND": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "HD": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "LOW": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "AMZN": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "BYON": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "CART": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "CHWY": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "CPNG": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "EBAY": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "ETSY": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "TDUP": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "W": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "FUN": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "LTH": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "MAT": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "MODG": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "PLNT": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "PTON": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "YETI": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "HLT": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "MAR": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "REAL": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "TPR": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "BALL": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "CCK": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "GPK": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "IP": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "HRB": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "ROL": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "WW": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "HOG": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "PII": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "DHI": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "KBH": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:58 PM"
     },
     "LEN": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:58 PM"
     },
     "PHM": {
       "status": "done",
-      "last_timestamp": "6/20 03:09 PM"
+      "last_timestamp": "6/27 01:58 PM"
     },
     "TOL": {
       "status": "done",
-      "last_timestamp": "6/20 03:09 PM"
+      "last_timestamp": "6/27 01:58 PM"
     },
     "CZR": {
       "status": "done",
-      "last_timestamp": "6/20 03:09 PM"
+      "last_timestamp": "6/27 01:58 PM"
     },
     "LVS": {
       "status": "done",
-      "last_timestamp": "6/20 03:09 PM"
+      "last_timestamp": "6/27 01:58 PM"
     },
     "MGM": {
       "status": "done",
-      "last_timestamp": "6/20 03:09 PM"
+      "last_timestamp": "6/27 01:58 PM"
     },
     "PENN": {
       "status": "done",
-      "last_timestamp": "6/20 03:09 PM"
+      "last_timestamp": "6/27 01:58 PM"
     },
     "WYNN": {
       "status": "done",
-      "last_timestamp": "6/20 03:09 PM"
+      "last_timestamp": "6/27 01:58 PM"
     },
     "ARCO": {
       "status": "done",
-      "last_timestamp": "6/20 03:09 PM"
+      "last_timestamp": "6/27 01:58 PM"
     },
     "BLMN": {
       "status": "done",
-      "last_timestamp": "6/20 03:09 PM"
+      "last_timestamp": "6/27 01:58 PM"
     },
     "BROS": {
       "status": "done",
-      "last_timestamp": "6/20 03:09 PM"
+      "last_timestamp": "6/27 01:58 PM"
     },
     "CAVA": {
       "status": "done",
-      "last_timestamp": "6/20 03:09 PM"
+      "last_timestamp": "6/27 01:58 PM"
     },
     "CMG": {
       "status": "done",
-      "last_timestamp": "6/20 03:09 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "DRI": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "EAT": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "MCD": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "PZZA": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "SBUX": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "SG": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "WEN": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "YUM": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "AAP": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "ASO": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "BBWI": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "BBY": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "CHPT": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "DKS": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "EVGO": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "EYE": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "FIVE": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 02:00 PM"
     },
     "GME": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:00 PM"
     },
     "LESL": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:00 PM"
     },
     "OLPX": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:00 PM"
     },
     "SBH": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:00 PM"
     },
     "TSCO": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:00 PM"
     },
     "WOOF": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:00 PM"
     },
     "WSM": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:00 PM"
     },
     "ABNB": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:00 PM"
     },
     "CCL": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:00 PM"
     },
     "EXPE": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:00 PM"
     },
     "NCLH": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:00 PM"
     },
     "RCL": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:00 PM"
     },
     "TRIP": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "STZ": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "TAP": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "CELH": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "KDP": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "KO": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "MNST": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "PEP": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "SBEV": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "HSY": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "MDLZ": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "BJ": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "COST": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "DG": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "DLTR": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "OLLI": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "TGT": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "WMT": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "CHGG": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "COUR": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "LRN": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "ADM": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "BG": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "TSN": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "VITL": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "PFGC": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "SYY": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "USFD": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "ACI": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "DNUT": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "GO": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "KR": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "CHD": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "CL": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "CLX": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "COTY": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "EL": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "ELF": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "HIMS": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "HNST": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "KMB": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "KVUE": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "NWL": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "PG": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "BGS": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "BYND": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "CAG": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "CDXC": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "CPB": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "DAR": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "FLO": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "GIS": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "HAIN": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "HLF": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "HRL": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "K": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "KHC": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "LW": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "MKC": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "PPC": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "SMPL": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "MO": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "PM": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "HP": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "NE": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "PTEN": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "SOC": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "APA": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "AR": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "BRY": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "CIVI": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "CNX": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "COP": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "CRK": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "CTRA": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "DVN": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "EOG": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "EQT": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "EXE": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "FANG": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "HES": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "HUSA": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "KOS": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "MGY": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "MTDR": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "MUR": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "NEXT": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "NOG": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "OVV": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "OXY": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "PR": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "REI": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "RRC": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:06 PM"
     },
     "SM": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "TALO": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "WTI": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "AESI": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "AROC": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "BKR": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "CHX": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "FTI": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "HAL": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "HLX": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "LBRT": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "NINE": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "NOV": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "PUMP": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "RES": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "SLB": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "TTI": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "XPRO": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "CRGY": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "CVX": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "XOM": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "AM": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "ENLC": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "EPD": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "ET": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "KMI": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "LNG": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "MPLX": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "OKE": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "PAA": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "PAGP": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "TRGP": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "WES": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "WMB": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "CLNE": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "CVI": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "DINO": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "DK": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "IEP": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "MPC": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "PBF": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "PSX": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "VLO": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "BTU": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "EU": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "LEU": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "UEC": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "UUUU": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "APO": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "ARCC": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "BEN": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "BX": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "CG": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "CRBG": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "FSK": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "GBDC": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "GSBD": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "HTGC": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "IVZ": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "KKR": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "NTRS": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "OBDC": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "OWL": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "PSEC": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "RJF": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "STT": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "TROW": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "WT": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "BAC": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "BK": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "C": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "JPM": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "WFC": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "ASB": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "BANC": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "CADE": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "CFG": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "CMA": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "COLB": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "FBP": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "FHN": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "FITB": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "FLG": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "FNB": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "FULT": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "HBAN": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "HOMB": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "KEY": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "LC": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "MTB": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "ONB": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "OZK": {
-      "status": "in-progress",
-      "last_timestamp": "6/20 03:23 PM"
+      "status": "done",
+      "last_timestamp": "6/27 02:12 PM"
     },
     "PNC": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "RF": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "SNV": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "TFC": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "USB": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "VLY": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "WAL": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "WBS": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "ZION": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "BGC": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "BTBT": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "CIFR": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "CLSK": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:13 PM"
     },
     "GS": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:13 PM"
     },
     "HIVE": {
       "status": "done",
-      "last_timestamp": "6/20 03:24 PM"
+      "last_timestamp": "6/27 02:13 PM"
     },
     "HOOD": {
       "status": "done",
-      "last_timestamp": "6/20 03:24 PM"
+      "last_timestamp": "6/27 02:13 PM"
     },
     "HUT": {
       "status": "done",
-      "last_timestamp": "6/20 03:24 PM"
+      "last_timestamp": "6/27 02:13 PM"
     },
     "IBKR": {
       "status": "done",
-      "last_timestamp": "6/20 03:24 PM"
+      "last_timestamp": "6/27 02:13 PM"
     },
     "JEF": {
       "status": "done",
-      "last_timestamp": "6/20 03:24 PM"
+      "last_timestamp": "6/27 02:13 PM"
     },
     "MARA": {
       "status": "done",
-      "last_timestamp": "6/20 03:24 PM"
+      "last_timestamp": "6/27 02:13 PM"
     },
     "MS": {
       "status": "done",
-      "last_timestamp": "6/20 03:24 PM"
+      "last_timestamp": "6/27 02:13 PM"
     },
     "RIOT": {
       "status": "done",
-      "last_timestamp": "6/20 03:24 PM"
+      "last_timestamp": "6/27 02:13 PM"
     },
     "SCHW": {
       "status": "done",
-      "last_timestamp": "6/20 03:24 PM"
+      "last_timestamp": "6/27 02:13 PM"
     },
     "WULF": {
       "status": "done",
-      "last_timestamp": "6/20 03:24 PM"
+      "last_timestamp": "6/27 02:13 PM"
     },
     "ALLY": {
       "status": "done",
-      "last_timestamp": "6/20 03:24 PM"
+      "last_timestamp": "6/27 02:14 PM"
     },
     "AXP": {
       "status": "done",
-      "last_timestamp": "6/20 03:24 PM"
+      "last_timestamp": "6/27 02:14 PM"
     },
     "COF": {
       "status": "done",
-      "last_timestamp": "6/20 03:24 PM"
+      "last_timestamp": "6/27 02:14 PM"
     },
     "DFS": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:24 PM"
+      "last_timestamp": "6/27 02:14 PM"
     },
     "MA": {
       "status": "done",
-      "last_timestamp": "6/20 03:25 PM"
+      "last_timestamp": "6/27 02:14 PM"
     },
     "PYPL": {
       "status": "done",
-      "last_timestamp": "6/20 03:25 PM"
+      "last_timestamp": "6/27 02:14 PM"
     },
     "SLM": {
       "status": "done",
-      "last_timestamp": "6/20 03:25 PM"
+      "last_timestamp": "6/27 02:14 PM"
     },
     "SOFI": {
       "status": "done",
-      "last_timestamp": "6/20 03:25 PM"
+      "last_timestamp": "6/27 02:14 PM"
     },
     "SYF": {
       "status": "done",
-      "last_timestamp": "6/20 03:25 PM"
+      "last_timestamp": "6/27 02:14 PM"
     },
     "UPST": {
       "status": "done",
-      "last_timestamp": "6/20 03:25 PM"
+      "last_timestamp": "6/27 02:14 PM"
     },
     "V": {
       "status": "done",
-      "last_timestamp": "6/20 03:25 PM"
+      "last_timestamp": "6/27 02:14 PM"
     },
     "WU": {
       "status": "done",
-      "last_timestamp": "6/20 03:25 PM"
+      "last_timestamp": "6/27 02:14 PM"
     },
     "RILY": {
       "status": "done",
-      "last_timestamp": "6/20 03:25 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "VOYA": {
       "status": "done",
-      "last_timestamp": "6/20 03:25 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "CME": {
       "status": "done",
-      "last_timestamp": "6/20 03:25 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "COIN": {
       "status": "done",
-      "last_timestamp": "6/20 03:25 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "DNB": {
       "status": "done",
-      "last_timestamp": "6/20 03:25 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "ICE": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "NDAQ": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "SPGI": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "TRU": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "AJG": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "BRO": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "MMC": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "SLQT": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "AIG": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "EQH": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "AFL": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "GNW": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "LNC": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "MET": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "PRU": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "UNM": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "ALL": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "HIG": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "LMND": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "ORI": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "PGR": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "TRV": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "WRB": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "FNF": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "MTG": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "RDN": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "LDI": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "RKT": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "UWMC": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "ABSI": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "ACAD": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "ADMA": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "ADPT": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "ALLO": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "ALT": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "ALXO": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "AMLX": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "ANNX": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "APLS": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "APLT": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "ARDX": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "ARQT": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "ARWR": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "AVXL": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "BBIO": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "BCRX": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "BMRN": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "CCCC": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "CHRS": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "CLRB": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "COGT": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:17 PM"
     },
     "CRBU": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "CRMD": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "CYTK": {
       "status": "done",
-      "last_timestamp": "6/20 03:28 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "DNA": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "DYN": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "EDIT": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "ELEV": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "ERAS": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "ETNB": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "EXEL": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "EYEN": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "FATE": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "FOLD": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "GERN": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "HRTX": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "HUMA": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "IBRX": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "INCY": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "INSM": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "IONS": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "IOVA": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "IVVD": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:18 PM"
     },
     "KROS": {
       "status": "done",
-      "last_timestamp": "6/20 03:29 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "LCTX": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "LEGN": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "LXRX": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "MCRB": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "MNKD": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "MRNA": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "MRSN": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "MRVI": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "NMRA": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "NTLA": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "NUVB": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "NVAX": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "OCGN": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "PGEN": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "RCKT": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "RLAY": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "RLMD": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "RPRX": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "RVMD": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "RVNC": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "RVPH": {
       "status": "done",
-      "last_timestamp": "6/20 03:30 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "RXRX": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:19 PM"
     },
     "SAGE": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "SANA": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "SAVA": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "SGMO": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "SLS": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "SMMT": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "SNDX": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "SVRA": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "SWTX": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "TERN": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "TGTX": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "TNYA": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "TPST": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "TSHA": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "TVTX": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "VERU": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "VERV": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:20 PM"
     },
     "VIR": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "VKTX": {
       "status": "done",
-      "last_timestamp": "6/20 03:31 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "VRTX": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "VXRT": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "XERS": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "XFOR": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "ZNTL": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "A": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "DHR": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "EXAS": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "GH": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "ILMN": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "IQV": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "NEOG": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "OPK": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "PSNL": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "TMO": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "ABBV": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:22 PM"
     },
     "AMGN": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:22 PM"
     },
     "BIIB": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:22 PM"
     },
     "BMY": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:22 PM"
     },
     "GILD": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:22 PM"
     },
     "JNJ": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:22 PM"
     },
     "LLY": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:22 PM"
     },
     "MRK": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:22 PM"
     },
     "OGN": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:22 PM"
     },
     "PFE": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:22 PM"
     },
     "SCLX": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:22 PM"
     },
     "AKBA": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:22 PM"
     },
     "AMRX": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:22 PM"
     },
     "AQST": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "CPIX": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "DVAX": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "EBS": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "ELAN": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "ESPR": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "INDV": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "IRWD": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "ITCI": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "LNTH": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "NBIX": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "VTRS": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "ZTS": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "ALHC": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "CI": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "CLOV": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "CNC": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "CVS": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "ELV": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "HUM": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "OSCR": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "UNH": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "ACCD": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "BTSG": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "CERT": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "DOCS": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "EVH": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "GDRX": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "PGNY": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "TALK": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "TDOC": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "TEM": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "TXG": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "WAY": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "ACHC": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "AGL": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "BKD": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "CYH": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "HCA": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "OPCH": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "PACS": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "SEM": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "SGRY": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "THC": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "ABT": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "AHCO": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "ATEC": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "BFLY": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "BMRA": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "BRKR": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "BSX": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "CATX": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "CERS": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "DXCM": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "EW": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "GEHC": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "GMED": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "LAB": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "NARI": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "OM": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "PACB": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "QSI": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "SENS": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "SYK": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "TMDX": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "TNDM": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "XAIR": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "ZBH": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "CAH": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "COR": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "HSIC": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "PDCO": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "AVTR": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "BAX": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "BDX": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "COO": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "HOLX": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "ISRG": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "MBOT": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "NVST": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "WRBY": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "XRAY": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "WBA": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "ACHR": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "BA": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "GD": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "GE": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "HWM": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "KTOS": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "LHX": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "LMT": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "LUNR": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "PL": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "RDW": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "RKLB": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "RTX": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "SARO": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "SPCE": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "SPR": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "TXT": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "AAL": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "ALK": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:29 PM"
     },
     "ATSG": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:29 PM"
     },
     "DAL": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:29 PM"
     },
     "JBLU": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:29 PM"
     },
     "LUV": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:29 PM"
     },
     "UAL": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:29 PM"
     },
     "ULCC": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:29 PM"
     },
     "BLDE": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:29 PM"
     },
     "JOBY": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:29 PM"
     },
     "UP": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:29 PM"
     },
     "ASPN": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "AZEK": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "BLDR": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "CARR": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "FBIN": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "JBI": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "MAS": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "TREX": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "ACCO": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "FIP": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "HON": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "MDU": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "MMM": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "BAH": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "EFX": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "AMPX": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "BE": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "EAF": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "ENVX": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "EOSE": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "FCEL": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "FREY": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "HAYW": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "LTBR": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "MVST": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "PLUG": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "VRT": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "APG": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "BLNK": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "FLR": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "KBR": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "PWR": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "TTEK": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "CAT": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "DE": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "NKLA": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "PCAR": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "CNM": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "FAST": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "FERG": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "VRRM": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "CHRW": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "EXPD": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "FDX": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "GXO": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "PBI": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "UPS": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "KEX": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "GNK": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "ATI": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "CMPO": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "CRS": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "MLI": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "PCT": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "VLTO": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "CSX": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "NSC": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "UNP": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "WAB": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "FTAI": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "HTZ": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "VSTS": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "WSC": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "ADT": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "CXW": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "EVLV": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "GEO": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "AMTM": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "ARMK": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "CPRT": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "CTAS": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "KODK": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "LZ": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "AME": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "AMSC": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "AOS": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "BW": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "EMR": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "GTES": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "IR": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "MIR": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "MWA": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "NNE": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "OPTT": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "OTIS": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "SERV": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "SMR": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "SYM": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "XYL": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "RHI": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "ZIP": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "HLMN": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "KMT": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "SWK": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "KNX": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "ODFL": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "XPO": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "LNZA": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "RSG": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "WM": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "FPH": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "HHH": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "CBRE": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "COMP": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "CSGP": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "DBRG": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "OPEN": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "RDFN": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "GNL": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "VICI": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "DOC": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "HR": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "MPW": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "VTR": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "WELL": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "APLE": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "DRH": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "HST": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "PEB": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "PK": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "SHO": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "SVC": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "COLD": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "CUBE": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "EXR": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "LXP": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "PLD": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "REXR": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "STAG": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "ABR": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "AGNC": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "ARR": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "BXMT": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "DX": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "IVR": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "NLY": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "ORC": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "RC": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "RITM": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "STWD": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "BDN": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "DEI": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "HPP": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "KRC": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "VNO": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "AMH": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "ELS": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "EQR": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "INVH": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "IRT": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "UDR": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "AKR": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "BRX": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "KIM": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "KRG": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "MAC": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "NNN": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "O": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "REG": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "ROIC": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "SITC": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "SPG": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "AMT": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "CCI": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "DLR": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "GLPI": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "IRM": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "OUT": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "UNIT": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "WY": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "AAOI": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "ASTS": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "CIEN": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "COMM": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "CSCO": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "EXTR": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "HLIT": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "HPE": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "JNPR": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "LITE": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "ONDS": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "SATS": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "VIAV": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "VSAT": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "ANET": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "DDD": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "DELL": {
       "status": "done",
-      "last_timestamp": "6/20 03:51 PM"
+      "last_timestamp": "6/27 02:41 PM"
     },
     "HPQ": {
       "status": "done",
-      "last_timestamp": "6/20 03:51 PM"
+      "last_timestamp": "6/27 02:41 PM"
     },
     "IONQ": {
       "status": "done",
-      "last_timestamp": "6/20 03:51 PM"
+      "last_timestamp": "6/27 02:41 PM"
     },
     "NTAP": {
       "status": "done",
-      "last_timestamp": "6/20 03:51 PM"
+      "last_timestamp": "6/27 02:41 PM"
     },
     "PSTG": {
       "status": "done",
-      "last_timestamp": "6/20 03:51 PM"
+      "last_timestamp": "6/27 02:41 PM"
     },
     "QBTS": {
       "status": "done",
-      "last_timestamp": "6/20 03:51 PM"
+      "last_timestamp": "6/27 02:41 PM"
     },
     "QUBT": {
-      "status": "done",
-      "last_timestamp": "6/20 03:51 PM"
+      "status": "in-progress",
+      "last_timestamp": "6/27 02:41 PM"
     },
     "RCAT": {
       "status": "done",
-      "last_timestamp": "6/20 03:51 PM"
+      "last_timestamp": "6/27 02:41 PM"
     },
     "RGTI": {
       "status": "done",
-      "last_timestamp": "6/20 03:51 PM"
+      "last_timestamp": "6/27 02:41 PM"
     },
     "SMCI": {
       "status": "done",
-      "last_timestamp": "6/20 03:51 PM"
+      "last_timestamp": "6/27 02:41 PM"
     },
     "STX": {
       "status": "done",
-      "last_timestamp": "6/20 03:51 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "WDC": {
       "status": "done",
-      "last_timestamp": "6/20 03:51 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "AAPL": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "GPRO": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "SONO": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "VUZI": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "APH": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "FLEX": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "GLW": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "JBL": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "KOPN": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "KULR": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "OUST": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "AVT": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "APLD": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "AUR": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "BBAI": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "CDW": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "CNDT": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "CTSH": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "DXC": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "FI": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "FIS": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "IBM": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "INOD": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "KD": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "LDOS": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "NOTE": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "TSSI": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "VYX": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "XRX": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "BKSY": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "CGNX": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "COHR": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "FCUV": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "FTV": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "KEYS": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "MVIS": {
       "status": "done",
-      "last_timestamp": "6/20 03:54 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "ST": {
       "status": "done",
-      "last_timestamp": "6/20 03:54 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "TRMB": {
       "status": "done",
-      "last_timestamp": "6/20 03:54 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "ACMR": {
       "status": "done",
-      "last_timestamp": "6/20 03:54 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "AEHR": {
       "status": "done",
-      "last_timestamp": "6/20 03:54 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "AMAT": {
-      "status": "done",
-      "last_timestamp": "6/20 03:54 PM"
+      "status": "in-progress",
+      "last_timestamp": "6/27 02:44 PM"
     },
     "AMKR": {
       "status": "done",
-      "last_timestamp": "6/20 03:54 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "ENTG": {
       "status": "done",
-      "last_timestamp": "6/20 03:54 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "INDI": {
       "status": "done",
-      "last_timestamp": "6/20 03:54 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "KLAC": {
       "status": "done",
-      "last_timestamp": "6/20 03:54 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "LRCX": {
       "status": "done",
-      "last_timestamp": "6/20 03:54 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "TER": {
       "status": "done",
-      "last_timestamp": "6/20 03:54 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "ADI": {
       "status": "done",
-      "last_timestamp": "6/20 03:54 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "ALAB": {
       "status": "done",
-      "last_timestamp": "6/20 03:55 PM"
+      "last_timestamp": "6/27 02:45 PM"
     },
     "ALGM": {
       "status": "done",
-      "last_timestamp": "6/20 03:55 PM"
+      "last_timestamp": "6/27 02:45 PM"
     },
     "AMD": {
       "status": "done",
-      "last_timestamp": "6/20 03:55 PM"
+      "last_timestamp": "6/27 02:45 PM"
     },
     "AVGO": {
-      "status": "in-progress",
-      "last_timestamp": "6/20 03:55 PM"
+      "status": "done",
+      "last_timestamp": "6/27 02:45 PM"
     },
     "GFS": {
       "status": "done",
-      "last_timestamp": "6/20 03:55 PM"
+      "last_timestamp": "6/27 02:45 PM"
     },
     "GSIT": {
       "status": "done",
-      "last_timestamp": "6/20 03:55 PM"
+      "last_timestamp": "6/27 02:45 PM"
     },
     "INTC": {
       "status": "done",
-      "last_timestamp": "6/20 03:55 PM"
+      "last_timestamp": "6/27 02:45 PM"
     },
     "LSCC": {
       "status": "done",
-      "last_timestamp": "6/20 03:55 PM"
+      "last_timestamp": "6/27 02:45 PM"
     },
     "MCHP": {
       "status": "done",
-      "last_timestamp": "6/20 03:55 PM"
+      "last_timestamp": "6/27 02:45 PM"
     },
     "MPWR": {
       "status": "done",
-      "last_timestamp": "6/20 03:55 PM"
+      "last_timestamp": "6/27 02:45 PM"
     },
     "MRVL": {
       "status": "done",
-      "last_timestamp": "6/20 03:55 PM"
+      "last_timestamp": "6/27 02:45 PM"
     },
     "MU": {
       "status": "done",
-      "last_timestamp": "6/20 03:55 PM"
+      "last_timestamp": "6/27 02:45 PM"
     },
     "MXL": {
       "status": "done",
-      "last_timestamp": "6/20 03:55 PM"
+      "last_timestamp": "6/27 02:45 PM"
     },
     "NVDA": {
-      "status": "in-progress",
-      "last_timestamp": "6/20 03:55 PM"
+      "status": "done",
+      "last_timestamp": "6/27 02:46 PM"
     },
     "NVTS": {
       "status": "done",
-      "last_timestamp": "6/20 03:56 PM"
+      "last_timestamp": "6/27 02:46 PM"
     },
     "ON": {
       "status": "done",
-      "last_timestamp": "6/20 03:56 PM"
+      "last_timestamp": "6/27 02:46 PM"
     },
     "QCOM": {
       "status": "done",
-      "last_timestamp": "6/20 03:56 PM"
+      "last_timestamp": "6/27 02:46 PM"
     },
     "QRVO": {
       "status": "done",
-      "last_timestamp": "6/20 03:56 PM"
+      "last_timestamp": "6/27 02:46 PM"
     },
     "SMTC": {
       "status": "done",
-      "last_timestamp": "6/20 03:56 PM"
+      "last_timestamp": "6/27 02:46 PM"
     },
     "SWKS": {
       "status": "done",
-      "last_timestamp": "6/20 03:56 PM"
+      "last_timestamp": "6/27 02:46 PM"
     },
     "TXN": {
       "status": "done",
-      "last_timestamp": "6/20 03:56 PM"
+      "last_timestamp": "6/27 02:46 PM"
     },
     "VSH": {
       "status": "done",
-      "last_timestamp": "6/20 03:56 PM"
+      "last_timestamp": "6/27 02:46 PM"
     },
     "WOLF": {
       "status": "done",
-      "last_timestamp": "6/20 03:56 PM"
+      "last_timestamp": "6/27 02:46 PM"
     },
     "ADP": {
       "status": "done",
-      "last_timestamp": "6/20 03:56 PM"
+      "last_timestamp": "6/27 02:46 PM"
     },
     "ADSK": {
       "status": "done",
-      "last_timestamp": "6/20 03:56 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "AI": {
       "status": "done",
-      "last_timestamp": "6/20 03:56 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "ALIT": {
       "status": "done",
-      "last_timestamp": "6/20 03:56 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "ALTR": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "APP": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "APPS": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "ASAN": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "BILL": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "BLND": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "BRZE": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "BSY": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "CCCS": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "CDNS": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "CRM": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "CRNC": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "CWAN": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "CXAI": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "DAY": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:47 PM"
     },
     "DDOG": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:48 PM"
     },
     "DOCU": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:48 PM"
     },
     "DT": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:48 PM"
     },
     "DV": {
       "status": "done",
-      "last_timestamp": "6/20 03:57 PM"
+      "last_timestamp": "6/27 02:48 PM"
     },
     "ESTC": {
       "status": "done",
-      "last_timestamp": "6/20 03:58 PM"
+      "last_timestamp": "6/27 02:48 PM"
     },
     "ETWO": {
       "status": "done",
-      "last_timestamp": "6/20 03:58 PM"
+      "last_timestamp": "6/27 02:48 PM"
     },
     "FRSH": {
       "status": "done",
-      "last_timestamp": "6/20 03:58 PM"
+      "last_timestamp": "6/27 02:48 PM"
     },
     "FSLY": {
       "status": "done",
-      "last_timestamp": "6/20 03:58 PM"
+      "last_timestamp": "6/27 02:48 PM"
     },
     "INTU": {
       "status": "done",
-      "last_timestamp": "6/20 03:58 PM"
+      "last_timestamp": "6/27 02:48 PM"
     },
     "LPSN": {
       "status": "done",
-      "last_timestamp": "6/20 03:58 PM"
+      "last_timestamp": "6/27 02:48 PM"
     },
     "LYFT": {
       "status": "done",
-      "last_timestamp": "6/20 03:58 PM"
+      "last_timestamp": "6/27 02:48 PM"
     },
     "MAPS": {
       "status": "done",
-      "last_timestamp": "6/20 03:58 PM"
+      "last_timestamp": "6/27 02:48 PM"
     },
     "MSTR": {
       "status": "done",
-      "last_timestamp": "6/20 03:58 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "MTTR": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:58 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "NCNO": {
       "status": "done",
-      "last_timestamp": "6/20 03:58 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "NOW": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "NRDY": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "OLO": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "PAYX": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "PCOR": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "PD": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "PHUN": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "PRCH": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "PSQH": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "PYCR": {
       "status": "in-progress",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "QXO": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "RNG": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "RUM": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "SMRT": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "SNOW": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:49 PM"
     },
     "SOUN": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:50 PM"
     },
     "SSNC": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:50 PM"
     },
     "TEAM": {
       "status": "done",
-      "last_timestamp": "6/20 03:59 PM"
+      "last_timestamp": "6/27 02:50 PM"
     },
     "TTD": {
       "status": "done",
-      "last_timestamp": "6/20 04:00 PM"
+      "last_timestamp": "6/27 02:50 PM"
     },
     "U": {
       "status": "done",
-      "last_timestamp": "6/20 04:00 PM"
+      "last_timestamp": "6/27 02:50 PM"
     },
     "UBER": {
       "status": "done",
-      "last_timestamp": "6/20 04:00 PM"
+      "last_timestamp": "6/27 02:50 PM"
     },
     "VMEO": {
       "status": "done",
-      "last_timestamp": "6/20 04:00 PM"
+      "last_timestamp": "6/27 02:50 PM"
     },
     "WDAY": {
       "status": "done",
-      "last_timestamp": "6/20 04:00 PM"
+      "last_timestamp": "6/27 02:50 PM"
     },
     "YOU": {
       "status": "done",
-      "last_timestamp": "6/20 04:00 PM"
+      "last_timestamp": "6/27 02:50 PM"
     },
     "ZI": {
       "status": "in-progress",
-      "last_timestamp": "6/20 04:00 PM"
+      "last_timestamp": "6/27 02:50 PM"
     },
     "ZM": {
       "status": "done",
-      "last_timestamp": "6/20 04:00 PM"
+      "last_timestamp": "6/27 02:50 PM"
     },
     "ADBE": {
       "status": "done",
-      "last_timestamp": "6/20 04:00 PM"
+      "last_timestamp": "6/27 02:50 PM"
     },
     "AFRM": {
       "status": "done",
-      "last_timestamp": "6/20 04:00 PM"
+      "last_timestamp": "6/27 02:50 PM"
     },
     "AKAM": {
       "status": "done",
-      "last_timestamp": "6/20 04:00 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "AVDX": {
       "status": "done",
-      "last_timestamp": "6/20 04:00 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "BOX": {
       "status": "done",
-      "last_timestamp": "6/20 04:00 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "CFLT": {
       "status": "done",
-      "last_timestamp": "6/20 04:00 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "CORZ": {
       "status": "done",
-      "last_timestamp": "6/20 04:01 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "CRWD": {
       "status": "done",
-      "last_timestamp": "6/20 04:01 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "DBX": {
       "status": "done",
-      "last_timestamp": "6/20 04:01 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "DLO": {
       "status": "done",
-      "last_timestamp": "6/20 04:01 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "FIVN": {
       "status": "done",
-      "last_timestamp": "6/20 04:01 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "FLYW": {
       "status": "done",
-      "last_timestamp": "6/20 04:01 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "FOUR": {
       "status": "done",
-      "last_timestamp": "6/20 04:01 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "FTNT": {
       "status": "done",
-      "last_timestamp": "6/20 04:01 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "GCT": {
       "status": "done",
-      "last_timestamp": "6/20 04:01 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "GDDY": {
       "status": "done",
-      "last_timestamp": "6/20 04:01 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "GEN": {
       "status": "done",
-      "last_timestamp": "6/20 04:01 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "GPN": {
       "status": "done",
-      "last_timestamp": "6/20 04:01 PM"
+      "last_timestamp": "6/27 02:51 PM"
     },
     "GTLB": {
       "status": "done",
-      "last_timestamp": "6/20 04:01 PM"
+      "last_timestamp": "6/27 02:52 PM"
     },
     "HCP": {
       "status": "in-progress",
-      "last_timestamp": "6/20 04:01 PM"
+      "last_timestamp": "6/27 02:52 PM"
     },
     "INFA": {
       "status": "done",
-      "last_timestamp": "6/20 04:01 PM"
+      "last_timestamp": "6/27 02:52 PM"
     },
     "IOT": {
       "status": "done",
-      "last_timestamp": "6/20 04:02 PM"
+      "last_timestamp": "6/27 02:52 PM"
     },
     "KVYO": {
       "status": "done",
-      "last_timestamp": "6/20 04:02 PM"
+      "last_timestamp": "6/27 02:52 PM"
     },
     "MDB": {
       "status": "done",
-      "last_timestamp": "6/20 04:02 PM"
+      "last_timestamp": "6/27 02:52 PM"
     },
     "MQ": {
       "status": "done",
-      "last_timestamp": "6/20 04:02 PM"
+      "last_timestamp": "6/27 02:52 PM"
     },
     "MSFT": {
       "status": "done",
-      "last_timestamp": "6/20 04:02 PM"
+      "last_timestamp": "6/27 02:52 PM"
     },
     "NET": {
       "status": "done",
-      "last_timestamp": "6/20 04:02 PM"
+      "last_timestamp": "6/27 02:52 PM"
     },
     "NN": {
       "status": "done",
-      "last_timestamp": "6/20 04:02 PM"
+      "last_timestamp": "6/27 02:52 PM"
     },
     "NTNX": {
       "status": "done",
-      "last_timestamp": "6/20 04:02 PM"
+      "last_timestamp": "6/27 02:52 PM"
     },
     "OKTA": {
       "status": "done",
-      "last_timestamp": "6/20 04:02 PM"
+      "last_timestamp": "6/27 02:52 PM"
     },
     "ORCL": {
       "status": "done",
-      "last_timestamp": "6/20 04:02 PM"
+      "last_timestamp": "6/27 02:52 PM"
     },
     "OS": {
       "status": "done",
-      "last_timestamp": "6/20 04:02 PM"
+      "last_timestamp": "6/27 02:52 PM"
     },
     "PANW": {
       "status": "done",
-      "last_timestamp": "6/20 04:02 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "PATH": {
       "status": "done",
-      "last_timestamp": "6/20 04:02 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "PAYO": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "PDYN": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "PGY": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "PLTR": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "RBRK": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "REKR": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "RELY": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "S": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "SABR": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "SNPS": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "TOST": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "TWLO": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "VERI": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "VRAR": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "VRNS": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "XYZ": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:53 PM"
     },
     "ZETA": {
       "status": "done",
-      "last_timestamp": "6/20 04:03 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "ZS": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "ZUO": {
       "status": "in-progress",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "ARRY": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "ENPH": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "FSLR": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "NOVA": {
       "status": "in-progress",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "NXT": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "RUN": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "SHLS": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "AES": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "SRE": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "NRG": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "VST": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "AEP": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "CMS": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "CNP": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "D": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "DTE": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "DUK": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "ED": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "EIX": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "ES": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "ETR": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "EVRG": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "EXC": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "FE": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "HE": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "LNT": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "NEE": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "OKLO": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "PCG": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "PEG": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "PNW": {
       "status": "done",
-      "last_timestamp": "6/20 04:05 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "PPL": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "SO": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "WEC": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "XEL": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "NFE": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "NI": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "UGI": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "AWK": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "WTRG": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "AMPS": {
       "status": "in-progress",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "CEG": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "FLNC": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "GEV": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "NEP": {
       "status": "in-progress",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "NRGV": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "STEM": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     }
   },
   "industries": {
     "Agricultural_Imports": {
       "status": "done",
-      "last_timestamp": "6/20 02:54 PM"
+      "last_timestamp": "6/27 01:43 PM"
     },
     "Aluminum": {
       "status": "done",
-      "last_timestamp": "6/20 02:54 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "Building_Materials": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "Chemicals": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "Copper": {
       "status": "done",
-      "last_timestamp": "6/20 02:55 PM"
+      "last_timestamp": "6/27 01:44 PM"
     },
     "Gold": {
       "status": "done",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:45 PM"
     },
     "Silver": {
       "status": "done",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:45 PM"
     },
     "Industrial_Metals_and_Mining": {
       "status": "done",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:45 PM"
     },
     "Precious_Metals_and_Mining": {
       "status": "done",
-      "last_timestamp": "6/20 02:56 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "Specialty_Chemicals": {
       "status": "done",
-      "last_timestamp": "6/20 02:57 PM"
+      "last_timestamp": "6/27 01:46 PM"
     },
     "Steel": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "Advertising_Agencies": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "Broadcasting": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "Electronic_Gaming_Multimedia": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "Entertainment": {
       "status": "done",
-      "last_timestamp": "6/20 03:00 PM"
+      "last_timestamp": "6/27 01:49 PM"
     },
     "Internet_Content_and_Info": {
       "status": "done",
-      "last_timestamp": "6/20 03:01 PM"
+      "last_timestamp": "6/27 01:50 PM"
     },
     "Publishing": {
       "status": "done",
-      "last_timestamp": "6/20 03:02 PM"
+      "last_timestamp": "6/27 01:51 PM"
     },
     "Telecom_Services": {
       "status": "done",
-      "last_timestamp": "6/20 03:02 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "Apparel_Manufacturing": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "Apparel_Retail": {
       "status": "done",
-      "last_timestamp": "6/20 03:03 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "Auto_Manufacturers": {
       "status": "done",
-      "last_timestamp": "6/20 03:04 PM"
+      "last_timestamp": "6/27 01:53 PM"
     },
     "Autoparts": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "Auto_and_Truck_Dealerships": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "Department_Stores": {
       "status": "done",
-      "last_timestamp": "6/20 03:05 PM"
+      "last_timestamp": "6/27 01:54 PM"
     },
     "Footwear_and_Accessories": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "Furnishings_Fixtures_Appliances": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "Gambling": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "Home_Improvement_Retail": {
       "status": "done",
-      "last_timestamp": "6/20 03:06 PM"
+      "last_timestamp": "6/27 01:55 PM"
     },
     "Internet_Retail": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:56 PM"
     },
     "Leisure": {
       "status": "done",
-      "last_timestamp": "6/20 03:07 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "Lodging": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "Luxury_Goods": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "Packaging_and_Containers": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "Personal_Services": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "Recreational_Vehicles": {
       "status": "done",
-      "last_timestamp": "6/20 03:08 PM"
+      "last_timestamp": "6/27 01:57 PM"
     },
     "Residential_Construction": {
       "status": "done",
-      "last_timestamp": "6/20 03:09 PM"
+      "last_timestamp": "6/27 01:58 PM"
     },
     "Resorts_and_Casinos": {
       "status": "done",
-      "last_timestamp": "6/20 03:09 PM"
+      "last_timestamp": "6/27 01:58 PM"
     },
     "Restaurants": {
       "status": "done",
-      "last_timestamp": "6/20 03:10 PM"
+      "last_timestamp": "6/27 01:59 PM"
     },
     "Specialty_Retail": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:00 PM"
     },
     "Travel_Services": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "Beverages_Brewers": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "Beverages_Non_Alcoholic": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "Beverages_Wineries_Distilleries": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "Confectioners": {
       "status": "done",
-      "last_timestamp": "6/20 03:12 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "Discount_Stores": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "Education_and_Training": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "Farm_Products": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "Food_Distribution": {
       "status": "done",
-      "last_timestamp": "6/20 03:13 PM"
+      "last_timestamp": "6/27 02:02 PM"
     },
     "Grocery_Stores": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "Household_Personal_Products": {
       "status": "done",
-      "last_timestamp": "6/20 03:14 PM"
+      "last_timestamp": "6/27 02:03 PM"
     },
     "Packaged_Foods": {
       "status": "done",
-      "last_timestamp": "6/20 03:15 PM"
+      "last_timestamp": "6/27 02:04 PM"
     },
     "Tobacco": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "Oil_and_Gas_Drilling": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "Oil_and_Gas_ENP": {
       "status": "done",
-      "last_timestamp": "6/20 03:17 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "Oil_and_Gas_Equipment_Services": {
       "status": "done",
-      "last_timestamp": "6/20 03:18 PM"
+      "last_timestamp": "6/27 02:07 PM"
     },
     "Oil_and_Gas_Integrated": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "Oil_and_Gas_Midstream": {
       "status": "done",
-      "last_timestamp": "6/20 03:19 PM"
+      "last_timestamp": "6/27 02:08 PM"
     },
     "Oil_and_Gas_Refining_Marketing": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "Thermal_Coal": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "Uranium": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "Asset_Management": {
       "status": "done",
-      "last_timestamp": "6/20 03:21 PM"
+      "last_timestamp": "6/27 02:10 PM"
     },
     "Banks_Diversified": {
       "status": "done",
-      "last_timestamp": "6/20 03:22 PM"
+      "last_timestamp": "6/27 02:11 PM"
     },
     "Banks_Regional": {
       "status": "done",
-      "last_timestamp": "6/20 03:23 PM"
+      "last_timestamp": "6/27 02:12 PM"
     },
     "Capital_Markets": {
       "status": "done",
-      "last_timestamp": "6/20 03:24 PM"
+      "last_timestamp": "6/27 02:13 PM"
     },
     "Credit_Services": {
       "status": "done",
-      "last_timestamp": "6/20 03:25 PM"
+      "last_timestamp": "6/27 02:14 PM"
     },
     "Financial_Conglomerates": {
       "status": "done",
-      "last_timestamp": "6/20 03:25 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "Financial_Data_and_Stock_Exchanges": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "Insurance_Brokers": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "Insurance_Diversified": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:15 PM"
     },
     "Insurance_Life": {
       "status": "done",
-      "last_timestamp": "6/20 03:26 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "Insurance_Property_and_Casualty": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "Insurance_Specialty": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "Mortgage_Finance": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "Biotechnology": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "Diagnostics_and_Research": {
       "status": "done",
-      "last_timestamp": "6/20 03:32 PM"
+      "last_timestamp": "6/27 02:21 PM"
     },
     "Drug_Manufacturers_General": {
       "status": "done",
-      "last_timestamp": "6/20 03:33 PM"
+      "last_timestamp": "6/27 02:22 PM"
     },
     "Drug_Manufacturers_Specialty_and_Generic": {
       "status": "done",
-      "last_timestamp": "6/20 03:34 PM"
+      "last_timestamp": "6/27 02:23 PM"
     },
     "Healthcare_Plans": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:24 PM"
     },
     "Health_Information_Services": {
       "status": "done",
-      "last_timestamp": "6/20 03:35 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "Medical_Care_Facilities": {
       "status": "done",
-      "last_timestamp": "6/20 03:36 PM"
+      "last_timestamp": "6/27 02:25 PM"
     },
     "Medical_Devices": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:26 PM"
     },
     "Medical_Distribution": {
       "status": "done",
-      "last_timestamp": "6/20 03:37 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "Medical_Instruments_and_Supplies": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "Pharmaceutical_Retailers": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "Aerospace_and_Defense": {
       "status": "done",
-      "last_timestamp": "6/20 03:39 PM"
+      "last_timestamp": "6/27 02:28 PM"
     },
     "Airlines": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:29 PM"
     },
     "Airports_and_AirServices": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:29 PM"
     },
     "Building_Products_and_Equipment": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "Business_Equipment_and_Supplies": {
       "status": "done",
-      "last_timestamp": "6/20 03:40 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "Conglomerates": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "Consulting_Services": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:30 PM"
     },
     "Electrical_Equipment_and_Parts": {
       "status": "done",
-      "last_timestamp": "6/20 03:41 PM"
+      "last_timestamp": "6/27 02:31 PM"
     },
     "Engineering_and_Construction": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "Farm_and_Heavy_Construction_Machinery": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "Industrial_Distribution": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "Infrastructure_Operations": {
       "status": "done",
-      "last_timestamp": "6/20 03:42 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "Integrated_Freight_and_Logistics": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:32 PM"
     },
     "Marine_Shipping": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "Metal_Fabrication": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "Pollution_and_Treatment_Controls": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "Railroads": {
       "status": "done",
-      "last_timestamp": "6/20 03:43 PM"
+      "last_timestamp": "6/27 02:33 PM"
     },
     "Rental_and_Leasing_Services": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "Security_and_Protection_Services": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "Specialty_Business_Services": {
       "status": "done",
-      "last_timestamp": "6/20 03:44 PM"
+      "last_timestamp": "6/27 02:34 PM"
     },
     "Specialty_Industrial_Machinery": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "Staffing_and_Employment_Services": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "Tools_and_Accessories": {
       "status": "done",
-      "last_timestamp": "6/20 03:45 PM"
+      "last_timestamp": "6/27 02:35 PM"
     },
     "Trucking": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "Waste_Management": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "Real_Estate_Development": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "Real_Estate_Diversified": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "Real_Estate_Services": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "REIT_Diversified": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "REIT_Healthcare_Facilities": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "REIT_Hotel_and_Motel": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "REIT_Industrial": {
       "status": "done",
-      "last_timestamp": "6/20 03:47 PM"
+      "last_timestamp": "6/27 02:37 PM"
     },
     "REIT_Mortgage": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "REIT_Office": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:38 PM"
     },
     "REIT_Residential": {
       "status": "done",
-      "last_timestamp": "6/20 03:48 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "REIT_Retail": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "REIT_Specialty": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "Communication_Equipment": {
       "status": "done",
-      "last_timestamp": "6/20 03:50 PM"
+      "last_timestamp": "6/27 02:40 PM"
     },
     "Computer_Hardware": {
       "status": "done",
-      "last_timestamp": "6/20 03:51 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "Consumer_Electronics": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "Electronic_Components": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "Electronics_Computer_Distribution": {
       "status": "done",
-      "last_timestamp": "6/20 03:52 PM"
+      "last_timestamp": "6/27 02:42 PM"
     },
     "Information_Technology_Services": {
       "status": "done",
-      "last_timestamp": "6/20 03:53 PM"
+      "last_timestamp": "6/27 02:43 PM"
     },
     "Scientific_and_Technical_Instruments": {
       "status": "done",
-      "last_timestamp": "6/20 03:54 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "Semiconductor_Equipment_and_Materials": {
       "status": "done",
-      "last_timestamp": "6/20 03:54 PM"
+      "last_timestamp": "6/27 02:44 PM"
     },
     "Semiconductors": {
       "status": "done",
-      "last_timestamp": "6/20 03:56 PM"
+      "last_timestamp": "6/27 02:46 PM"
     },
     "Software_Application": {
       "status": "done",
-      "last_timestamp": "6/20 04:00 PM"
+      "last_timestamp": "6/27 02:50 PM"
     },
     "Software_Infrastructure": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "Solar": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "Utilities_Diversified": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "Utilities_Independent_Power_Producers": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:55 PM"
     },
     "Utilities_Regulated_Electric": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "Utilities_Regulated_Gas": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "Utilities_Regulated_Water": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:56 PM"
     },
     "Utilities_Renewable": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:57 PM"
     }
   },
   "sectors": {
     "Basic_Materials": {
       "status": "done",
-      "last_timestamp": "6/20 02:58 PM"
+      "last_timestamp": "6/27 01:47 PM"
     },
     "Communication_Services": {
       "status": "done",
-      "last_timestamp": "6/20 03:02 PM"
+      "last_timestamp": "6/27 01:52 PM"
     },
     "Consumer_Cyclical": {
       "status": "done",
-      "last_timestamp": "6/20 03:11 PM"
+      "last_timestamp": "6/27 02:01 PM"
     },
     "Consumer_Defensive": {
       "status": "done",
-      "last_timestamp": "6/20 03:16 PM"
+      "last_timestamp": "6/27 02:05 PM"
     },
     "Energy": {
       "status": "done",
-      "last_timestamp": "6/20 03:20 PM"
+      "last_timestamp": "6/27 02:09 PM"
     },
     "Financials": {
       "status": "done",
-      "last_timestamp": "6/20 03:27 PM"
+      "last_timestamp": "6/27 02:16 PM"
     },
     "Healthcare": {
       "status": "done",
-      "last_timestamp": "6/20 03:38 PM"
+      "last_timestamp": "6/27 02:27 PM"
     },
     "Industrials": {
       "status": "done",
-      "last_timestamp": "6/20 03:46 PM"
+      "last_timestamp": "6/27 02:36 PM"
     },
     "Real_Estate": {
       "status": "done",
-      "last_timestamp": "6/20 03:49 PM"
+      "last_timestamp": "6/27 02:39 PM"
     },
     "Technology": {
       "status": "done",
-      "last_timestamp": "6/20 04:04 PM"
+      "last_timestamp": "6/27 02:54 PM"
     },
     "Utilities": {
       "status": "done",
-      "last_timestamp": "6/20 04:06 PM"
+      "last_timestamp": "6/27 02:57 PM"
     }
   },
   "errors": [
     {
-      "timestamp": "6/20 03:23 PM",
-      "message": "\u2192 DB error for OZK: (psycopg2.errors.NumericValueOutOfRange) numeric field overflow\nDETAIL:  A field with precision 6, scale 2 must round to an absolute value less than 10^4.\n\n[SQL: \n    INSERT INTO option_contracts (ticker_id, expiration_id, strike, type, last_trade_date, last_price, bid, ask, change_amt, percent_change, volume, open_interest, implied_volatility)\n    VALUES (%(ticker_id)s, %(expiration_id)s, %(strike)s, %(type)s, %(last_trade_date)s, %(last_price)s, %(bid)s, %(ask)s, %(change_amt)s, %(percent_change)s, %(volume)s, %(open_interest)s, %(implied_volatility)s)\n    ON CONFLICT (ticker_id, expiration_id, strike, type)\n      DO UPDATE SET last_trade_date=EXCLUDED.last_trade_date, last_price=EXCLUDED.last_price, bid=EXCLUDED.bid, ask=EXCLUDED.ask, change_amt=EXCLUDED.change_amt, percent_change=EXCLUDED.percent_change, volume=EXCLUDED.volume, open_interest=EXCLUDED.open_interest, implied_volatility=EXCLUDED.implied_volatility, snapshot_timestamp=NOW()\n    ]\n[parameters: {'ticker_id': 1052, 'expiration_id': 3, 'strike': 47.5, 'type': 'CALL', 'last_trade_date': datetime.datetime(2025, 6, 20, 18, 38, 25, tzinfo=datetime.timezone.utc), 'last_price': 0.13, 'bid': 0.0, 'ask': 0.2, 'change_amt': 0.06, 'percent_change': 1610612610.0, 'volume': 28.0, 'open_interest': 1233, 'implied_volatility': 0.7539}]\n(Background on this error at: https://sqlalche.me/e/20/9h9h)"
+      "timestamp": "6/27 02:41 PM",
+      "message": "\u2192 DB error for QUBT: (psycopg2.errors.NumericValueOutOfRange) numeric field overflow\nDETAIL:  A field with precision 6, scale 2 must round to an absolute value less than 10^4.\n\n[SQL: \n    INSERT INTO option_contracts (ticker_id, expiration_id, strike, type, last_trade_date, last_price, bid, ask, change_amt, percent_change, volume, open_interest, implied_volatility)\n    VALUES (%(ticker_id)s, %(expiration_id)s, %(strike)s, %(type)s, %(last_trade_date)s, %(last_price)s, %(bid)s, %(ask)s, %(change_amt)s, %(percent_change)s, %(volume)s, %(open_interest)s, %(implied_volatility)s)\n    ON CONFLICT (ticker_id, expiration_id, strike, type)\n      DO UPDATE SET last_trade_date=EXCLUDED.last_trade_date, last_price=EXCLUDED.last_price, bid=EXCLUDED.bid, ask=EXCLUDED.ask, change_amt=EXCLUDED.change_amt, percent_change=EXCLUDED.percent_change, volume=EXCLUDED.volume, open_interest=EXCLUDED.open_interest, implied_volatility=EXCLUDED.implied_volatility, snapshot_timestamp=NOW()\n    ]\n[parameters: {'ticker_id': 32, 'expiration_id': 4, 'strike': 20.0, 'type': 'CALL', 'last_trade_date': datetime.datetime(2025, 6, 27, 18, 4, 19, tzinfo=datetime.timezone.utc), 'last_price': 0.05, 'bid': 0.0, 'ask': 0.05, 'change_amt': 0.03, 'percent_change': 1610612740.0, 'volume': 156.0, 'open_interest': 2547, 'implied_volatility': 1.9063}]\n(Background on this error at: https://sqlalche.me/e/20/9h9h)"
     },
     {
-      "timestamp": "6/20 03:55 PM",
-      "message": "\u2192 DB error for AVGO: (psycopg2.errors.NumericValueOutOfRange) numeric field overflow\nDETAIL:  A field with precision 6, scale 4 must round to an absolute value less than 10^2.\n\n[SQL: \n    INSERT INTO option_contracts (ticker_id, expiration_id, strike, type, last_trade_date, last_price, bid, ask, change_amt, percent_change, volume, open_interest, implied_volatility)\n    VALUES (%(ticker_id)s, %(expiration_id)s, %(strike)s, %(type)s, %(last_trade_date)s, %(last_price)s, %(bid)s, %(ask)s, %(change_amt)s, %(percent_change)s, %(volume)s, %(open_interest)s, %(implied_volatility)s)\n    ON CONFLICT (ticker_id, expiration_id, strike, type)\n      DO UPDATE SET last_trade_date=EXCLUDED.last_trade_date, last_price=EXCLUDED.last_price, bid=EXCLUDED.bid, ask=EXCLUDED.ask, change_amt=EXCLUDED.change_amt, percent_change=EXCLUDED.percent_change, volume=EXCLUDED.volume, open_interest=EXCLUDED.open_interest, implied_volatility=EXCLUDED.implied_volatility, snapshot_timestamp=NOW()\n    ]\n[parameters: {'ticker_id': 88, 'expiration_id': 3, 'strike': 1740.0, 'type': 'CALL', 'last_trade_date': datetime.datetime(2024, 7, 12, 18, 19, 3, tzinfo=datetime.timezone.utc), 'last_price': 264.15, 'bid': 240.4, 'ask': 252.5, 'change_amt': 5.55, 'percent_change': 2.15, 'volume': 3.0, 'open_interest': 52.0, 'implied_volatility': 105.7109}]\n(Background on this error at: https://sqlalche.me/e/20/9h9h)"
+      "timestamp": "6/27 02:44 PM",
+      "message": "\u2192 DB error for AMAT: (psycopg2.errors.NumericValueOutOfRange) numeric field overflow\nDETAIL:  A field with precision 6, scale 2 must round to an absolute value less than 10^4.\n\n[SQL: \n    INSERT INTO option_contracts (ticker_id, expiration_id, strike, type, last_trade_date, last_price, bid, ask, change_amt, percent_change, volume, open_interest, implied_volatility)\n    VALUES (%(ticker_id)s, %(expiration_id)s, %(strike)s, %(type)s, %(last_trade_date)s, %(last_price)s, %(bid)s, %(ask)s, %(change_amt)s, %(percent_change)s, %(volume)s, %(open_interest)s, %(implied_volatility)s)\n    ON CONFLICT (ticker_id, expiration_id, strike, type)\n      DO UPDATE SET last_trade_date=EXCLUDED.last_trade_date, last_price=EXCLUDED.last_price, bid=EXCLUDED.bid, ask=EXCLUDED.ask, change_amt=EXCLUDED.change_amt, percent_change=EXCLUDED.percent_change, volume=EXCLUDED.volume, open_interest=EXCLUDED.open_interest, implied_volatility=EXCLUDED.implied_volatility, snapshot_timestamp=NOW()\n    ]\n[parameters: {'ticker_id': 77, 'expiration_id': 5, 'strike': 157.5, 'type': 'PUT', 'last_trade_date': datetime.datetime(2025, 6, 27, 18, 14, 16, tzinfo=datetime.timezone.utc), 'last_price': 0.13, 'bid': 0.0, 'ask': 0.25, 'change_amt': 0.05, 'percent_change': 1342177150.0, 'volume': 30.0, 'open_interest': 1681, 'implied_volatility': 0.5313}]\n(Background on this error at: https://sqlalche.me/e/20/9h9h)"
     },
     {
-      "timestamp": "6/20 03:56 PM",
-      "message": "\u2192 DB error for NVDA: (psycopg2.errors.NumericValueOutOfRange) numeric field overflow\nDETAIL:  A field with precision 6, scale 4 must round to an absolute value less than 10^2.\n\n[SQL: \n    INSERT INTO option_contracts (ticker_id, expiration_id, strike, type, last_trade_date, last_price, bid, ask, change_amt, percent_change, volume, open_interest, implied_volatility)\n    VALUES (%(ticker_id)s, %(expiration_id)s, %(strike)s, %(type)s, %(last_trade_date)s, %(last_price)s, %(bid)s, %(ask)s, %(change_amt)s, %(percent_change)s, %(volume)s, %(open_interest)s, %(implied_volatility)s)\n    ON CONFLICT (ticker_id, expiration_id, strike, type)\n      DO UPDATE SET last_trade_date=EXCLUDED.last_trade_date, last_price=EXCLUDED.last_price, bid=EXCLUDED.bid, ask=EXCLUDED.ask, change_amt=EXCLUDED.change_amt, percent_change=EXCLUDED.percent_change, volume=EXCLUDED.volume, open_interest=EXCLUDED.open_interest, implied_volatility=EXCLUDED.implied_volatility, snapshot_timestamp=NOW()\n    ]\n[parameters: {'ticker_id': 98, 'expiration_id': 3, 'strike': 1560.0, 'type': 'CALL', 'last_trade_date': datetime.datetime(2024, 6, 7, 17, 56, 23, tzinfo=datetime.timezone.utc), 'last_price': 147.17, 'bid': 142.9, 'ask': 144.7, 'change_amt': 5.67, 'percent_change': 4.01, 'volume': 2.0, 'open_interest': 160.0, 'implied_volatility': 148.75}]\n(Background on this error at: https://sqlalche.me/e/20/9h9h)"
-    },
-    {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for SUM on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for GOLD on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for EDR on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for FFIE on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for JWN on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for TPX on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for WW on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for CDXC on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for ENLC on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for DFS on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for RVNC on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for ITCI on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for ACCD on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for NARI on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for PDCO on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for ATSG on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for FREY on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for NKLA on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for ROIC on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
-      "message": "\u2192 Final failure for AVGO: (psycopg2.errors.NumericValueOutOfRange) numeric field overflow\nDETAIL:  A field with precision 6, scale 4 must round to an absolute value less than 10^2.\n\n[SQL: \n    INSERT INTO option_contracts (ticker_id, expiration_id, strike, type, last_trade_date, last_price, bid, ask, change_amt, percent_change, volume, open_interest, implied_volatility)\n    VALUES (%(ticker_id)s, %(expiration_id)s, %(strike)s, %(type)s, %(last_trade_date)s, %(last_price)s, %(bid)s, %(ask)s, %(change_amt)s, %(percent_change)s, %(volume)s, %(open_interest)s, %(implied_volatility)s)\n    ON CONFLICT (ticker_id, expiration_id, strike, type)\n      DO UPDATE SET last_trade_date=EXCLUDED.last_trade_date, last_price=EXCLUDED.last_price, bid=EXCLUDED.bid, ask=EXCLUDED.ask, change_amt=EXCLUDED.change_amt, percent_change=EXCLUDED.percent_change, volume=EXCLUDED.volume, open_interest=EXCLUDED.open_interest, implied_volatility=EXCLUDED.implied_volatility, snapshot_timestamp=NOW()\n    ]\n[parameters: {'ticker_id': 88, 'expiration_id': 3, 'strike': 1740.0, 'type': 'CALL', 'last_trade_date': datetime.datetime(2024, 7, 12, 18, 19, 3, tzinfo=datetime.timezone.utc), 'last_price': 264.15, 'bid': 240.4, 'ask': 252.5, 'change_amt': 5.55, 'percent_change': 2.15, 'volume': 3.0, 'open_interest': 52.0, 'implied_volatility': 105.75}]\n(Background on this error at: https://sqlalche.me/e/20/9h9h)"
-    },
-    {
-      "timestamp": "6/20 04:07 PM",
-      "message": "\u2192 Final failure for NVDA: (psycopg2.errors.NumericValueOutOfRange) numeric field overflow\nDETAIL:  A field with precision 6, scale 4 must round to an absolute value less than 10^2.\n\n[SQL: \n    INSERT INTO option_contracts (ticker_id, expiration_id, strike, type, last_trade_date, last_price, bid, ask, change_amt, percent_change, volume, open_interest, implied_volatility)\n    VALUES (%(ticker_id)s, %(expiration_id)s, %(strike)s, %(type)s, %(last_trade_date)s, %(last_price)s, %(bid)s, %(ask)s, %(change_amt)s, %(percent_change)s, %(volume)s, %(open_interest)s, %(implied_volatility)s)\n    ON CONFLICT (ticker_id, expiration_id, strike, type)\n      DO UPDATE SET last_trade_date=EXCLUDED.last_trade_date, last_price=EXCLUDED.last_price, bid=EXCLUDED.bid, ask=EXCLUDED.ask, change_amt=EXCLUDED.change_amt, percent_change=EXCLUDED.percent_change, volume=EXCLUDED.volume, open_interest=EXCLUDED.open_interest, implied_volatility=EXCLUDED.implied_volatility, snapshot_timestamp=NOW()\n    ]\n[parameters: {'ticker_id': 98, 'expiration_id': 3, 'strike': 1560.0, 'type': 'CALL', 'last_trade_date': datetime.datetime(2024, 6, 7, 17, 56, 23, tzinfo=datetime.timezone.utc), 'last_price': 147.17, 'bid': 142.9, 'ask': 144.7, 'change_amt': 5.67, 'percent_change': 4.01, 'volume': 2.0, 'open_interest': 160.0, 'implied_volatility': 147.75}]\n(Background on this error at: https://sqlalche.me/e/20/9h9h)"
-    },
-    {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for ALTR on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for MTTR on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for PYCR on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for ZI on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for HCP on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for ZUO on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for NOVA on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for AMPS on retry."
     },
     {
-      "timestamp": "6/20 04:07 PM",
+      "timestamp": "6/27 02:57 PM",
       "message": "\u2192 Still no data for NEP on retry."
     }
   ],
   "summary": {
-    "completed": 1117,
+    "completed": 1118,
     "total": 1148
   }
 }

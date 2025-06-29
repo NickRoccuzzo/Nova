@@ -10,9 +10,9 @@ import dash_bootstrap_components as dbc
 import update_option_chains_in_db
 
 # ── Paths & Globals ─────────────────────────────────────────────────────────────
-HERE          = Path(__file__).parent
-TICKERS_FILE  = HERE / "tickers.json"
-PROGRESS_FILE = HERE / "progress.json"
+LOCAL          = Path(__file__).parent
+TICKERS_FILE  = LOCAL / "tickers.json"
+PROGRESS_FILE = LOCAL / "progress.json"
 LOG_LINES     = 100
 
 ingest_thread = None

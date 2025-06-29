@@ -224,8 +224,6 @@ def upsert_on_conflict(table, conn, keys, data_iter):
         conn.execute(text(sql), row)
 
 
-
-# ── Helper (place this after upsert_on_conflict, before your main()) ──────────
 # ── Helper (place this after upsert_on_conflict, before your main()) ──────────
 def upsert_option_metrics(conn, ticker_id: int):
     """

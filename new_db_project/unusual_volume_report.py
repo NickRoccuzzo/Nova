@@ -35,19 +35,19 @@ def unusual_volume_report():
         return
 
     # ── 2) Drop past expirations ───────────────────────────────────────────
-    today      = pd.Timestamp(datetime.now().date())
-    df         = df[df.expiration_date >= today]
+    today = pd.Timestamp(datetime.now().date())
+    df    = df[df.expiration_date >= today]
     if df.empty:
         print("No future expirations in the data.")
         return
 
     # ── 3) Compute extra lenses ────────────────────────────────────────────
-    df["call_vol_to_oi"]   = df.max_vol_call / df.max_call_oi.replace({0: np.nan})
-    df["put_vol_to_oi"]    = df.max_vol_put  / df.max_put_oi.replace({0: np.nan})
-    df["max_call_local_pct"]  = df.max_vol_call / df.call_vol_sum.replace({0: np.nan})
-    df["max_put_local_pct"]   = df.max_vol_put  / df.put_vol_sum.replace({0: np.nan})
-    df["max_call_global_pct"] = df.max_vol_call / df.call_vol_total.replace({0: np.nan})
-    df["max_put_global_pct"]  = df.max_vol_put  / df.put_vol_total.replace({0: np.nan})
+    df["call_vol_to_oi"]     = df.max_vol_call / df.max_call_oi.replace({0: np.nan})
+    df["put_vol_to_oi"]      = df.max_vol_put  / df.max_put_oi.replace({0: np.nan})
+    df["max_call_local_pct"] = df.max_vol_call / df.call_vol_sum.replace({0: np.nan})
+    df["max_put_local_pct"]  = df.max_vol_put  / df.put_vol_sum.replace({0: np.nan})
+    df["max_call_global_pct"]= df.max_vol_call / df.call_vol_total.replace({0: np.nan})
+    df["max_put_global_pct"] = df.max_vol_put  / df.put_vol_total.replace({0: np.nan})
 
     # ── 4) Pick the single best metric per symbol ───────────────────────────
     ratio_cols = [
@@ -63,12 +63,12 @@ def unusual_volume_report():
         sub = grp[ratio_cols].dropna(how="all")
         if sub.empty:
             continue
-        st = sub.stack().dropna()
+        st            = sub.stack().dropna()
         (rid, metric) = st.idxmax()
         raw_score     = st.loc[(rid, metric)]
         row           = grp.loc[rid].copy()
-        row["metric_col"]  = metric
-        row["raw_score"]   = raw_score
+        row["metric_col"] = metric
+        row["raw_score"]  = raw_score
         top.append(row)
 
     report = pd.DataFrame(top)
@@ -87,8 +87,6 @@ def unusual_volume_report():
 
     # ── 6) Compute days_to_expiry & moneyness ──────────────────────────────
     report["days_to_expiry"] = (report.expiration_date - today).dt.days
-
-    # For calls: (strike - price)/price ; for puts: (price - strike)/price
     is_call = report.metric_col.str.endswith("call")
     diff    = np.where(
       is_call,
@@ -106,19 +104,78 @@ def unusual_volume_report():
 
     # ── 8) Sort by adjusted score & print ──────────────────────────────────
     report = report.sort_values("adj_score", ascending=False)
-
     print(f"{'TICKER':<6}  {'EXPIRY':<10}  {'METRIC':<12}  {'ADJ_SCORE':>10}")
     print("-"*46)
     for _, r in report.iterrows():
-        # show strike & side
-        base = r.metric_col.replace("_vol_", "_")     # e.g. "max_call"
-        strike_col = f"{base}_strike"
-        strike = r[strike_col]
-        side   = base.split("_")[-1].upper()          # CALL or PUT
-        metric_display = f"${strike:.2f} {side}"
+        base          = r["metric_col"].replace("_vol_", "_")  # e.g. "max_call"
+        strike_col    = f"{base}_strike"
+        strike        = r[strike_col]
+        side          = base.split("_")[-1].upper()            # CALL or PUT
+        metric_display= f"${strike:.2f} {side}"
+        exp           = r["expiration_date"].strftime("%Y-%m-%d")
+        print(f"{r['symbol']:<6}  {exp:<10}  {metric_display:<12}  {r['adj_score']:10.2f}")
 
-        exp = r.expiration_date.strftime("%Y-%m-%d")
-        print(f"{r.symbol:<6}  {exp:<10}  {metric_display:<12}  {r.adj_score:10.2f}")
+    # ── 9) Persist to feedback_table ────────────────────────────────────────
+    run_date = today
+    with engine.begin() as conn:
+        conn.execute(text("""
+        CREATE TABLE IF NOT EXISTS feedback_table (
+          ticker       TEXT    NOT NULL,
+          run_date     DATE    NOT NULL,
+          expiry_date  DATE    NOT NULL,
+          metric       TEXT    NOT NULL,
+          closing_price NUMERIC,
+          pct_change   DOUBLE PRECISION,
+          volume       BIGINT,
+          adj_score    DOUBLE PRECISION,
+          PRIMARY KEY (ticker, run_date, expiry_date, metric)
+        );
+        """))
+
+        insert_sql = text("""
+        INSERT INTO feedback_table (
+          ticker, run_date, expiry_date, metric,
+          closing_price, pct_change, volume, adj_score
+        ) VALUES (
+          :ticker, :run_date, :expiry_date, :metric,
+          :closing_price, :pct_change, :volume, :adj_score
+        )
+        ON CONFLICT (ticker, run_date, expiry_date, metric) DO UPDATE
+          SET
+            closing_price = COALESCE(feedback_table.closing_price, EXCLUDED.closing_price),
+            pct_change    = COALESCE(feedback_table.pct_change,    EXCLUDED.pct_change),
+            volume        = COALESCE(feedback_table.volume,        EXCLUDED.volume),
+            adj_score     = EXCLUDED.adj_score;
+        """)
+
+        for _, r in report.iterrows():
+            base   = r["metric_col"].replace("_vol_", "_")
+            strike = r[f"{base}_strike"]
+            side   = base.split("_")[-1].upper()
+            disp   = f"${strike:.2f} {side}"
+
+            # pull today's close/volume/%chg if present in price_history for run_date
+            ph = conn.execute(text("""
+              SELECT close, 
+                     ((close - open)/open) AS pct_change, 
+                     volume
+                FROM price_history
+               WHERE symbol = :sym
+                 AND date   = :d
+            """), {"sym": r["symbol"], "d": run_date.date()}).fetchone()
+
+            conn.execute(insert_sql, {
+                "ticker":        r["symbol"],
+                "run_date":      run_date.date(),
+                "expiry_date":   r["expiration_date"].date(),
+                "metric":        disp,
+                "closing_price": None if ph is None else float(ph.close),
+                "pct_change":    None if ph is None else float(ph.pct_change),
+                "volume":        None if ph is None else int(ph.volume),
+                "adj_score":     float(r["adj_score"]),
+            })
+
+    print("\n✅ feedback_table updated with this run’s picks.")
 
 if __name__ == "__main__":
     unusual_volume_report()
