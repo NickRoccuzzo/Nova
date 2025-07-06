@@ -2,16 +2,15 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
+from db_config import POSTGRES_DB_URL, EMA_CONFIG
 
 # ─── CONFIG ────────────────────────────────────────────────────────────────────
-DB_URL       = "postgresql://option_user:option_pass@localhost:5432/tickers"
-EMA_PERIODS  = [3, 5, 7, 9, 12, 15, 18, 21, 25, 29, 33, 37, 42, 47, 50,
-                52, 57, 75, 85, 95, 100, 105, 115, 125, 150, 200]
+EMA_PERIODS = EMA_CONFIG["PERIODS"]
 LOOKAHEAD_DAYS = 5
-MAX_WORKERS    = 8
+MAX_WORKERS = 8
 
 # ─── ENGINE ───────────────────────────────────────────────────────────────────
-engine = create_engine(DB_URL, future=True)
+engine = create_engine(POSTGRES_DB_URL, future=True)
 
 # ─── HELPERS ─────────────────────────────────────────────────────────────────
 def scenario_from_row(row):

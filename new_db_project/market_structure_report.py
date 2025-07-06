@@ -1,12 +1,12 @@
 import pandas as pd
 from sqlalchemy import create_engine, text
 from datetime import datetime
+from db_config import POSTGRES_DB_URL
 
-DATABASE_URL   = "postgresql://option_user:option_pass@localhost:5432/tickers"
 BULK_THRESHOLD = 0.30  # require at least ±30% OTM shift
 
 def market_structure_report():
-    engine = create_engine(DATABASE_URL)
+    engine = create_engine(POSTGRES_DB_URL)
 
     # 1) Pull strikes + open‐interest
     metrics_sql = """
@@ -106,14 +106,15 @@ def market_structure_report():
           f"{'%DIFF':>7}  {'AVG_OI':>8}  {'DTE':>4}  {'PAIR':>6}  {'SCORE':>12}")
     print("-" * 80)
     for _, r in top.iterrows():
-        exp    = r["expiration_date"].strftime("%Y-%m-%d")
-        pct    = r["pct_diff"] * 100
-        oi     = int(r["avg_oi"])
-        dte    = int(r["days_to_expiry"])
-        pair   = r["pairedness"]
-        score  = r["final_score"]
+        exp = r["expiration_date"].strftime("%Y-%m-%d")
+        pct = r["pct_diff"] * 100
+        oi = int(r["avg_oi"])
+        dte = int(r["days_to_expiry"])
+        pair = r["pairedness"]
+        score = r["final_score"]
         print(f"{r['symbol']:<6}  {exp:<10}  {r['structure']:<8}  "
               f"{pct:7.1f}%  {oi:8d}  {dte:4d}  {pair:6.2f}  {score:12.2f}")
+
 
 if __name__ == "__main__":
     market_structure_report()

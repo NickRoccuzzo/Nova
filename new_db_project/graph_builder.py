@@ -1,209 +1,314 @@
-# graph_builder.py
 import os
+from urllib.parse import quote_plus as urlquote
 
 import pandas as pd
+import numpy as np
 from sqlalchemy import create_engine, text
 
 import dash
-from dash import dcc, html
-from dash.dependencies import Input, Output
+from dash import dcc, html, Input, Output
 import plotly.graph_objects as go
 
-# ─── DATABASE SETUP ─────────────────────────────────────────────────────────────
-DB_URI = os.getenv("GRAPH_DB_URI",
-                   "postgresql://option_user:option_pass@localhost:5432/tickers")
-engine = create_engine(DB_URI, future=True)
+# ─── DATABASE CONFIG ─────────────────────────────────────────────────────────
+DB_USER = os.environ.get("DB_USER", "option_user")
+DB_PASS = os.environ.get("DB_PASS", "option_pass")
+DB_HOST = os.environ.get("DB_HOST", "localhost")
+DB_PORT = os.environ.get("DB_PORT", "5432")
+DB_NAME = os.environ.get("DB_NAME", "tickers")
 
-# ─── METRIC OPTIONS ────────────────────────────────────────────────────────────
-X_OPTIONS = [
-    {"label": "Call OI Total",     "value": "call_oi_sum"},
-    {"label": "Put OI Total",      "value": "put_oi_sum"},
-    {"label": "Call Volume Total", "value": "call_vol_sum"},
-    {"label": "Put Volume Total",  "value": "put_vol_sum"},
-    {"label": "Call IV Total",     "value": "call_iv_sum"},
-    {"label": "Put IV Total",      "value": "put_iv_sum"},
-]
-
-Y_OPTIONS = [
-    {"label": "Max OI Call",     "value": "max_oi_call"},
-    {"label": "Max OI Put",      "value": "max_oi_put"},
-    {"label": "2nd Max OI Call", "value": "second_oi_call"},
-    {"label": "2nd Max OI Put",  "value": "second_oi_put"},
-    {"label": "3rd Max OI Call", "value": "third_oi_call"},
-    {"label": "3rd Max OI Put",  "value": "third_oi_put"},
-    {"label": "Max Vol Call",     "value": "max_vol_call"},
-    {"label": "Max Vol Put",      "value": "max_vol_put"},
-    {"label": "2nd Max Vol Call", "value": "second_vol_call"},
-    {"label": "2nd Max Vol Put",  "value": "second_vol_put"},
-    {"label": "3rd Max Vol Call", "value": "third_vol_call"},
-    {"label": "3rd Max Vol Put",  "value": "third_vol_put"},
-]
-
-# ─── DASH SETUP ────────────────────────────────────────────────────────────────
-app = dash.Dash(__name__)
-app.title = "Option‐Chain Metrics Explorer"
-
-# ─── HELPERS ─────────────────────────────────────────────────────────────────
-def load_tickers():
-    """Fetch all symbols for dropdown."""
-    with engine.connect() as conn:
-        rows = conn.execute(text("SELECT symbol FROM tickers ORDER BY symbol")).all()
-    return [r[0] for r in rows]
-
-# New helper: fetch scenario stats
-
-def get_scenario_stats(symbol: str) -> pd.DataFrame:
-    """Grab the latest EMA scenario and return metrics for a given symbol."""
-    sql = """
-    SELECT *
-      FROM latest_ticker_stats
-     WHERE symbol = :symbol
-    """
-    df = pd.read_sql(text(sql), engine, params={"symbol": symbol})
-    return df
-
-# ─── LAYOUT ───────────────────────────────────────────────────────────────────
-app.layout = html.Div([
-    html.H1("Option‐Chain Metrics Explorer"),
-
-    html.Div([
-        html.Label("Ticker"),
-        dcc.Dropdown(
-            id="ticker-dropdown",
-            options=[{"label": sym, "value": sym}
-                     for sym in load_tickers()],
-            placeholder="Select a ticker…",
-            clearable=False
-        ),
-    ], style={"width": "20%", "display": "inline-block", "verticalAlign": "top"}),
-
-    html.Div([
-        html.Label("X-axis (Totals: bars)"),
-        dcc.Checklist(
-            id="x-metrics",
-            options=X_OPTIONS,
-            value=["call_oi_sum", "put_oi_sum"],  # defaults
-            inline=True
-        ),
-        html.Br(),
-        html.Label("Y-axis (Strikes/Vol: lines)"),
-        dcc.Checklist(
-            id="y-metrics",
-            options=Y_OPTIONS,
-            value=["max_oi_call", "max_oi_put"],  # defaults
-            inline=True
-        ),
-    ], style={"width": "75%", "display": "inline-block", "paddingLeft": "2%"}),
-
-    dcc.Graph(id="metrics-graph", style={"height": "70vh"}),
-    html.Div(id="scenario-info", style={"padding": "1em", "fontFamily": "monospace"}),
-])
-
-
-def query_option_metrics(symbol: str) -> pd.DataFrame:
-    """Grab option_metrics for all expirations of a given symbol."""
-    sql = """
-    SELECT
-      e.expiration_date::date,
-      om.*
-    FROM option_metrics om
-    JOIN tickers t      ON om.ticker_id = t.ticker_id
-    JOIN expirations e  ON om.expiration_id = e.expiration_id
-    WHERE t.symbol = :symbol
-    ORDER BY e.expiration_date
-    """
-    df = pd.read_sql(text(sql), engine, params={"symbol": symbol})
-    return df
-
-
-# ─── CALLBACK ────────────────────────────────────────────────────────────────
-@app.callback(
-    Output("metrics-graph", "figure"),
-    Input("ticker-dropdown", "value"),
-    Input("x-metrics", "value"),
-    Input("y-metrics", "value"),
+DATABASE_URL = (
+    f"postgresql://{DB_USER}:{urlquote(DB_PASS)}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
-def update_graph(symbol, x_metrics, y_metrics):
-    if not symbol:
-        return go.Figure()
-
-    df = query_option_metrics(symbol)
-    if df.empty:
-        return go.Figure().add_annotation(text="No data for that ticker")
-
-    df["exp_str"] = pd.to_datetime(df["expiration_date"]).dt.strftime("%Y-%m-%d")
-
-    fig = go.Figure()
-    # bars on primary y-axis
-    for col in x_metrics:
-        fig.add_trace(go.Bar(
-            x=df["exp_str"],
-            y=df[col],
-            name=col.replace("_", " ").title(),
-            opacity=0.6,
-        ))
-
-    # lines on secondary y-axis
-    for col in y_metrics:
-        fig.add_trace(go.Scatter(
-            x=df["exp_str"],
-            y=df[col],
-            name=col.replace("_", " ").title(),
-            mode="lines+markers",
-            yaxis="y2",
-        ))
-
-    # layout with two y-axes
-    fig.update_layout(
-        title=f"{symbol} Option Metrics by Expiration",
-        xaxis_title="Expiration Date",
-        yaxis=dict(title="Totals (bars)"),
-        yaxis2=dict(
-            title="Strikes/Vol (lines)",
-            overlaying="y",
-            side="right"
-        ),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-    )
-    # force the axis to be categorical
-    fig.update_layout(
-        xaxis=dict(
-            type="category",
-            categoryorder="array",
-            categoryarray=list(df["exp_str"]),
-            tickangle=45,
-            tickfont=dict(size=10),
-            tickmode="array",
-            tickvals=list(df["exp_str"]),
-            ticktext=list(df["exp_str"])
-        ),
-        margin=dict(t=40, b=100),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-    )
-
-    return fig
+engine = create_engine(DATABASE_URL, future=True)
 
 
-@app.callback(
-    Output("scenario-info", "children"),
-    Input("ticker-dropdown", "value")
-)
-def update_scenario_info(symbol):
-    if not symbol:
+def human_format(n) -> str:
+    """Convert a number into a human-readable dollar string, e.g. $3.5M."""
+    try:
+        v = float(n)
+    except (TypeError, ValueError):
         return ""
+    if np.isnan(v):
+        return ""
+    for unit in ["", "k", "M", "B", "T"]:
+        if abs(v) < 1000:
+            return f"${v:,.1f}{unit}"
+        v /= 1000
+    return f"${v:.1f}P"
 
-    df = get_scenario_stats(symbol)
-    if df.empty:
-        return html.Div("No scenario data available", style={"color": "gray"})
 
-    row = df.iloc[0]
-    return html.Div([
-        html.P(f"Current scenario: {row['current_scenario']}{''}"),
-        html.P(f"Avg return: {row['avg_return_for_scenario']:.2f}%"),
-        html.P(f"Bull%: {row['bull_percent_for_scenario']:.1f}%  Bear%: {row['bear_percent_for_scenario']:.1f}%"),
-        html.P(f"Occurrences: {row['num_occurrences_for_scenario']}{''}")
-    ])
+def make_annotation(label, y, strike, vol, price, side, y_offset=40):
+    """
+    Return a Plotly annotation dict for an unusual event,
+    anchored at y (the strike price).
+    """
+    price = float(price)         # ensure no Decimal
+    total_spent = vol * price
 
-# ─── BOOTSTRAP ───────────────────────────────────────────────────────────────
+    color = "green" if side == "CALL" else "red"
+    text = (
+        f"${strike:.2f} {side}<br>"
+        f"{vol:,} contracts<br>"
+        f"{human_format(total_spent)}"
+    )
+    return dict(
+        x=label,
+        y=y,
+        xref="x",
+        yref="y1",      # anchor on the strike (primary) axis
+        text=text,
+        showarrow=True,
+        arrowhead=2,
+        ax=0,
+        ay=-y_offset if side == "CALL" else y_offset,
+        bgcolor="rgba(255,255,255,0.9)",
+        bordercolor=color,
+        font=dict(color=color),
+    )
+
+
+def graph_builder(port: int = 8050):
+    """Launch the Dash app."""
+    app = dash.Dash(__name__)
+    server = app.server
+
+    # ─── LAYOUT ─────────────────────────────────────────────────────────────
+    app.layout = html.Div(
+        style={"padding": "2rem", "maxWidth": "1000px", "margin": "auto"},
+        children=[
+            html.H1("Option Chain Metrics Explorer"),
+            html.Div(
+                style={"display": "flex", "gap": "1rem", "marginBottom": "1rem"},
+                children=[
+                    html.Label("Ticker:"),
+                    dcc.Input(
+                        id="ticker-input",
+                        type="text",
+                        placeholder="e.g. AAPL",
+                        debounce=True,
+                        style={"width": "100px"},
+                    ),
+                    html.Label("# Annotations:"),
+                    # wrap the Slider in a Div if you need flex styling
+                    html.Div(
+                        dcc.Slider(
+                            id="num-annotations",
+                            min=0, max=10, step=1, value=3,
+                            marks={i: str(i) for i in range(11)},
+                            persistence=True, persistence_type="session"
+                        ),
+                        style={"flex": 1}
+                    ),
+                ],
+            ),
+            dcc.Graph(id="chain-graph", style={"height": "70vh"}),
+        ],
+    )
+
+    # ─── CALLBACK ────────────────────────────────────────────────────────────
+    @app.callback(
+        Output("chain-graph", "figure"),
+        Input("ticker-input", "value"),
+        Input("num-annotations", "value"),
+    )
+    def update_graph(symbol: str, num_ann: int) -> go.Figure:
+        sym = (symbol or "").strip().upper()
+        if not sym:
+            return go.Figure()
+
+        # 1) Pull enriched metrics
+        df = pd.read_sql(
+            text("""
+                SELECT
+                  om.expiration_id,
+                  e.expiration_date,
+                  om.call_oi_sum,
+                  om.put_oi_sum,
+                  om.max_call_strike,
+                  om.max_call_last_price,
+                  om.max_call_volume,
+                  om.max_call_oi,
+                  om.max_put_strike,
+                  om.max_put_last_price,
+                  om.max_put_volume,
+                  om.max_put_oi
+                FROM option_metrics om
+                JOIN expirations e     USING(expiration_id)
+                JOIN tickers     t     USING(ticker_id)
+                WHERE t.symbol = :sym
+                ORDER BY e.expiration_date
+            """),
+            engine,
+            params={"sym": sym},
+            parse_dates=["expiration_date"],
+        )
+        if df.empty:
+            return go.Figure()
+
+        # labels
+        df["expiry_label"] = df["expiration_date"].dt.strftime("%m/%d/%y")
+        x = df["expiry_label"]
+
+        fig = go.Figure()
+
+        # 2) Bars on y2
+        fig.add_trace(go.Bar(
+            x=x, y=df["call_oi_sum"], name="Call OI Sum",
+            marker_color="lightgreen", yaxis="y2", opacity=0.6
+        ))
+        fig.add_trace(go.Bar(
+            x=x, y=df["put_oi_sum"], name="Put OI Sum",
+            marker_color="lightcoral", yaxis="y2", opacity=0.6
+        ))
+
+        # 3) Marker sizing from OI
+        call_oi = df["max_call_oi"].fillna(0).astype(float).to_numpy()
+        put_oi  = df["max_put_oi"].fillna(0).astype(float).to_numpy()
+        SIZE_FLOOR, SIZE_PEAK = 10, 50
+        global_max = max(call_oi.max(), put_oi.max(), 1.0)
+        call_sizes = np.clip(call_oi / global_max * SIZE_PEAK, a_min=SIZE_FLOOR, a_max=None)
+        put_sizes  = np.clip(put_oi  / global_max * SIZE_PEAK, a_min=SIZE_FLOOR, a_max=None)
+
+        # 4) customdata and plot max-strike on y1
+        call_cd = list(zip(
+            df["max_call_volume"].fillna(0).astype(int),
+            df["max_call_last_price"].fillna(0).astype(float),
+            df["max_call_oi"].fillna(0).astype(int),
+        ))
+        put_cd = list(zip(
+            df["max_put_volume"].fillna(0).astype(int),
+            df["max_put_last_price"].fillna(0).astype(float),
+            df["max_put_oi"].fillna(0).astype(int),
+        ))
+
+        fig.add_trace(go.Scatter(
+            x=x, y=df["max_call_strike"],
+            mode="lines+markers", name="Max Call Strike",
+            line=dict(color="green", width=2),
+            marker=dict(size=call_sizes, symbol="square",
+                        color="green", line=dict(width=1, color="darkgreen")),
+            customdata=call_cd,
+            hovertemplate=(
+                "<b>Strike:</b> $%{y:.2f}<br>"
+                "<b>Vol:</b> %{customdata[0]:,}<br>"
+                "<b>Last:</b> $%{customdata[1]:.2f}<br>"
+                "<b>OI:</b> %{customdata[2]:,}<extra></extra>"
+            ),
+            yaxis="y1"
+        ))
+        fig.add_trace(go.Scatter(
+            x=x, y=df["max_put_strike"],
+            mode="lines+markers", name="Max Put Strike",
+            line=dict(color="red", width=2),
+            marker=dict(size=put_sizes, symbol="square",
+                        color="red", line=dict(width=1, color="darkred")),
+            customdata=put_cd,
+            hovertemplate=(
+                "<b>Strike:</b> $%{y:.2f}<br>"
+                "<b>Vol:</b> %{customdata[0]:,}<br>"
+                "<b>Last:</b> $%{customdata[1]:.2f}<br>"
+                "<b>OI:</b> %{customdata[2]:,}<extra></extra>"
+            ),
+            yaxis="y1"
+        ))
+
+          # 5) Top-N unusual annotations — pulled directly from the ranked matview
+        ue = pd.read_sql(
+            text("""
+                              SELECT
+                                u.expiration_id,
+                                e.expiration_date,
+                                u.unusual_max_vol_call,
+                                u.unusual_max_vol_call_score,
+                                u.unusual_second_vol_call,
+                                u.unusual_second_vol_call_score,
+                                u.unusual_third_vol_call,
+                                u.unusual_third_vol_call_score,
+                                u.unusual_max_vol_put,
+                                u.unusual_max_vol_put_score,
+                                u.unusual_second_vol_put,
+                                u.unusual_second_vol_put_score,
+                                u.unusual_third_vol_put,
+                                u.unusual_third_vol_put_score,
+                                u.total_score AS score
+                              FROM unusual_events_ranked u
+                              JOIN tickers     t USING (ticker_id)
+                              JOIN expirations e USING (expiration_id)
+                              WHERE t.symbol    = :sym
+                                AND u.score_rank <= :num_ann
+                              ORDER BY u.score_rank
+                            """),
+            engine,
+            params={"sym": sym, "num_ann": num_ann},
+            parse_dates=["expiration_date"],
+        )
+
+        last_price = float(
+            engine.connect()
+            .execute(text("SELECT close FROM price_history WHERE symbol=:sym ORDER BY date DESC LIMIT 1"),
+                     {"sym": sym})
+            .scalar() or 0.0
+        )
+
+        # **FILL ZERO & CAST VOLUMES AHEAD OF TIME**
+        df["max_call_volume"] = df["max_call_volume"].fillna(0).astype(int)
+        df["max_put_volume"] = df["max_put_volume"].fillna(0).astype(int)
+
+        for _, r in ue.iterrows():
+            row = df[df["expiration_id"] == r["expiration_id"]]
+            if row.empty:
+                continue
+            row = row.iloc[0]
+
+            # choose which side and grab vol & strike
+            if r["unusual_max_vol_call"]:
+                vol = int(row["max_call_volume"])
+                strike = row["max_call_strike"]
+                y = strike
+                side = "CALL"
+            else:
+                vol = int(row["max_put_volume"])
+                strike = row["max_put_strike"]
+                y = strike
+                side = "PUT"
+
+            # skip any “empty” events
+            if vol == 0 or pd.isna(strike):
+                continue
+
+            ann = make_annotation(
+                label=row["expiry_label"],
+                y=y,
+                strike=strike,
+                vol=vol,
+                price=last_price,
+                side=side,
+            )
+            fig.add_annotation(**ann)
+
+        # 6) Layout
+        fig.update_layout(
+            title=f"{sym} Option-Chain Strikes & OI",
+            barmode="overlay",
+            xaxis=dict(
+                type="category", categoryarray=x,
+                tickangle=45, title="Expiry"
+            ),
+            yaxis=dict(title="Strike Price", side="left"),
+            yaxis2=dict(
+                overlaying="y", side="right",
+                title="Open Interest (bars)",
+                showticklabels=False
+            ),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02,
+                        xanchor="right", x=1),
+            margin=dict(l=60, r=60, t=50, b=100),
+        )
+
+        return fig
+
+    app.run(debug=True, port=port)
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    graph_builder(8050)

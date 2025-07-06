@@ -1,24 +1,23 @@
 import time
 import random
-from itertools import islice
-
 import pandas as pd
 import yfinance as yf
 from sqlalchemy import create_engine, text
 import sqlalchemy.types
+from db_config import POSTGRES_DB_URL, DB_CONFIG
 
-# ─── Configuration ────────────────────────────────────────────────────────
-DB_URL        = "postgresql://option_user:option_pass@localhost:5432/tickers"
-TICKERS_TABLE = "tickers"
-PRICE_TABLE   = "price_history"
-BATCH_SIZE    = 5  # how many tickers to fetch in one yf.download call
+# ─── Configurations ────────────────────────────────────────────────────────
+TICKERS = DB_CONFIG["DB_NAME"]
+PRICE_TABLE = "price_history"
+BATCH_SIZE = 5  # how many tickers to fetch in one yf.download call
 
 # ─── Helper Functions ─────────────────────────────────────────────────────
 
 def chunked(iterable, size):
     """Yield successive chunks of length size."""
     for i in range(0, len(iterable), size):
-        yield iterable[i : i + size]
+        yield iterable[i: i + size]
+
 
 def fetch_history(ticker: str) -> pd.DataFrame:
     """Download full history, with up to 3 retries."""
@@ -30,6 +29,7 @@ def fetch_history(ticker: str) -> pd.DataFrame:
                 time.sleep(3)
             else:
                 raise
+
 
 def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     """Drop unwanted cols, normalize names, round prices, drop NaNs."""
@@ -44,6 +44,7 @@ def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
         df = df.rename(columns={"Volume": "volume"})
     keep = {"date", "open", "high", "low", "close", "volume"}
     return df[[c for c in df.columns if c in keep]].dropna()
+
 
 def ensure_price_table(engine):
     ddl = f"""
@@ -61,10 +62,12 @@ def ensure_price_table(engine):
     with engine.begin() as conn:
         conn.execute(text(ddl))
 
+
 def get_all_tickers(engine):
     with engine.connect() as conn:
-        result = conn.execute(text(f"SELECT symbol FROM {TICKERS_TABLE}"))
+        result = conn.execute(text(f"SELECT symbol FROM {TICKERS}"))
         return [row[0] for row in result]
+
 
 def get_last_date(engine, symbol):
     with engine.connect() as conn:
@@ -76,14 +79,15 @@ def get_last_date(engine, symbol):
 
 # ─── Main Workflow ────────────────────────────────────────────────────────
 
+
 def price_check():
-    engine = create_engine(DB_URL)
+    engine = create_engine(POSTGRES_DB_URL)
     ensure_price_table(engine)
     all_tickers = get_all_tickers(engine)
 
     # Partition into existing vs. brand-new symbols
     existing = {}
-    new      = []
+    new = []
     for sym in all_tickers:
         ld = get_last_date(engine, sym)
         if ld:
@@ -95,7 +99,7 @@ def price_check():
     for batch in chunked(list(existing.keys()), BATCH_SIZE):
         # compute the earliest start date among the batch
         next_starts = [existing[sym] + pd.Timedelta(days=1) for sym in batch]
-        start_date  = min(next_starts)
+        start_date = min(next_starts)
 
         # batch download
         df_all = yf.download(
@@ -106,7 +110,7 @@ def price_check():
         )
 
         batch_dfs = []
-        updates   = []
+        updates = []
 
         for sym in batch:
             # extract per-symbol DataFrame (fallback if group_by didn’t nest)
@@ -184,6 +188,7 @@ def price_check():
             }
         )
         print(f"✔️ {sym} full history inserted")
+
 
 if __name__ == "__main__":
     price_check()

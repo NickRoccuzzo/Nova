@@ -1,161 +1,251 @@
+# db_schema.yml
+
 tables:
   tickers:
     columns:
       ticker_id:
         type: SERIAL
-        constraints: [PRIMARY KEY]
+        constraints:
+          - PRIMARY KEY
       symbol:
-        type: TEXT
-        constraints: [UNIQUE, NOT NULL]
+        type: VARCHAR(16)
+        constraints:
+          - NOT NULL
+          - UNIQUE
       last_queried_time:
         type: TIMESTAMPTZ
-      industry_id:
-        type: INTEGER
-        constraints: [REFERENCES industries(industry_id)]
-      full_name:
-        type: TEXT
-
-  expirations:
-    columns:
-      expiration_id:
-        type: SERIAL
-        constraints: [PRIMARY KEY]
-      expiration_date:
-        type: DATE
-        constraints: [UNIQUE, NOT NULL]
-
-  option_contracts:
-    columns:
-      option_id:
-        type: BIGSERIAL
-        constraints: [PRIMARY KEY]
-      ticker_id:
-        type: INTEGER
-        constraints: [NOT NULL, REFERENCES tickers(ticker_id)]
-      expiration_id:
-        type: INTEGER
-        constraints: [NOT NULL, REFERENCES expirations(expiration_id)]
-      strike:
-        type: NUMERIC(10,2)
-        constraints: [NOT NULL]
-      type:
-        type: VARCHAR(4)
-        constraints: [NOT NULL]
-      last_trade_date:
-        type: TIMESTAMPTZ
-      last_price:
-        type: NUMERIC(12,4)
-      bid:
-        type: NUMERIC(12,4)
-      ask:
-        type: NUMERIC(12,4)
-      change_amt:
-        type: NUMERIC(12,4)
-      percent_change:
-        type: NUMERIC(6,2)
-      volume:
-        type: INTEGER
-      open_interest:
-        type: INTEGER
-      implied_volatility:
-        type: NUMERIC(6,4)
-      snapshot_timestamp:
-        type: TIMESTAMPTZ
-        default: now()
-    constraints:
-      - UNIQUE(ticker_id, expiration_id, strike, type, snapshot_timestamp)
-      - UNIQUE(ticker_id, expiration_id, strike, type)
-
-  option_metrics:
-    columns:
-      ticker_id:
-        type: INTEGER
-        constraints: [NOT NULL, REFERENCES tickers(ticker_id)]
-      expiration_id:
-        type: INTEGER
-        constraints: [NOT NULL, REFERENCES expirations(expiration_id)]
-      call_oi_sum:    { type: BIGINT }
-      put_oi_sum:     { type: BIGINT }
-      call_vol_sum:   { type: BIGINT }
-      put_vol_sum:    { type: BIGINT }
-      call_iv_sum:    { type: NUMERIC }
-      put_iv_sum:     { type: NUMERIC }
-      max_oi_call:    { type: NUMERIC }
-      second_oi_call: { type: NUMERIC }
-      third_oi_call:  { type: NUMERIC }
-      max_oi_put:     { type: NUMERIC }
-      second_oi_put:  { type: NUMERIC }
-      third_oi_put:   { type: NUMERIC }
-      max_vol_call:   { type: NUMERIC }
-      second_vol_call:{ type: NUMERIC }
-      third_vol_call: { type: NUMERIC }
-      max_vol_put:    { type: NUMERIC }
-      second_vol_put: { type: NUMERIC }
-      third_vol_put:  { type: NUMERIC }
-    constraints:
-      - PRIMARY KEY (ticker_id, expiration_id)
-
-  sectors:
-    columns:
-      sector_id:
-        type: SERIAL
-        constraints: [PRIMARY KEY]
-      sector_name:
-        type: TEXT
-        constraints: [UNIQUE, NOT NULL]
+        constraints:
+          - NULL
+    indexes:
+      - [symbol]
 
   industries:
     columns:
       industry_id:
         type: SERIAL
-        constraints: [PRIMARY KEY]
-      industry_name:
-        type: TEXT
-        constraints: [NOT NULL]
-      sector_id:
-        type: INTEGER
-        constraints: [NOT NULL, REFERENCES sectors(sector_id)]
-    constraints:
-      - UNIQUE(industry_name, sector_id)
+        constraints:
+          - PRIMARY KEY
+      name:
+        type: VARCHAR(64)
+        constraints:
+          - NOT NULL
+          - UNIQUE
 
-materialized_views:
+  sectors:
+    columns:
+      sector_id:
+        type: SERIAL
+        constraints:
+          - PRIMARY KEY
+      name:
+        type: VARCHAR(64)
+        constraints:
+          - NOT NULL
+          - UNIQUE
+
+  expirations:
+    columns:
+      expiration_id:
+        type: SERIAL
+        constraints:
+          - PRIMARY KEY
+      expiration_date:
+        type: DATE
+        constraints:
+          - NOT NULL
+    indexes:
+      - [expiration_date]
+
+  option_contracts:
+    columns:
+      ticker_id:
+        type: INTEGER
+        constraints:
+          - NOT NULL
+          - REFERENCES tickers(ticker_id)
+      expiration_id:
+        type: INTEGER
+        constraints:
+          - NOT NULL
+          - REFERENCES expirations(expiration_id)
+      type:
+        type: VARCHAR(4)
+        constraints:
+          - NOT NULL
+      last_trade_date:
+        type: TIMESTAMPTZ
+        constraints:
+          - NOT NULL
+      last_price:
+        type: NUMERIC
+        constraints:
+          - NOT NULL
+      bid:
+        type: NUMERIC
+        constraints:
+          - NOT NULL
+      ask:
+        type: NUMERIC
+        constraints:
+          - NOT NULL
+      change_amt:
+        type: NUMERIC
+        constraints:
+          - NOT NULL
+      percent_change:
+        type: NUMERIC
+        constraints:
+          - NOT NULL
+      volume:
+        type: BIGINT
+        constraints:
+          - NOT NULL
+      open_interest:
+        type: BIGINT
+        constraints:
+          - NOT NULL
+      implied_volatility:
+        type: NUMERIC
+        constraints:
+          - NOT NULL
+    indexes:
+      - [ticker_id]
+      - [expiration_id]
+
+  option_metrics:
+    columns:
+      ticker_id:   { type: INTEGER, constraints: [ NOT NULL, REFERENCES tickers(ticker_id) ] }
+      expiration_id: { type: INTEGER, constraints: [ NOT NULL, REFERENCES expirations(expiration_id) ] }
+
+      call_oi_sum: { type: BIGINT,  constraints: [ NOT NULL ] }
+      put_oi_sum:  { type: BIGINT,  constraints: [ NOT NULL ] }
+
+      max_call_strike:  { type: NUMERIC, constraints: [ NOT NULL ] }
+      max_call_last_price: { type: NUMERIC, constraints: [ NOT NULL ] }
+      max_call_volume:  { type: BIGINT,  constraints: [ NOT NULL ] }
+      max_call_oi:      { type: BIGINT,  constraints: [ NOT NULL ] }
+
+      max_put_strike:   { type: NUMERIC, constraints: [ NOT NULL ] }
+      max_put_last_price:  { type: NUMERIC, constraints: [ NOT NULL ] }
+      max_put_volume:   { type: BIGINT,  constraints: [ NOT NULL ] }
+      max_put_oi:       { type: BIGINT,  constraints: [ NOT NULL ] }
+    constraints:
+      - PRIMARY KEY (ticker_id, expiration_id)
+    indexes:
+      - [ticker_id]
+      - [expiration_id]
+
   ticker_metrics:
-    definition: |
-      SELECT
-        om.ticker_id,
-        SUM(om.call_oi_sum)    AS call_oi_total,
-        SUM(om.put_oi_sum)     AS put_oi_total,
-        SUM(om.call_vol_sum)   AS call_vol_total,
-        SUM(om.put_vol_sum)    AS put_vol_total,
-        SUM(om.call_iv_sum)    AS call_iv_total,
-        SUM(om.put_iv_sum)     AS put_iv_total
-      FROM option_metrics om
-      GROUP BY om.ticker_id
+    columns:
+      ticker_id:    { type: INTEGER, constraints: [ NOT NULL, REFERENCES tickers(ticker_id) ] }
+
+      call_vol_total: { type: BIGINT, constraints: [ NOT NULL ] }
+      put_vol_total:  { type: BIGINT, constraints: [ NOT NULL ] }
+    constraints:
+      - PRIMARY KEY (ticker_id)
+    indexes:
+      - [ticker_id]
 
   industry_metrics:
-    definition: |
-      SELECT
-        t.industry_id,
-        SUM(tm.call_oi_total)   AS industry_call_oi,
-        SUM(tm.put_oi_total)    AS industry_put_oi,
-        SUM(tm.call_vol_total)  AS industry_call_vol,
-        SUM(tm.put_vol_total)   AS industry_put_vol,
-        SUM(tm.call_iv_total)   AS industry_call_iv,
-        SUM(tm.put_iv_total)    AS industry_put_iv
-      FROM ticker_metrics tm
-      JOIN tickers t USING (ticker_id)
-      GROUP BY t.industry_id
+    columns:
+      industry_id:      { type: INTEGER, constraints: [ NOT NULL, REFERENCES industries(industry_id) ] }
+      call_vol_sum:     { type: BIGINT, constraints: [ NOT NULL ] }
+      put_vol_sum:      { type: BIGINT, constraints: [ NOT NULL ] }
+    constraints:
+      - PRIMARY KEY (industry_id)
 
   sector_metrics:
+    columns:
+      sector_id:        { type: INTEGER, constraints: [ NOT NULL, REFERENCES sectors(sector_id) ] }
+      call_vol_sum:     { type: BIGINT, constraints: [ NOT NULL ] }
+      put_vol_sum:      { type: BIGINT, constraints: [ NOT NULL ] }
+    constraints:
+      - PRIMARY KEY (sector_id)
+
+  unusual_option_events:
+    columns:
+      ticker_id:
+        type: INTEGER
+        constraints:
+          - NOT NULL
+          - REFERENCES tickers(ticker_id)
+      expiration_id:
+        type: INTEGER
+        constraints:
+          - NOT NULL
+          - REFERENCES expirations(expiration_id)
+
+      unusual_max_vol_call:          { type: BOOLEAN, constraints: [ NOT NULL ] }
+      unusual_max_vol_call_score:    { type: INTEGER, constraints: [ NOT NULL ] }
+      unusual_second_vol_call:       { type: BOOLEAN, constraints: [ NOT NULL ] }
+      unusual_second_vol_call_score: { type: INTEGER, constraints: [ NOT NULL ] }
+      unusual_third_vol_call:        { type: BOOLEAN, constraints: [ NOT NULL ] }
+      unusual_third_vol_call_score:  { type: INTEGER, constraints: [ NOT NULL ] }
+
+      unusual_max_vol_put:           { type: BOOLEAN, constraints: [ NOT NULL ] }
+      unusual_max_vol_put_score:     { type: INTEGER, constraints: [ NOT NULL ] }
+      unusual_second_vol_put:        { type: BOOLEAN, constraints: [ NOT NULL ] }
+      unusual_second_vol_put_score:  { type: INTEGER, constraints: [ NOT NULL ] }
+      unusual_third_vol_put:         { type: BOOLEAN, constraints: [ NOT NULL ] }
+      unusual_third_vol_put_score:   { type: INTEGER, constraints: [ NOT NULL ] }
+
+      # newly added generated column
+      total_score:
+        type: INTEGER
+        constraints:
+          - GENERATED ALWAYS AS (
+              unusual_max_vol_call_score
+            + unusual_second_vol_call_score
+            + unusual_third_vol_call_score
+            + unusual_max_vol_put_score
+            + unusual_second_vol_put_score
+            + unusual_third_vol_put_score
+            ) STORED
+
+    constraints:
+      - PRIMARY KEY (ticker_id, expiration_id)
+    indexes:
+      - [ticker_id]
+      - [expiration_id]
+
+
+materialized_views:
+  unusual_events_ranked:
     definition: |
       SELECT
-        i.sector_id,
-        SUM(im.industry_call_oi)  AS sector_call_oi,
-        SUM(im.industry_put_oi)   AS sector_put_oi,
-        SUM(im.industry_call_vol) AS sector_call_vol,
-        SUM(im.industry_put_vol)  AS sector_put_vol,
-        SUM(im.industry_call_iv)  AS sector_call_iv,
-        SUM(im.industry_put_iv)   AS sector_put_iv
-      FROM industry_metrics im
-      JOIN industries i USING (industry_id)
-      GROUP BY i.sector_id
+        u.ticker_id,
+        u.expiration_id,
+        u.unusual_max_vol_call,
+        u.unusual_max_vol_call_score,
+        u.unusual_second_vol_call,
+        u.unusual_second_vol_call_score,
+        u.unusual_third_vol_call,
+        u.unusual_third_vol_call_score,
+        u.unusual_max_vol_put,
+        u.unusual_max_vol_put_score,
+        u.unusual_second_vol_put,
+        u.unusual_second_vol_put_score,
+        u.unusual_third_vol_put,
+        u.unusual_third_vol_put_score,
+        (
+          u.unusual_max_vol_call_score
+        + u.unusual_second_vol_call_score
+        + u.unusual_third_vol_call_score
+        + u.unusual_max_vol_put_score
+        + u.unusual_second_vol_put_score
+        + u.unusual_third_vol_put_score
+        ) AS total_score,
+        row_number() OVER (
+          PARTITION BY u.ticker_id
+          ORDER BY (
+            u.unusual_max_vol_call_score
+          + u.unusual_second_vol_call_score
+          + u.unusual_third_vol_call_score
+          + u.unusual_max_vol_put_score
+          + u.unusual_second_vol_put_score
+          + u.unusual_third_vol_put_score
+          ) DESC
+        ) AS score_rank
+      FROM unusual_option_events u;
+    indexes:
+      - [ticker_id, score_rank]

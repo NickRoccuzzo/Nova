@@ -1,8 +1,7 @@
 import json
 import logging
-
 from sqlalchemy import create_engine, text
-
+from db_config import POSTGRES_DB_URL
 # ——————————————————————————————————————————————————————————————————————————————
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -28,17 +27,14 @@ def main():
                     json_symbols.add(e)
 
     # 3) Connect
-    engine = create_engine(
-        "postgresql://option_user:option_pass@localhost:5432/tickers",
-        echo=False, future=True
-    )
+    engine = create_engine(POSTGRES_DB_URL, echo=False, future=True)
 
     with engine.begin() as conn:
         # — Pre-sync: fetch existing tickers —
         res = conn.execute(text("SELECT symbol, full_name FROM tickers"))
         db_rows = res.all()
-        db_symbols   = {row[0] for row in db_rows}
-        db_name_map  = {row[0]: row[1] for row in db_rows}
+        db_symbols = {row[0] for row in db_rows}
+        db_name_map = {row[0]: row[1] for row in db_rows}
 
         #  Determine what to insert / delete / update
         to_insert = json_symbols - db_symbols
@@ -152,6 +148,7 @@ def main():
                 """), {"industry_id": industry_id, "symbols": symbols})
 
     logger.info("✅ Full sync complete! Database now mirrors tickers.json.")
+
 
 if __name__ == "__main__":
     main()
