@@ -44,6 +44,28 @@ def main():
             if sym in json_name_map and json_name_map[sym] != db_name_map.get(sym)
         ]
 
+        # **First** remove any option_contracts for those tickers
+        conn.execute(
+            text("""
+              DELETE FROM option_contracts
+               WHERE ticker_id IN (
+                 SELECT ticker_id FROM tickers WHERE symbol = ANY(:symbols)
+               )
+            """),
+            {"symbols": list(to_delete)},
+        )
+
+        # (If you also have an archive table, repeat for that too)
+        conn.execute(
+            text("""
+              DELETE FROM option_contracts_archive
+               WHERE ticker_id IN (
+                 SELECT ticker_id FROM tickers WHERE symbol = ANY(:symbols)
+               )
+            """),
+            {"symbols": list(to_delete)},
+        )
+
         #  DELETE removed symbols
         if to_delete:
             conn.execute(

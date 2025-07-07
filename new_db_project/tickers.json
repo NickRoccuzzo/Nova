@@ -410,18 +410,6 @@
       {
         "symbol": "NYT",
         "full_name": "The New York Times Company"
-      },
-      {
-        "symbol": "SPY",
-        "full_name": "SPDR S&P 500 ETF"
-      },
-      {
-        "symbol": "QQQ",
-        "full_name": "Invesco QQQ Trust"
-      },
-      {
-        "symbol": "IWM",
-        "full_name": "iShares Russell 2000 ETF"
       }
     ],
     "Telecom_Services": [
@@ -4888,6 +4876,142 @@
       {
         "symbol": "STEM",
         "full_name": "Stem, Inc."
+      }
+    ]
+  },
+  "ETFs": {
+    "S&P_500": [
+      {
+        "symbol": "SPY",
+        "full_name": "SPDR S&P 500 ETF"
+      },
+      {
+        "symbol": "SPXL",
+        "full_name": "Direxion Daily S&P 500 Bull 3x Shares"
+      },
+      {
+        "symbol": "SPXS",
+        "full_name": "Direxion Daily S&P 500 Bear 3x Shares"
+      }
+    ],
+    "India": [
+      {
+        "symbol": "INDA",
+        "full_name": "iShares MSCI India ETF"
+      }
+    ],
+    "Europe": [
+      {
+        "symbol": "VGK",
+        "full_name": "Vanguard FTSE Europe ETF"
+      }
+    ],
+    "China": [
+      {
+        "symbol": "FXI",
+        "full_name": "iShares FTSE China Large-Cap ETF"
+      },
+      {
+        "symbol": "KWEB",
+        "full_name": "KraneShares CSI China Internet ETF"
+      },
+      {
+        "symbol": "BABA",
+        "full_name": "Alibaba"
+      },
+      {
+        "symbol": "JD",
+        "full_name": "JD.com"
+      },
+      {
+        "symbol": "BIDU",
+        "full_name": "Baidu"
+      }
+    ],
+    "Emerging_Markets": [
+      {
+        "symbol": "VWO",
+        "full_name": "Vanguard FTSE Emerging Markets Fund"
+      },
+      {
+        "symbol": "SPEM",
+        "full_name": "SPDR Portfolio Emerging Markets ETF"
+      }
+    ],
+    "Developed_Markets": [
+      {
+        "symbol": "VEA",
+        "full_name": "Vanguard FTSE Developed Markets ETF"
+      }
+    ],
+    "Growth": [
+      {
+        "symbol": "VUG",
+        "full_name": "Vanguard Growth ETF"
+      },
+      {
+        "symbol": "SPYG",
+        "full_name": "SPDR Portfolio S&P 500 Growth ETF"
+      },
+      {
+        "symbol": "SCHG",
+        "full_name": "Schwab US Large-Cap Growth ETF"
+      }
+    ],
+    "Value": [
+      {
+        "symbol": "VTV",
+        "full_name": "Vanguard Value ETF"
+      },
+      {
+        "symbol": "SPYV",
+        "full_name": "SPDR Portfolio S&P 500 Value ETF"
+      },
+      {
+        "symbol": "SCHV",
+        "full_name": "Schwab US Large-Cap Value ETF"
+      }
+    ],
+    "NASDAQ": [
+      {
+        "symbol": "QQQ",
+        "full_name": "Invesco QQQ"
+      },
+      {
+        "symbol": "TQQQ",
+        "full_name": "ProShares UltraPro QQQ"
+      },
+      {
+        "symbol": "SQQQ",
+        "full_name": "ProShares UltraPro Short QQQ"
+      }
+    ],
+    "Crypto_ETFs": [
+      {
+        "symbol": "BITO",
+        "full_name": "ProShares Bitcoin ETF"
+      },
+      {
+        "symbol": "IBIT",
+        "full_name": "iShares Bitcoin Trust ETF"
+      },
+      {
+        "symbol": "ETHE",
+        "full_name": "Grayscale Ethereum Trust ETF"
+      },
+      {
+        "symbol": "ETHA",
+        "full_name": "iShares Ethereum Trust ETF"
+      }
+    ],
+    "Market_Volatility": [
+      {
+        "symbol": "UVXY",
+        "full_name": "ProShares Ultra VIX Short-Term Futures ETF"
+      },
+      {
+        "symbol": "VXX",
+        "full_name": "iPath Series B S&P 500 VIX Short-Term Futures ETN"
       }
     ]
   }

@@ -599,6 +599,15 @@ def refresh_industry_zscores(conn):
 def refresh_sector_zscores(conn):
     conn.execute(text("REFRESH MATERIALIZED VIEW sector_metrics_zscores"))
 
+def refresh_unusual_volume_report(conn):
+    conn.execute(text("REFRESH MATERIALIZED VIEW unusual_volume_report"))
+
+def refresh_industry_unusual_report(conn):
+    conn.execute(text("REFRESH MATERIALIZED VIEW industry_unusual_report"))
+
+def refresh_sector_unusual_report(conn):
+    conn.execute(text("REFRESH MATERIALIZED VIEW sector_unusual_report"))
+
 # ── Main Logic ──────────────────────────────────────────────────────────────────
 
 
@@ -734,6 +743,13 @@ def main():
                 logger.info("Industry Z-scores refreshed successfully")
                 refresh_ticker_zscores(conn)
                 logger.info("Ticker Z-scores refreshed successfully")
+
+                refresh_unusual_volume_report(conn)
+                logger.info("Unusual Volume Report Updated!")
+                refresh_sector_unusual_report(conn)
+                logger.info("Unusual Sectors Updated!")
+                refresh_industry_unusual_report(conn)
+                logger.info("Unusual Industries Updated!")
 
         except Exception as e:
             logger.error(f"DB error for {symbol}: {e}")
