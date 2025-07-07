@@ -113,6 +113,7 @@ layout = html.Div(
         dcc.Input(
             id="filter-input",
             placeholder="Filter tickers…",
+            value="",
             debounce=True,
             style={"width":"100%","margin":"1rem 0"}
         ),
