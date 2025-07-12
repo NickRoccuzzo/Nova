@@ -1,7 +1,7 @@
 import numpy as np
 import yfinance as yf
 
-# Define our ticker to query
+            # DEFINE TICKER(s)
 ticker = yf.Ticker("WOLF")
 
 def safe_divide(n, d):
@@ -28,27 +28,24 @@ def interpret_unusualness(ratio):
 def pull_option_chain(ticker, expiration_date):
     option_chain = ticker.option_chain(expiration_date)
     calls, puts = option_chain.calls.copy(), option_chain.puts.copy()
-
-            # // Sanitize the dataframes --
+            # // Sanitize the dataframes
     calls[['volume','openInterest']] = calls[['volume','openInterest']].fillna(0)
     puts[['volume','openInterest']] = puts[['volume','openInterest']].fillna(0)
-
             # // OI‑based Logic
-    valid_call_OI = calls[calls.openInterest > 0]
-    valid_put_OI = puts[puts.openInterest > 0]
-
-    if not valid_call_OI.empty:
-        calls_sorted_by_OI = valid_call_OI.sort_values('openInterest', ascending=False).iloc[0]
+    call_OI = calls[calls.openInterest > 0]
+    put_OI = puts[puts.openInterest > 0]
+    # calls
+    if not call_OI.empty:
+        calls_sorted_by_OI = call_OI.sort_values('openInterest', ascending=False).iloc[0]
         call_contract_with_largest_OI = (calls_sorted_by_OI.strike, calls_sorted_by_OI.volume, calls_sorted_by_OI.openInterest)
     else:
         call_contract_with_largest_OI = (None, 0.0, 0)
-
-    if not valid_put_OI.empty:
-        put_options_sorted_by_OI = valid_put_OI.sort_values('openInterest', ascending=False).iloc[0]
+    # puts
+    if not put_OI.empty:
+        put_options_sorted_by_OI = put_OI.sort_values('openInterest', ascending=False).iloc[0]
         put_contract_with_largest_OI = (put_options_sorted_by_OI.strike, put_options_sorted_by_OI.volume, put_options_sorted_by_OI.openInterest)
     else:
         put_contract_with_largest_OI = (None, 0.0, 0)
-
     call_options_OI_sum = calls.openInterest.sum()
     put_options_OI_sum = puts.openInterest.sum()
 
@@ -68,19 +65,18 @@ def pull_option_chain(ticker, expiration_date):
         put_contract_with_largest_volume = (puts_sorted_by_volume.strike, puts_sorted_by_volume.volume, puts_sorted_by_volume.openInterest)
     else:
         put_contract_with_largest_volume = (None, 0.0, 0)
-
     call_options_volume_sum = calls.volume.sum()
     put_options_volume_sum = puts.volume.sum()
 
-    # 4) Ratios
+            # // Unusual Volume Builders (used for reporting/etc)
     top_call_volume_to_oi = safe_divide(call_contract_with_largest_volume[1], call_contract_with_largest_volume[2])
     top_put_volume_to_oi = safe_divide(put_contract_with_largest_volume[1], put_contract_with_largest_volume[2])
+
     top_call_volume_to_chainOI = safe_divide(call_contract_with_largest_volume[1], call_options_OI_sum)
     top_put_volume_to_chainOI = safe_divide(put_contract_with_largest_volume[1], put_options_OI_sum)
 
-    u_call = (top_call_volume_to_oi * 0.75) + (top_call_volume_to_chainOI * 0.25)
-    u_put = (top_put_volume_to_oi * 0.75) + (top_put_volume_to_chainOI * 0.25)
-
+    unusual_call = (top_call_volume_to_oi * 0.75) + (top_call_volume_to_chainOI * 0.25)
+    unusual_put = (top_put_volume_to_oi * 0.75) + (top_put_volume_to_chainOI * 0.25)
 
     return {
         "expiration_date": expiration_date,                                       # x-axis on graph_builder
@@ -95,8 +91,8 @@ def pull_option_chain(ticker, expiration_date):
         "call_options_volume_sum": call_options_volume_sum,                       # not graphed
         "put_options_volume_sum": put_options_volume_sum,                         # not graphed
         # Unusual Report
-        "call_unusualness": interpret_unusualness(u_call),                        # not graphed -- used for unusual_volume_report
-        "put_unusualness": interpret_unusualness(u_put)                           # not graphed -- used for unusual_volume_report
+        "call_unusualness": interpret_unusualness(unusual_call),                        # not graphed -- used for unusual_volume_report
+        "put_unusualness": interpret_unusualness(unusual_put)                           # not graphed -- used for unusual_volume_report
     }
 options_dictionary = []
 
