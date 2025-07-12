@@ -1,4 +1,4 @@
-# Option Chain Data Tool
+# OPTION CHAIN Data Tool
 import yfinance as yf
 
 # Define the {ticker}
@@ -8,7 +8,7 @@ ticker = yf.Ticker("LYFT")
 call_options_df = ticker.option_chain(ticker.options[0]).calls
 put_options_df = ticker.option_chain(ticker.options[0]).puts
 
-#       // Open Interest (OI):
+#             // Open Interest (OI):
 
 # *SORT options by 'openInterest' (OI):
 call_options_sorted_by_OI = call_options_df.sort_values(by='openInterest', ascending=False)
@@ -17,7 +17,7 @@ put_options_sorted_by_OI = put_options_df.sort_values(by='openInterest', ascendi
 # *FIND contracts /w the largest 'openInterest' (OI):
 call_contract_with_largest_OI = tuple(call_options_sorted_by_OI.iloc[0][['strike', 'openInterest', 'volume']])
 put_contract_with_largest_OI = tuple(put_options_sorted_by_OI.iloc[0][['strike', 'openInterest', 'volume']])
-# Raw dataframes below without tuple:
+# Raw dataframes below without tuple defined:
 # call_contract_with_largest_OI = (call_options_sorted_by_OI.iloc[0])
 # put_contract_with_largest_OI = (put_options_sorted_by_OI.iloc[0])
 
@@ -25,15 +25,17 @@ put_contract_with_largest_OI = tuple(put_options_sorted_by_OI.iloc[0][['strike',
 call_options_OI_sum = call_options_df['openInterest'].sum()
 put_options_OI_sum = put_options_df['openInterest'].sum()
 
-# We'll utilize these variables in our 'graph_builder' (GUI) now:
-#   call_contract_with_largest_OI
-#   put_contract_with_largest_OI
-#   call_options_OI_sum
-#   put_options_OI_sum
+# We'll utilize these variables in 'graph_builder' (Plotly GUI) now and plot them like so:
+
+#   for each [n] expiration_date,   -- (x-axis) -- anchor for the set of associated data points being
+#   call_contract_with_largest_OI   -- (y-axis1) -- line graph with square marker
+#   put_contract_with_largest_OI    -- (y-axis1) -- line graph with square marker
+#   call_options_OI_sum             -- (y-axis2) -- bar graph with green shade
+#   put_options_OI_sum              -- (y-axis2) -- bar graph with red shade
 
 
 
-#       // Volume Tools:
+#            // Volume Tools:
 
 # *SORT option chains by 'volume' --> quick access to the largest contracts
 call_options_sorted_by_volume = call_options_df.sort_values(by='volume', ascending=False)
@@ -47,7 +49,7 @@ put_with_largest_volume = tuple(put_options_sorted_by_volume.iloc[0][['strike', 
 call_options_volume_sum = call_options_df['volume'].sum()
 put_options_volume_sum = put_options_df['volume'].sum()
 
-# __ Unusual Score (*)
+# -- Unusual Score (*)
 
 # First we gather the ratio of the contract's volume : OI
 unusual_call_volume_to_oi = call_with_largest_volume[1] / call_with_largest_volume[2]
@@ -61,7 +63,7 @@ def interpret_unusualness(ratio):
     if ratio <= 1.0:
         return "Not unusual"
     elif ratio <= 1.5:
-        return "Mildly unusual"
+        return "Mildly Unusual"
     elif ratio <= 2.0:
         return "Unusual"
     elif ratio <= 3.0:
@@ -79,4 +81,3 @@ put_score_label = interpret_unusualness(unusual_put_score)
 print(f"🔔 Calls Combined Score = {unusual_call_score:.2f} → {call_score_label}")
 print(f"🔔 Puts Combined Score = {unusual_put_score:.2f} → {put_score_label}")
 
-# -> We'd then dump the 'Unusual' threshold contracts into a file/db --> that's unusual_volume_report
