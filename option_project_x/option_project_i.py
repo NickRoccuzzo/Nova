@@ -25,7 +25,7 @@ put_contract_with_largest_OI = tuple(put_options_sorted_by_OI.iloc[0][['strike',
 call_options_OI_sum = call_options_df['openInterest'].sum()
 put_options_OI_sum = put_options_df['openInterest'].sum()
 
-# We'll utilize these variables in 'graph_builder' (Plotly GUI) now and plot them like so:
+#       These will be the primary variables used for building 'graph_builder' (-- Plotly GUI):
 
 #   for each [n] expiration_date,   -- (x-axis) -- anchor for the set of associated data points being
 #   call_contract_with_largest_OI   -- (y-axis1) -- line graph with square marker
@@ -41,7 +41,7 @@ put_options_OI_sum = put_options_df['openInterest'].sum()
 call_options_sorted_by_volume = call_options_df.sort_values(by='volume', ascending=False)
 put_options_sorted_by_volume = put_options_df.sort_values(by='volume', ascending=False)
 
-# *FIND options with the largest 'volume'
+# *FIND call/put contracts with the largest 'volume'
 call_with_largest_volume = tuple(call_options_sorted_by_volume.iloc[0][['strike', 'volume', 'openInterest']])
 put_with_largest_volume = tuple(put_options_sorted_by_volume.iloc[0][['strike', 'volume', 'openInterest']])
 
@@ -49,13 +49,13 @@ put_with_largest_volume = tuple(put_options_sorted_by_volume.iloc[0][['strike', 
 call_options_volume_sum = call_options_df['volume'].sum()
 put_options_volume_sum = put_options_df['volume'].sum()
 
-# -- Unusual Score (*)
+#   !(*) Unusual Score (*)!
 
-# First we gather the ratio of the contract's volume : OI
+# First we gather the ratio of the contract's Volume : OI -- weighted most heavily
 unusual_call_volume_to_oi = call_with_largest_volume[1] / call_with_largest_volume[2]
 unusual_put_volume_to_oi = put_with_largest_volume[1] / put_with_largest_volume[2]
 
-# Next, we gather the ratio of the contract's volume : entire option chain's OI
+# Next, we gather the ratio of the contract's volume : entire option chain's OI -- weighted, but not as heavily
 unusual_call_volume_to_chainOI = call_with_largest_volume[1] / call_options_OI_sum
 unusual_put_volume_to_chainOI = put_with_largest_volume[1] / put_options_OI_sum
 
@@ -71,7 +71,7 @@ def interpret_unusualness(ratio):
     else:
         return "🔥 Highly Unusual"
 
-# Volume spikes are more important, so we weight them more heavily (can be changed around)
+# Here, we weight our volume:OI much more heavily
 unusual_call_score = (unusual_call_volume_to_oi * 0.75) + (unusual_call_volume_to_chainOI * 0.25)
 unusual_put_score = (unusual_put_volume_to_oi * 0.75) + (unusual_put_volume_to_chainOI * 0.25)
 
