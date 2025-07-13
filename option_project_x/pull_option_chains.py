@@ -78,21 +78,26 @@ def pull_option_chain(ticker, expiration_date):
     unusual_call = (top_call_volume_to_oi * 0.75) + (top_call_volume_to_chainOI * 0.25)
     unusual_put = (top_put_volume_to_oi * 0.75) + (top_put_volume_to_chainOI * 0.25)
 
+    # small helper to convert data types to make the PostgreSQL-friendly
+    def to_py_tuple(tup):
+        # tup == (strike, volume, openInterest)
+        return (float(tup[0]), int(tup[1]), int(tup[2]))
+    # // DICTIONARY:
     return {
-        "expiration_date": expiration_date,                                       # x-axis on graph_builder
+        "expiration_date": expiration_date,
         # Open Interest
-        "call_contract_with_largest_OI": call_contract_with_largest_OI,           # y-axis1 -- line graph w/ markers
-        "put_contract_with_largest_OI": put_contract_with_largest_OI,             # y-axis1 -- line graph w/ markers
-        "call_options_OI_sum": call_options_OI_sum,                               # y-axis2 -- green bar graph
-        "put_options_OI_sum": put_options_OI_sum,                                 # y-axis2 -- red bar graph
+        "call_contract_with_largest_OI": to_py_tuple(call_contract_with_largest_OI),
+        "put_contract_with_largest_OI": to_py_tuple(put_contract_with_largest_OI),
+        "call_options_OI_sum": int(call_options_OI_sum),
+        "put_options_OI_sum": int(put_options_OI_sum),
         # Volume
-        "call_with_the_largest_volume": call_contract_with_largest_volume,        # not graphed
-        "put_with_the_largest_volume": put_contract_with_largest_volume,          # not graphed
-        "call_options_volume_sum": call_options_volume_sum,                       # not graphed
-        "put_options_volume_sum": put_options_volume_sum,                         # not graphed
+        "call_with_the_largest_volume": to_py_tuple(call_contract_with_largest_volume),
+        "put_with_the_largest_volume": to_py_tuple(put_contract_with_largest_volume),
+        "call_options_volume_sum": float(call_options_volume_sum),
+        "put_options_volume_sum": float(put_options_volume_sum),
         # Unusual Report
-        "call_unusualness": interpret_unusualness(unusual_call),                        # not graphed -- used for unusual_volume_report
-        "put_unusualness": interpret_unusualness(unusual_put)                           # not graphed -- used for unusual_volume_report
+        "call_unusualness": interpret_unusualness(unusual_call),
+        "put_unusualness": interpret_unusualness(unusual_put),
     }
 options_dictionary = []
 
