@@ -3,7 +3,7 @@ import yfinance as yf
 
 
             # DEFINE TICKER(s)
-ticker = yf.Ticker("WOLF")
+ticker = yf.Ticker("AAPL")
 
 
 def safe_divide(n, d):
@@ -50,6 +50,7 @@ def pull_option_chain(ticker, expiration_date):
         put_contract_with_largest_OI = (put_options_sorted_by_OI.strike, put_options_sorted_by_OI.volume, put_options_sorted_by_OI.openInterest)
     else:
         put_contract_with_largest_OI = (None, 0.0, 0)
+    # SUM of option chains 'openInterest'
     call_options_OI_sum = calls.openInterest.sum()
     put_options_OI_sum = puts.openInterest.sum()
 
@@ -69,6 +70,7 @@ def pull_option_chain(ticker, expiration_date):
         put_contract_with_largest_volume = (puts_sorted_by_volume.strike, puts_sorted_by_volume.volume, puts_sorted_by_volume.openInterest)
     else:
         put_contract_with_largest_volume = (None, 0.0, 0)
+    # SUM of option chains 'volume'
     call_options_volume_sum = calls.volume.sum()
     put_options_volume_sum = puts.volume.sum()
 
@@ -109,9 +111,10 @@ for expiration_date in ticker.options:
     full_ticker_option_chain = pull_option_chain(ticker, expiration_date)
     options_dictionary.append(full_ticker_option_chain) # < FULL dataset that allows for downstream reports
 
-
     # // UNUSUAL VOLUME REPORT
+        # -- 'unusual' thresholds that are most important to the report
     unusual_volume_report_thresholds = {"Unusual", "Very Unusual", "🔥 Highly Unusual"}
+    SYMBOL = ticker.ticker
 
     # Unusual Volume Report will track the 'options_dictionary' for the most unusual contracts for this ticker
     unusual_volume_report = []
@@ -119,6 +122,7 @@ for expiration_date in ticker.options:
         # check call side
         if entry["call_unusualness"] in unusual_volume_report_thresholds:
             unusual_volume_report.append({
+                "ticker": SYMBOL,
                 "expiration_date": entry["expiration_date"],
                 "side": "call",
                 **dict(zip(
@@ -130,6 +134,7 @@ for expiration_date in ticker.options:
         # check put side
         if entry["put_unusualness"] in unusual_volume_report_thresholds:
             unusual_volume_report.append({
+                "ticker": SYMBOL,
                 "expiration_date": entry["expiration_date"],
                 "side": "put",
                 **dict(zip(
@@ -138,3 +143,4 @@ for expiration_date in ticker.options:
                 )),
                 "unusualness": entry["put_unusualness"]
             })
+

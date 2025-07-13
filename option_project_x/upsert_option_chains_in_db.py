@@ -35,6 +35,16 @@ option_chain = Table(
     Column("put_unusualness",       String),
 )
 
+unusual_vol = Table(
+  "unusual_volume_report", metadata,
+  Column("expiration_date", String, primary_key=True),
+  Column("side",            String, primary_key=True),
+  Column("strike",          Float),
+  Column("volume",          Integer),
+  Column("openInterest",    Integer),
+  Column("unusualness",     String),
+)
+
 # // Create table if missing
 metadata.create_all(engine)
 
@@ -78,6 +88,29 @@ def upsert_rows(rows):
                           for col in data if col != "expiration_date"}
                 )
             conn.execute(stmt)
+
+
+def upsert_unusual_report(report_rows):
+  with engine.begin() as conn:
+    for r in report_rows:
+      data = {
+        "expiration_date": r["expiration_date"],
+        "side":            r["side"],
+        "strike":          r["strike"],
+        "volume":          r["volume"],
+        "openInterest":    r["openInterest"],
+        "unusualness":     r["unusualness"],
+      }
+      if DB_URL.startswith("sqlite"):
+        stmt = unusual_vol.insert().prefix_with("OR REPLACE").values(**data)
+      else:
+        stmt = pg_insert(unusual_vol).values(**data)
+        stmt = stmt.on_conflict_do_update(
+          index_elements=["expiration_date","side"],
+          set_={col: getattr(stmt.excluded, col) for col in data if col not in ("expiration_date","side")}
+        )
+      conn.execute(stmt)
+
 
 if __name__ == "__main__":
     # assume your `options_dictionary` is built/imported here
