@@ -141,3 +141,4 @@ def update_unusual_data(ticker_search):
         term = ticker_search.strip().upper()
         df = df[df['ticker'].str.upper().str.contains(term)]
     return df.to_dict('records')
+
