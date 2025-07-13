@@ -115,31 +115,31 @@ for expiration_date in ticker.options:
     # // UNUSUAL VOLUME REPORT
 
         # -- 'unusual' thresholds that are most important to the report
-    UNUSUAL_THRESHOLDS = {"Unusual", "Very Unusual", "🔥 Highly Unusual"}
-    SYMBOL = ticker.ticker
+UNUSUAL_THRESHOLDS = {"Unusual", "Very Unusual", "🔥 Highly Unusual"}
+SYMBOL = ticker.ticker
 
     # … after you build options_dictionary …
-    unusual_volume_report = []
-    for entry in options_dictionary:
-        if entry["call_unusualness"] in UNUSUAL_THRESHOLDS:
-            unusual_volume_report.append({
-                "ticker": SYMBOL,
-                "expiration_date": entry["expiration_date"],
-                "side": "call",
-                **dict(zip(
-                    ["strike", "volume", "openInterest"],
-                    entry["call_with_the_largest_volume"]
-                )),
-                "unusualness": entry["call_unusualness"]
-            })
-        if entry["put_unusualness"] in UNUSUAL_THRESHOLDS:
-            unusual_volume_report.append({
-                "ticker": SYMBOL,
-                "expiration_date": entry["expiration_date"],
-                "side": "put",
-                **dict(zip(
-                    ["strike", "volume", "openInterest"],
-                    entry["put_with_the_largest_volume"]
-                )),
-                "unusualness": entry["put_unusualness"]
-            })
+unusual_volume_report = []
+for entry in options_dictionary:
+    if entry["call_unusualness"] in UNUSUAL_THRESHOLDS:
+        unusual_volume_report.append({
+            "ticker": SYMBOL,
+            "expiration_date": entry["expiration_date"],
+            "side": "call",
+            **dict(zip(
+                ["strike", "volume", "openInterest"],
+                entry["call_with_the_largest_volume"]
+            )),
+            "unusualness": entry["call_unusualness"]
+        })
+    if entry["put_unusualness"] in UNUSUAL_THRESHOLDS:
+        unusual_volume_report.append({
+            "ticker": SYMBOL,
+            "expiration_date": entry["expiration_date"],
+            "side": "put",
+            **dict(zip(
+                ["strike", "volume", "openInterest"],
+                entry["put_with_the_largest_volume"]
+            )),
+            "unusualness": entry["put_unusualness"]
+        })

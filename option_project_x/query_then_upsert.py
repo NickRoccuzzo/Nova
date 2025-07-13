@@ -1,4 +1,4 @@
-# import pull_option_chains; pull_option_chains.run()
+# query_then_upsert.py
 
 from query_options import options_dictionary, unusual_volume_report
 from upsert_options import upsert_rows, upsert_unusual_report
