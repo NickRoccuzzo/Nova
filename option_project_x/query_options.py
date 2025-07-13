@@ -1,7 +1,6 @@
 import numpy as np
 import yfinance as yf
 
-
             # DEFINE TICKER(s)
 ticker = yf.Ticker("WOLF")
 

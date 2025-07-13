@@ -27,10 +27,10 @@ def get_option_data(symbol):
         ORDER BY expiration_date
         """,
         conn,
-        params=(symbol,)
+        params=[symbol],  # ← use a list here
     )
     conn.close()
-    df['expiration_date'] = pd.to_datetime(df['expiration_date'])
+    df["expiration_date"] = pd.to_datetime(df["expiration_date"])
     return df
 
 layout = html.Div([
