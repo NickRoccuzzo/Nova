@@ -1,3 +1,5 @@
+# File: /pages/viewer.py
+
 import numpy as np
 import dash
 import pandas as pd
@@ -12,7 +14,7 @@ dash.register_page(__name__, path='/', name='viewer')
 
 SQLITE_DB_PATH = 'options.db'
 
-# 1) Fetch all available tickers from the SQLite DB
+# // -- Fetch all available tickers from SQLite
 def get_tickers():
     conn = sqlite3.connect(SQLITE_DB_PATH)
     df = pd.read_sql_query(
@@ -21,7 +23,8 @@ def get_tickers():
     conn.close()
     return df['ticker'].tolist()
 
-# 2) Fetch option chain data for the selected ticker
+
+# // -- Get option chain data
 def get_option_data(symbol):
     conn = sqlite3.connect(SQLITE_DB_PATH)
     query = '''
@@ -44,6 +47,7 @@ def get_option_data(symbol):
     df['expiration_date'] = pd.to_datetime(df['expiration_date']).dt.normalize()
     return df
 
+
 # 3) Fetch unusual volume entries for annotations
 def get_unusual_volume(symbol):
     conn = sqlite3.connect(SQLITE_DB_PATH)
@@ -57,6 +61,7 @@ def get_unusual_volume(symbol):
     df['expiration_date'] = pd.to_datetime(df['expiration_date']).dt.normalize()
     return df
 
+
 # Page layout function called by Dash Pages
 def layout():
     return html.Div([
@@ -69,7 +74,7 @@ def layout():
         ),
         dcc.Checklist(
             id='show-unusual',
-            options=[{'label': 'Show Unusual Volume', 'value': 'yes'}],
+            options=[{'label': 'Show Option Flow', 'value': 'yes'}],
             value=[],
             inline=True,
             style={'margin': '10px 0'}
@@ -101,18 +106,18 @@ def update_graph(symbol, show_unusual):
     all_oi = np.concatenate([df['call_OI_OI'], df['put_OI_OI']])
     if all_oi.size == 0:
         call_norm = np.zeros(len(df))
-        put_norm  = np.zeros(len(df))
+        put_norm = np.zeros(len(df))
     else:
         min_oi, max_oi = all_oi.min(), all_oi.max()
         norm = np.ones_like(all_oi) if max_oi == min_oi else (all_oi - min_oi) / (max_oi - min_oi)
         mid = len(df)
         call_norm = norm[:mid]
-        put_norm  = norm[mid:]
+        put_norm = norm[mid:]
 
     # 3) Map normalized weights to marker sizes
-    MIN_SIZE, MAX_SIZE = 30, 500
+    MIN_SIZE, MAX_SIZE = 10, 500
     call_sizes = MIN_SIZE + call_norm * (MAX_SIZE - MIN_SIZE)
-    put_sizes  = MIN_SIZE + put_norm  * (MAX_SIZE - MIN_SIZE)
+    put_sizes = MIN_SIZE + put_norm * (MAX_SIZE - MIN_SIZE)
 
     # 4) Build base Plotly figure
     fig = go.Figure([
@@ -121,7 +126,7 @@ def update_graph(symbol, show_unusual):
             marker=dict(
                 size=call_sizes,
                 symbol='square', sizemode='area', color='lightgrey',
-                line=dict(width=2, color='green')
+                line=dict(width=2.5, color='green')
             ),
             customdata=np.stack([df['call_volume_OI'], df['call_OI_OI']], axis=-1),
             hovertemplate='$%{y:.2f} CALL<br>Vol: %{customdata[0]}<br>OI: %{customdata[1]}<extra></extra>'
@@ -131,18 +136,18 @@ def update_graph(symbol, show_unusual):
             marker=dict(
                 size=put_sizes,
                 symbol='square', sizemode='area', color='lightgrey',
-                line=dict(width=2, color='red')
+                line=dict(width=2.5, color='red')
             ),
             customdata=np.stack([df['put_volume_OI'], df['put_OI_OI']], axis=-1),
             hovertemplate='$%{y:.2f} PUT<br>Vol: %{customdata[0]}<br>OI: %{customdata[1]}<extra></extra>'
         ),
         go.Bar(
-            x=idx, y=df['call_OI_sum'], name='Call OI Sum', yaxis='y2', opacity=0.6,
-            hovertemplate='%{y}<extra></extra>'
+            x=idx, y=df['call_OI_sum'], name='Call OI Sum', yaxis='y2', opacity=0.45,
+            marker_color='#66ff00', hovertemplate='%{y}<extra></extra>'
         ),
         go.Bar(
-            x=idx, y=df['put_OI_sum'],  name='Put OI Sum',  yaxis='y2', opacity=0.6,
-            hovertemplate='%{y}<extra></extra>'
+            x=idx, y=df['put_OI_sum'], name='Put OI Sum', yaxis='y2', opacity=0.45,
+            marker_color='#8c554a', hovertemplate='%{y}<extra></extra>'
         )
     ])
 
@@ -190,3 +195,4 @@ def update_graph(symbol, show_unusual):
         margin=dict(t=80, b=40)
     )
     return fig
+

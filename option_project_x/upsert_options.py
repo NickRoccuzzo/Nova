@@ -1,4 +1,4 @@
-# File: store_option_chains.py
+# File: upsert_options.py
 
 import os
 from sqlalchemy import (
@@ -7,28 +7,28 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-# 1) Engine & metadata
+# // Engine & metadata
 DB_URL = os.getenv("DB_URL", "sqlite:///./options.db")
 engine = create_engine(DB_URL, echo=False)
 metadata = MetaData()
 
-# 2) Main option_chain table (with sector & industry)
+# // Main option_chain table (with sector & industry)
 option_chain = Table(
     # Basic building blocks
     "option_chain", metadata,
-    Column("ticker",             String,  primary_key=True, nullable=False),
+    Column("ticker",      String,  primary_key=True, nullable=False),
     Column("expiration_date",    String,  primary_key=True, nullable=False),
     Column("sector",             String),
     Column("industry",           String),
     # Open-Interest (OI)-sorted
-    Column("call_strike_OI",     Float),    # Call Strike
-    Column("call_volume_OI",     Integer),  # Call Volume
-    Column("call_OI_OI",         Integer),  # Call OI
-    Column("put_strike_OI",      Float),    # Put Strike
-    Column("put_volume_OI",      Integer),  # Put Volume
-    Column("put_OI_OI",          Integer),  # Put OI
-    Column("call_OI_sum",        Integer),  # Call OI sum
-    Column("put_OI_sum",         Integer),  # Put OI sum
+    Column("call_strike_OI",     Float),
+    Column("call_volume_OI",     Integer),
+    Column("call_OI_OI",         Integer),
+    Column("put_strike_OI",      Float),
+    Column("put_volume_OI",      Integer),
+    Column("put_OI_OI",          Integer),
+    Column("call_OI_sum",        Integer),
+    Column("put_OI_sum",         Integer),
     # Volume-sorted
     Column("call_strike_vol",    Float),
     Column("call_volume_vol",    Integer),
@@ -43,10 +43,10 @@ option_chain = Table(
     Column("put_unusualness",    String),
 )
 
-# 3) Unusual volume report table
+# // Unusual volume report table
 unusual_vol = Table(
     "unusual_volume_report", metadata,
-    Column("ticker",             String,  primary_key=True, nullable=False),
+    Column("ticker",      String,  primary_key=True, nullable=False),
     Column("expiration_date",    String,  primary_key=True, nullable=False),
     Column("side",               String,  primary_key=True, nullable=False),
     Column("sector",             String),
@@ -57,10 +57,11 @@ unusual_vol = Table(
     Column("unusualness",        String),
 )
 
-# 4) Create tables if missing
+# // Create tables if missing
 metadata.create_all(engine)
 
-# 5) Upsert main table
+
+# // Upsert main table
 def upsert_rows(rows):
     with engine.begin() as conn:
         for r in rows:
@@ -94,14 +95,16 @@ def upsert_rows(rows):
             else:
                 stmt = pg_insert(option_chain).values(**data)
                 stmt = stmt.on_conflict_do_update(
-                    index_elements=["ticker","expiration_date"],
+                    index_elements=["ticker", "expiration_date"],
                     set_={c: getattr(stmt.excluded, c)
-                          for c in data if c not in ("ticker","expiration_date")}
+                          for c in data if c not in ("ticker", "expiration_date")}
                 )
 
             conn.execute(stmt)
 
-# 6) Upsert unusual report
+
+
+# // Upsert unusual report
 def upsert_unusual_report(report_rows):
     with engine.begin() as conn:
         for r in report_rows:
@@ -128,3 +131,4 @@ def upsert_unusual_report(report_rows):
                 )
 
             conn.execute(stmt)
+
