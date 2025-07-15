@@ -1,11 +1,13 @@
 # File: query_options.py
-
+from upsert_options import engine, metadata
+import sqlite3
 import numpy as np
 import yfinance as yf
 import json
 import logging
 import time
-
+import pandas as pd
+import os
 
 # // Setup logging to watch progress // catch any new errors
 logging.basicConfig(
@@ -52,13 +54,28 @@ def interpret_unusualness(ratio):
     elif ratio <= 20.0:
         return "🌊🏛️ Institutional Whale 🏛️🌊"
     else:
-        return "💀 ??? 💀"
+        return "💀🗡️ EXTREME Outlier 🗡️💀"
 
 
                     # // Main Option Ingest (Builds a FINAL DICTIONARY of option data, and the UNUSUAL VOLUME report)
+
+
+# Unusual Thresholds for building our report
+UNUSUAL_THRESHOLDS = {"LARGE Whale 🌊", "MEGA Whale 🌊🌊", "🌊🏛️ Institutional Whale 🏛️🌊", "💀🗡️ EXTREME Outlier 🗡️💀"}
+
+
 def pull_option_chain(ticker, expiration_date):
     # building blocks for option_chain
-    option_chain = ticker.option_chain(expiration_date)
+    try:
+        option_chain = ticker.option_chain(expiration_date)
+    except Exception as e:
+        logger.warning(f"No option chain for {ticker.ticker} @ {expiration_date}: {e}")
+        return None
+        # defensive check
+    if option_chain is None or option_chain.calls is None or option_chain.puts is None:
+        logger.warning(f"Empty option chain for {ticker.ticker} @ {expiration_date}")
+        return None
+
     calls, puts = option_chain.calls.copy(), option_chain.puts.copy()
     # quick sanitization
     calls[['volume', 'openInterest']] = calls[['volume', 'openInterest']].fillna(0)
@@ -154,81 +171,93 @@ def pull_option_chain(ticker, expiration_date):
 
 
 # // Load & flatten tickers.json
+# ── load tickers.json ──
 with open("tickers.json") as f:
     raw = json.load(f)
 
+all_tickers = [
+    {"symbol": t["symbol"], "full_name": t["full_name"],
+     "sector": sector, "industry": industry}
+    for sector, inds in raw.items()
+    for industry, ts in inds.items()
+    for t in ts
+]
 
-all_tickers = []
-for sector, industries in raw.items():
-    for industry, tickers in industries.items():
-        for t in tickers:
-            all_tickers.append({
-                "symbol":     t["symbol"],
-                "full_name":  t["full_name"],
-                "sector":     sector,
-                "industry":   industry
-            })
+def already_done_tickers():
+    conn = sqlite3.connect("options.db")
+    df = pd.read_sql_query("SELECT DISTINCT ticker FROM option_chain", conn)
+    conn.close()
+    return set(df["ticker"])
 
-
-# Build both lists
+# expose these for our orchestrator
 options_dictionary = []
 unusual_volume_report = []
 
+done = already_done_tickers()
+
+all_symbols = {info["symbol"] for info in all_tickers}
+if done >= all_symbols:
+    logger.info("✅ All tickers have already been ingested—resetting progress to start over.")
+    done.clear()
 
 for info in all_tickers:
     sym = info["symbol"]
-    sector = info["sector"]
-    industry = info["industry"]
+    if sym in done:
+        logger.info(f"Skipping {sym}, already in DB")
+        continue
 
-    logger.info(f"Starting ingestion for {sym}")
+    logger.info(f"Starting {sym}")
     ticker = yf.Ticker(sym)
-
     try:
         expirations = ticker.options
     except Exception as e:
-        logger.error(f"Failed to fetch expirations for {sym}: {e}", exc_info=True)
-        # even on error, pause before next ticker
+        logger.error(f"Failed fetching expirations for {sym}: {e}", exc_info=True)
         time.sleep(1.1)
         continue
 
-    for exp in ticker.options:
+    rows_this_ticker = []
+    unusual_this_ticker = []
+
+    for exp in expirations:
         row = pull_option_chain(ticker, exp)
+        if not row:
+            continue
+
         # inject metadata
-        row["ticker"] = sym
-        row["sector"] = sector
-        row["industry"] = industry
+        row.update({
+            "ticker":   sym,
+            "sector":   info["sector"],
+            "industry": info["industry"]
+        })
+        rows_this_ticker.append(row)
 
-        options_dictionary.append(row)
-        logger.info(f"Finished ingestion for {sym} (total rows: {len(options_dictionary)})")
-
-        # Unusual Thresholds for building our report
-        UNUSUAL_THRESHOLDS = {"Unusual", "Very Unusual", "Highly Unusual 🔥", "Extremely Unusual 🔥🔥", "LARGE Whale 🌊", "MEGA Whale 🌊🌊", "🌊🏛️ Institutional Whale 🏛️🌊", "💀 ??? 💀"}
-
-        # threshold‐filter
+        # check thresholds
         if row["call_unusualness"] in UNUSUAL_THRESHOLDS:
-            unusual_volume_report.append({
-                "ticker":          sym,
-                "sector":          sector,
-                "industry":        industry,
-                "expiration_date": row["expiration_date"],
-                "side":            "call",
-                "strike":          row["call_with_the_largest_volume"][0],
-                "volume":          row["call_with_the_largest_volume"][1],
-                "openInterest":    row["call_with_the_largest_volume"][2],
-                "unusualness":     row["call_unusualness"]
+            unusual_this_ticker.append({
+                "ticker": sym, **{k: row[k] for k in ("sector","industry")},
+                "expiration_date": exp, "side":"call",
+                **dict(zip(["strike","volume","openInterest"], row["call_with_the_largest_volume"])),
+                "unusualness": row["call_unusualness"]
             })
-
         if row["put_unusualness"] in UNUSUAL_THRESHOLDS:
-            unusual_volume_report.append({
-                "ticker":          sym,
-                "sector":          sector,
-                "industry":        industry,
-                "expiration_date": row["expiration_date"],
-                "side":            "put",
-                "strike":          row["put_with_the_largest_volume"][0],
-                "volume":          row["put_with_the_largest_volume"][1],
-                "openInterest":    row["put_with_the_largest_volume"][2],
-                "unusualness":     row["put_unusualness"]
+            unusual_this_ticker.append({
+                "ticker": sym, **{k: row[k] for k in ("sector","industry")},
+                "expiration_date": exp, "side":"put",
+                **dict(zip(["strike","volume","openInterest"], row["put_with_the_largest_volume"])),
+                "unusualness": row["put_unusualness"]
             })
-    time.sleep(1.1)
 
+    # append into the module‑level lists so the orchestrator can see them too:
+    options_dictionary.extend(rows_this_ticker)
+    unusual_volume_report.extend(unusual_this_ticker)
+
+    # write as you go
+    if rows_this_ticker:
+        from upsert_options import upsert_rows
+        upsert_rows(rows_this_ticker)
+    if unusual_this_ticker:
+        from upsert_options import upsert_unusual_report
+        upsert_unusual_report(unusual_this_ticker)
+
+    logger.info(f"Finished {sym}: {len(rows_this_ticker)} rows / {len(unusual_this_ticker)} unusual")
+    time.sleep(1.1)

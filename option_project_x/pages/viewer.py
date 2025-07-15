@@ -6,7 +6,7 @@ import pandas as pd
 import sqlite3
 import plotly.graph_objects as go
 import yfinance as yf
-from dash import html, dcc, Input, Output
+from dash import html, dcc, Input, Output, State, no_update
 
 # Register this file as a Dash page
 # Multipage support in app.py will pick up this module
@@ -66,11 +66,12 @@ def get_unusual_volume(symbol):
 def layout():
     return html.Div([
         html.H2("Option Chain Viewer"),
-        dcc.Dropdown(
-            id='ticker-dropdown',
-            options=[{'label': t, 'value': t} for t in get_tickers()],
-            value=get_tickers()[0] if get_tickers() else None,
-            clearable=False
+        dcc.Input(
+            id='ticker-input',
+            type='text',
+            value='',  # ← ensures it’s controlled from the get‑go
+            placeholder="Search your ticker...",
+            style={'width': '200px', 'marginBottom': '10px'}
         ),
         dcc.Checklist(
             id='show-unusual',
@@ -82,20 +83,54 @@ def layout():
         dcc.Graph(id='oi-graph')
     ], style={'padding': '20px'})
 
+
+@dash.callback(
+    Output('ticker-dropdown', 'value'),
+    Input('ticker-dropdown', 'search_value'),
+    State('ticker-dropdown', 'options'),
+    prevent_initial_call=True
+)
+def select_exact_ticker(search, options):
+    """
+    If the user’s search string exactly equals one of the option values,
+    immediately set that as the dropdown’s value.
+    """
+    if not search:
+        return no_update
+
+    # normalize case so “m” matches “M”
+    target = search.strip().upper()
+    # look for an exact match in the options’ values
+    for opt in options:
+        if opt['value'].upper() == target:
+            return opt['value']
+
+    # otherwise, do nothing (leave the dropdown open)
+    return no_update
+
 # Callback: update graph when ticker or checkbox changes
 @dash.callback(
     Output('oi-graph', 'figure'),
-    Input('ticker-dropdown', 'value'),
-    Input('show-unusual', 'value')
+    Input('ticker-input', 'n_submit'),    # fires on Enter
+    Input('ticker-input', 'value'),       # the actual text typed
+    Input('show-unusual',  'value'),      # list (e.g. ['yes']) or []
 )
-def update_graph(symbol, show_unusual):
+def update_graph(n_submit, symbol, show_unusual):
+    # only run when Enter has been pressed at least once
+    if not n_submit or not symbol:
+        return go.Figure()
+
+    symbol = symbol.strip().upper()
+    # guard: must exist in DB
+    if symbol not in get_tickers():
+        return go.Figure()
+
     # Fetch live last price via yfinance
     ticker_obj = yf.Ticker(symbol)
     try:
         last_price = ticker_obj.fast_info['last_price']
     except Exception:
-        # fallback to most recent close
-        last_price = ticker_obj.history(period='1d', interval='1m')['Close'].iloc[-1]
+        last_price = ticker_obj.history(period='1d')['Close'].iloc[-1]
 
     # 1) Load main option-chain data
     df = get_option_data(symbol)
@@ -177,11 +212,17 @@ def update_graph(symbol, show_unusual):
                         ax, ay = 0, 30  # arrow down, square above
                         border = 'red'
                     fig.add_annotation(
-                        x=pos_map[key], y=row['strike'],
+                        x=pos_map[key],
+                        y=row['strike'],
                         text=f"${row['strike']}{row['side'].capitalize()}\nx{row['volume']}",
-                        showarrow=True, arrowhead=2, ax=ax, ay=ay,
-                        bgcolor='lightgrey', bordercolor=border,
-                        borderwidth=2, font=dict(size=11)
+                        showarrow=True,
+                        arrowhead=2,
+                        ax=(0 if row['side'] == 'call' else 0),
+                        ay=(-30 if row['side'] == 'call' else 30),
+                        bgcolor='lightgrey',
+                        bordercolor=('green' if row['side'] == 'call' else 'red'),
+                        borderwidth=2,
+                        font=dict(size=11)
                     )
                     count += 1
 
