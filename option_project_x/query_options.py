@@ -1,15 +1,18 @@
 # File: query_options.py
-from upsert_options import engine, metadata
 import sqlite3
+import pandas as pd
 import numpy as np
 import yfinance as yf
 import json
 import logging
 import time
-import pandas as pd
-import os
 
-# // Setup logging to watch progress // catch any new errors
+                        # // HELPER FUNCTIONS:
+
+# Source of Truth JSON File -- tickers.json:
+tickers_file = 'tickers.json'
+
+# Logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(name)s: %(message)s",
@@ -21,14 +24,14 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-# // Divide-against-zero-helper
+# Divide-against-zero-helper
 def safe_divide(n, d):
     if d and not np.isnan(d):
         return n / d
     return 0.0
 
 
-# // 'Unusual Threshold' for labeling unusual volume ratios
+# 'Unusualness' helper for giving ranks+labels to individual unusual volume ratios for call/put contracts
 def interpret_unusualness(ratio):
     if np.isnan(ratio) or ratio == 0:
         return "Not Unusual"
@@ -60,12 +63,16 @@ def interpret_unusualness(ratio):
                     # // Main Option Ingest (Builds a FINAL DICTIONARY of option data, and the UNUSUAL VOLUME report)
 
 
-# Unusual Thresholds for building our report
+# 'UNUSUAL_THRESHOLDS' & 'OTM_THRESHOLDS' are both used to build reports and tables for SQLite DB downstream
+# - used  'unusual volume report'
 UNUSUAL_THRESHOLDS = {"LARGE Whale 🌊", "MEGA Whale 🌊🌊", "🌊🏛️ Institutional Whale 🏛️🌊", "💀🗡️ EXTREME Outlier 🗡️💀"}
+# - used in 'market structure report'
+OTM_THRESHOLDS = 0.30   # -- ±30% OTM
 
 
+                        # // MAIN INGEST
 def pull_option_chain(ticker, expiration_date):
-    # building blocks for option_chain
+    # building blocks for the call and put option chains
     try:
         option_chain = ticker.option_chain(expiration_date)
     except Exception as e:
@@ -77,11 +84,12 @@ def pull_option_chain(ticker, expiration_date):
         return None
 
     calls, puts = option_chain.calls.copy(), option_chain.puts.copy()
+
     # quick sanitization
     calls[['volume', 'openInterest']] = calls[['volume', 'openInterest']].fillna(0)
     puts[['volume', 'openInterest']] = puts[['volume', 'openInterest']].fillna(0)
 
-                        # // OI‑based Logic
+                        # // OI‑Based Logic -->
     call_OI = calls[calls.openInterest > 0]
     put_OI = puts[puts.openInterest > 0]
 
@@ -170,14 +178,17 @@ def pull_option_chain(ticker, expiration_date):
     }
 
 
-# // Load & flatten tickers.json
-# ── load tickers.json ──
+# ── load & flatten tickers.json ──
 with open("tickers.json") as f:
     raw = json.load(f)
 
 all_tickers = [
-    {"symbol": t["symbol"], "full_name": t["full_name"],
-     "sector": sector, "industry": industry}
+    {
+        "symbol":    t["symbol"],
+        "full_name": t["full_name"],
+        "sector":    sector,
+        "industry":  industry
+    }
     for sector, inds in raw.items()
     for industry, ts in inds.items()
     for t in ts
@@ -185,19 +196,26 @@ all_tickers = [
 
 def already_done_tickers():
     conn = sqlite3.connect("options.db")
-    df = pd.read_sql_query("SELECT DISTINCT ticker FROM option_chain", conn)
-    conn.close()
-    return set(df["ticker"])
+    try:
+        df = pd.read_sql_query("SELECT DISTINCT ticker FROM option_chain", conn)
+        done = set(df["ticker"])
+    except Exception as e:
+        # if the table doesn't exist yet, treat it as “no tickers done”
+        done = set()
+    finally:
+        conn.close()
+    return done
 
-# expose these for our orchestrator
-options_dictionary = []
-unusual_volume_report = []
+# expose for orchestrator
+options_dictionary      = []
+unusual_volume_report   = []
 
-done = already_done_tickers()
-
+done       = already_done_tickers()
 all_symbols = {info["symbol"] for info in all_tickers}
+
+# if we've already ingested every symbol, start fresh
 if done >= all_symbols:
-    logger.info("✅ All tickers have already been ingested—resetting progress to start over.")
+    logger.info("✅ All tickers already ingested—resetting to start over.")
     done.clear()
 
 for info in all_tickers:
@@ -215,9 +233,10 @@ for info in all_tickers:
         time.sleep(1.1)
         continue
 
-    rows_this_ticker = []
+    rows_this_ticker    = []
     unusual_this_ticker = []
 
+    # 1) pull every expiration
     for exp in expirations:
         row = pull_option_chain(ticker, exp)
         if not row:
@@ -231,33 +250,137 @@ for info in all_tickers:
         })
         rows_this_ticker.append(row)
 
-        # check thresholds
+        # 2) build unusual‑volume rows
         if row["call_unusualness"] in UNUSUAL_THRESHOLDS:
             unusual_this_ticker.append({
-                "ticker": sym, **{k: row[k] for k in ("sector","industry")},
-                "expiration_date": exp, "side":"call",
-                **dict(zip(["strike","volume","openInterest"], row["call_with_the_largest_volume"])),
-                "unusualness": row["call_unusualness"]
+                "ticker":           sym,
+                **{k: row[k] for k in ("sector","industry")},
+                "expiration_date":  exp,
+                "side":             "call",
+                **dict(zip(
+                    ["strike","volume","openInterest"],
+                    row["call_with_the_largest_volume"]
+                )),
+                "unusualness":      row["call_unusualness"]
             })
         if row["put_unusualness"] in UNUSUAL_THRESHOLDS:
             unusual_this_ticker.append({
-                "ticker": sym, **{k: row[k] for k in ("sector","industry")},
-                "expiration_date": exp, "side":"put",
-                **dict(zip(["strike","volume","openInterest"], row["put_with_the_largest_volume"])),
-                "unusualness": row["put_unusualness"]
+                "ticker":           sym,
+                **{k: row[k] for k in ("sector","industry")},
+                "expiration_date":  exp,
+                "side":             "put",
+                **dict(zip(
+                    ["strike","volume","openInterest"],
+                    row["put_with_the_largest_volume"]
+                )),
+                "unusualness":      row["put_unusualness"]
             })
 
-    # append into the module‑level lists so the orchestrator can see them too:
+    # 3) keep for in‑memory lists (if you ever want them later)
     options_dictionary.extend(rows_this_ticker)
     unusual_volume_report.extend(unusual_this_ticker)
 
-    # write as you go
+    # 4) write as you go (survives crashes mid‑run)
     if rows_this_ticker:
         from upsert_options import upsert_rows
         upsert_rows(rows_this_ticker)
     if unusual_this_ticker:
         from upsert_options import upsert_unusual_report
         upsert_unusual_report(unusual_this_ticker)
+
+    # ─── compute & upsert Market Structure for this ticker ───
+    import sqlite3
+    import pandas as pd
+    from upsert_options import upsert_market_structure
+
+    conn = sqlite3.connect("options.db")
+    df_ms = pd.read_sql_query(
+        """
+        SELECT
+          expiration_date,
+          call_strike_OI   AS max_call_strike,
+          put_strike_OI    AS max_put_strike,
+          call_OI_OI       AS max_call_oi,
+          put_OI_OI        AS max_put_oi,
+          sector, industry
+        FROM option_chain
+        WHERE ticker = :sym
+        """,
+        conn,
+        params={"sym": sym},
+        parse_dates=["expiration_date"]
+    )
+    conn.close()
+
+    if not df_ms.empty:
+        # strip tz, normalize to midnight
+        df_ms["expiration_date"] = (
+            df_ms["expiration_date"]
+            .dt.tz_localize(None)
+            .dt.normalize()
+        )
+        today = pd.Timestamp.utcnow().normalize().date()
+
+        # days‑to‑expiry
+        df_ms["days_to_expiry"] = df_ms["expiration_date"].dt.date.map(
+            lambda exp: (exp - today).days
+        )
+        df_ms = df_ms[df_ms["days_to_expiry"] >= 0]
+
+        # mid‑strike vs spot & pct_diff
+        df_ms["mid_strike"] = (
+            df_ms["max_call_strike"] + df_ms["max_put_strike"]
+        ) / 2
+        try:
+            last_price = yf.Ticker(sym).fast_info["last_price"]
+            df_ms = df_ms.dropna(subset=["mid_strike"])
+            df_ms["pct_diff"] = df_ms["mid_strike"] / last_price - 1
+        except Exception:
+            df_ms = df_ms.iloc[0:0]
+
+        # filter ±30%
+        df_ms = df_ms[df_ms["pct_diff"].abs() >= OTM_THRESHOLDS]
+
+        if not df_ms.empty:
+            # bullish/bearish
+            df_ms["structure"] = df_ms["pct_diff"].apply(
+                lambda x: "BULLISH" if x > 0 else "BEARISH"
+            )
+            # avg OI
+            df_ms["avg_oi"] = (
+                df_ms["max_call_oi"] + df_ms["max_put_oi"]
+            ) / 2
+            # pairedness
+            df_ms["pairedness"] = df_ms.apply(
+                lambda r: (
+                    min(r["max_call_strike"], r["max_put_strike"])
+                    / max(r["max_call_strike"], r["max_put_strike"])
+                ) if (r["max_call_strike"] and r["max_put_strike"]) else 0,
+                axis=1
+            )
+            # final score
+            df_ms["final_score"] = (
+                df_ms["pct_diff"].abs() * df_ms["avg_oi"]
+                * (1 + df_ms["days_to_expiry"] / 365)
+            ) * (1 + df_ms["pairedness"])
+
+            # pick top row
+            idx = df_ms["final_score"].idxmax()
+            top = df_ms.loc[[idx]].copy()
+            top["pct_diff"]     = (top["pct_diff"] * 100).round(1)
+            top["avg_oi"]       = top["avg_oi"].round(0).astype(int)
+            top["pairedness"]   = top["pairedness"].round(2)
+            top["final_score"]  = top["final_score"].round(2)
+            top["expiration_date"] = top["expiration_date"].dt.strftime("%Y-%m-%d")
+
+            ms_row = top[[
+                "expiration_date","sector","industry","structure",
+                "pct_diff","avg_oi","days_to_expiry",
+                "pairedness","final_score"
+            ]].iloc[0].to_dict()
+            ms_row["ticker"] = sym
+
+            upsert_market_structure([ms_row])
 
     logger.info(f"Finished {sym}: {len(rows_this_ticker)} rows / {len(unusual_this_ticker)} unusual")
     time.sleep(1.1)
